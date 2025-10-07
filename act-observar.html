@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad: ¿Evidencia o Juicio?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .statement-card {
+            cursor: grab;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .statement-card:active {
+            cursor: grabbing;
+        }
+        .dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .drop-zone {
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .drag-over {
+            background-color: #e0f2fe; /* Light blue bg */
+            border-color: #38bdf8; /* Brighter blue border */
+        }
+        .correct {
+            border-left: 5px solid #22c55e; /* Green-500 */
+        }
+        .incorrect {
+            border-left: 5px solid #ef4444; /* Red-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Encabezado -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Actividad de Observación</h1>
+            <p class="mt-2 text-lg text-gray-600">Clasifica cada enunciado como <span class="font-semibold text-sky-600">Evidencia</span> o <span class="font-semibold text-amber-600">Juicio</span>.</p>
+            <p class="text-sm text-gray-500 mt-2">Arrastra cada tarjeta a la columna que corresponda.</p>
+        </header>
+
+        <!-- Contenedor principal de la actividad -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Columna 1: Enunciados para clasificar -->
+            <div id="enunciados-pool" class="bg-white rounded-lg p-4 shadow-md">
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b text-center text-gray-700">Enunciados</h2>
+                <div id="statements-container" class="space-y-3 min-h-[300px]">
+                    <!-- Las tarjetas de enunciados se insertarán aquí con JS -->
+                </div>
+            </div>
+
+            <!-- Columna 2: Evidencia -->
+            <div id="evidencia-zone" class="drop-zone bg-sky-50 border-2 border-dashed border-sky-300 rounded-lg p-4">
+                <h2 class="text-xl font-bold mb-4 text-center text-sky-800">✅ Evidencia</h2>
+                <div id="evidencia-container" class="space-y-3 min-h-[300px]"></div>
+            </div>
+
+            <!-- Columna 3: Juicio -->
+            <div id="juicio-zone" class="drop-zone bg-amber-50 border-2 border-dashed border-amber-300 rounded-lg p-4">
+                <h2 class="text-xl font-bold mb-4 text-center text-amber-800">🤔 Juicio</h2>
+                <div id="juicio-container" class="space-y-3 min-h-[300px]"></div>
+            </div>
+        </div>
+
+        <!-- Botones y Mensajes -->
+        <div class="mt-8 text-center">
+            <button id="check-button" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300 mr-4">
+                Verificar Respuestas
+            </button>
+            <button id="reset-button" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400 transition-colors duration-300">
+                Reiniciar
+            </button>
+            <div id="feedback-message" class="mt-4 text-lg font-medium h-6"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statements = [
+                { texto: "El 80% de los estudiantes levantó la mano para participar.", tipo: "evidencia" },
+                { texto: "La clase estaba muy desordenada y caótica.", tipo: "juicio" },
+                { texto: "El profesor hizo tres preguntas abiertas durante la lección.", tipo: "evidencia" },
+                { texto: "Los estudiantes no estaban prestando atención.", tipo: "juicio" },
+                { texto: "Un estudiante en la tercera fila bostezó dos veces.", tipo: "evidencia" },
+                { texto: "El tono de voz del profesor era monótono y aburrido.", tipo: "juicio" },
+                { texto: "El profesor esperó 5 segundos en silencio después de hacer una pregunta.", tipo: "evidencia" },
+                { texto: "La explicación del profesor sobre la fotosíntesis fue confusa.", tipo: "juicio" },
+                { texto: "Dos estudiantes estaban hablando mientras el profesor daba las instrucciones.", tipo: "evidencia" },
+                { texto: "Los estudiantes se mostraron muy apáticos y sin ganas de aprender.", tipo: "juicio" },
+                { texto: "El profesor utilizó un video de 3 minutos para ilustrar el concepto.", tipo: "evidencia" },
+                { texto: "Fue una excelente gestión del aula.", tipo: "juicio" },
+                { texto: "Al pedir que trabajaran en parejas, los estudiantes se agruparon en menos de 30 segundos.", tipo: "evidencia" },
+                { texto: "El material didáctico no era el adecuado para la edad de los niños.", tipo: "juicio" }
+            ];
+
+            const statementsContainer = document.getElementById('statements-container');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const checkButton = document.getElementById('check-button');
+            const resetButton = document.getElementById('reset-button');
+            const feedbackMessage = document.getElementById('feedback-message');
+
+            let draggedItem = null;
+
+            // Función para inicializar o reiniciar la actividad
+            function initializeActivity() {
+                // Limpiar contenedores
+                document.getElementById('evidencia-container').innerHTML = '';
+                document.getElementById('juicio-container').innerHTML = '';
+                statementsContainer.innerHTML = '';
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'mt-4 text-lg font-medium h-6';
+
+                // Barajar y crear las tarjetas
+                shuffleArray(statements).forEach((stmt, index) => {
+                    const card = document.createElement('div');
+                    card.id = `stmt-${index}`;
+                    card.className = 'statement-card bg-white p-3 rounded-lg border border-gray-200 shadow-sm';
+                    card.draggable = true;
+                    card.textContent = stmt.texto;
+                    card.dataset.tipo = stmt.tipo;
+                    statementsContainer.appendChild(card);
+                });
+
+                addDragListeners();
+            }
+            
+            // Función para barajar el array
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // Función para añadir los event listeners de arrastre
+            function addDragListeners() {
+                const cards = document.querySelectorAll('.statement-card');
+                cards.forEach(card => {
+                    card.addEventListener('dragstart', handleDragStart);
+                    card.addEventListener('dragend', handleDragEnd);
+                });
+            }
+            
+            // --- Manejadores de eventos de arrastre ---
+            function handleDragStart(e) {
+                draggedItem = e.target;
+                setTimeout(() => e.target.classList.add('dragging'), 0);
+                e.dataTransfer.setData('text/plain', e.target.id);
+            }
+
+            function handleDragEnd(e) {
+                e.target.classList.remove('dragging');
+                draggedItem = null;
+            }
+
+            // --- Manejadores de eventos de las zonas de destino ---
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragenter', handleDragEnter);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+            });
+
+            function handleDragOver(e) {
+                e.preventDefault(); // Necesario para permitir el drop
+            }
+
+            function handleDragEnter(e) {
+                e.preventDefault();
+                if (e.target.classList.contains('drop-zone') || e.target.parentElement.classList.contains('drop-zone')) {
+                    const zone = e.target.closest('.drop-zone');
+                    zone.classList.add('drag-over');
+                }
+            }
+
+            function handleDragLeave(e) {
+                if (e.target.classList.contains('drop-zone') || e.target.parentElement.classList.contains('drop-zone')) {
+                    const zone = e.target.closest('.drop-zone');
+                    zone.classList.remove('drag-over');
+                }
+            }
+
+            function handleDrop(e) {
+                e.preventDefault();
+                const zone = e.target.closest('.drop-zone');
+                if (zone && draggedItem) {
+                    const container = zone.querySelector('.space-y-3');
+                    container.appendChild(draggedItem);
+                    zone.classList.remove('drag-over');
+                    clearFeedback();
+                }
+            }
+            
+            // --- Lógica de los botones ---
+            checkButton.addEventListener('click', () => {
+                const evidenciaContainer = document.getElementById('evidencia-container');
+                const juicioContainer = document.getElementById('juicio-container');
+                const enunciadosPool = document.getElementById('statements-container');
+
+                let allCorrect = true;
+
+                // Verificar la zona de Evidencia
+                Array.from(evidenciaContainer.children).forEach(card => {
+                    card.classList.remove('correct', 'incorrect');
+                    if (card.dataset.tipo === 'evidencia') {
+                        card.classList.add('correct');
+                    } else {
+                        card.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                });
+
+                // Verificar la zona de Juicio
+                Array.from(juicioContainer.children).forEach(card => {
+                    card.classList.remove('correct', 'incorrect');
+                    if (card.dataset.tipo === 'juicio') {
+                        card.classList.add('correct');
+                    } else {
+                        card.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                });
+
+                if (enunciadosPool.children.length > 0) {
+                    allCorrect = false;
+                    feedbackMessage.textContent = 'Aún quedan enunciados por clasificar.';
+                    feedbackMessage.className += ' text-amber-600';
+                    return;
+                }
+                
+                if (allCorrect) {
+                    feedbackMessage.textContent = '¡Excelente! Todas las respuestas son correctas.';
+                    feedbackMessage.className += ' text-green-600';
+                } else {
+                    feedbackMessage.textContent = 'Algunas respuestas son incorrectas. ¡Inténtalo de nuevo!';
+                    feedbackMessage.className += ' text-red-600';
+                }
+            });
+
+            resetButton.addEventListener('click', initializeActivity);
+
+            function clearFeedback() {
+                document.querySelectorAll('.statement-card').forEach(card => {
+                    card.classList.remove('correct', 'incorrect');
+                });
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'mt-4 text-lg font-medium h-6';
+            }
+
+            // Iniciar la actividad al cargar la página
+            initializeActivity();
+        });
+    </script>
+
+</body>
+</html>
