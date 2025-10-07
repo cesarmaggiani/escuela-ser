@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller: El Poder de la Observación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Prevent scrollbars from flashing during slide transitions */
+        }
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        /* Custom styles for YouTube embeds to be responsive */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 0.75rem;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* Speaker Notes are hidden by default in the main presentation */
+        .speaker-notes {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white flex flex-col h-screen antialiased">
+
+    <!-- Main Container -->
+    <div class="flex flex-grow h-full w-full overflow-hidden">
+        <!-- Presentation Container -->
+        <main id="presentation-container" class="flex-grow w-full h-full p-4 md:p-8 lg:p-12">
+            <!-- Slides will be injected here by JS -->
+        </main>
+    </div>
+
+    <!-- Navigation -->
+    <footer class="w-full bg-slate-900/50 backdrop-blur-sm p-4 flex justify-between items-center border-t border-slate-700">
+        <div id="slide-counter" class="text-sm text-slate-400">Diapositiva 1 / X</div>
+        <div class="flex items-center gap-4">
+            <button id="presenterModeBtn" class="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-lg transition-colors" title="Modo Presentador">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </button>
+            <button id="fullscreenBtn" class="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-lg transition-colors" title="Pantalla Completa">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+            <button id="prevBtn" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg shadow-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                Anterior
+            </button>
+            <button id="nextBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg transition-colors">
+                Siguiente
+            </button>
+        </div>
+    </footer>
+
+    <!-- Slide Templates -->
+    <template id="slide-template">
+        <!-- Slide 1: Title -->
+        <div class="slide h-full flex-col justify-center items-center text-center p-8">
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">El Poder de la Observación</h1>
+            <p class="mt-4 text-3xl md:text-4xl text-slate-300">Ver para Liderar</p>
+            <p class="mt-8 text-xl text-slate-400">Un taller para desarrollar la habilidad más importante del liderazgo</p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><strong>Misión:</strong> Establecer un tono de curiosidad y seguridad. Tu energía es contagiosa. Camina por la sala para crear una conexión más personal.</p>
+                <p><em>"¡Muy buenos días/tardes a todos y bienvenidos! Me gustaría empezar con una pregunta: ¿Cuántos de ustedes se consideran personas observadoras? (Pausa, permite que levanten la mano). La mayoría confiamos mucho en nuestros ojos para tomar decisiones."</em></p>
+                <p><em>"Pero, ¿y si les dijera que constantemente nos estamos perdiendo información crucial que está justo frente a nosotros? Hoy vamos a explorar eso. Nuestro objetivo es aprender a <strong>observar con intención</strong>. Y para empezar, vamos a poner a prueba esa habilidad ahora mismo".</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Module 1 Intro -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <span class="text-sm font-bold text-blue-400">MÓDULO 1</span>
+            <h2 class="text-5xl md:text-7xl font-bold mt-2">¿Realmente Vemos lo que Miramos?</h2>
+            <p class="mt-4 text-3xl text-slate-400 max-w-3xl">Vamos a poner a prueba nuestra capacidad de atención con un simple ejercicio.</p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><strong>Frase de Transición:</strong> <em>"Muy bien, vamos a hacer un pequeño experimento social. Es muy simple, pero requiere toda su concentración".</em></p>
+                <p>El objetivo es crear expectación y asegurar que todos entiendan que el objetivo es poner a prueba su habilidad de observación.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Exercise 1 Instructions -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h3 class="text-4xl md:text-6xl font-bold">Ejercicio 1: Instrucciones</h3>
+            <div class="mt-8 p-8 bg-slate-800 rounded-xl max-w-4xl text-left text-3xl space-y-4">
+                <p><span class="font-bold text-emerald-400">Tu única tarea:</span> Cuenta cuántos pases hace el equipo que viste de <span class="font-bold">BLANCO</span>.</p>
+                <p>Ignora por completo al equipo de negro.</p>
+                <p>¡Concéntrate solo en contar los pases!</p>
+            </div>
+            <div class="speaker-notes">
+                <h4>Notas del Facilitador:</h4>
+                <p><strong>La Clave del Éxito:</strong> La claridad en las instrucciones es fundamental. No des ninguna pista. Si alguien ya conoce el video, pídele con una sonrisa que sea tu cómplice y no revele la sorpresa.</p>
+                <p><em>"Les voy a mostrar un video muy corto. Su tarea es muy simple y muy específica: por favor, cuenten únicamente los pases que hace el equipo vestido de blanco. Ignoren al equipo de negro. Al final, les preguntaré el número exacto. ¿Listos?"</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Video 1 -->
+        <div class="slide h-full flex-col justify-center items-center">
+             <h3 class="text-4xl md:text-5xl font-bold mb-6">Test de Atención Selectiva</h3>
+             <div class="video-container w-full max-w-4xl">
+                <iframe data-src="https://www.youtube-nocookie.com/embed/vJG698U2Mvo" title="Selective Attention Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p>Al terminar el video, primero recoge algunas respuestas sobre el número de pases.
+                <em>"Ok, escucho 15, 16... estamos por ahí. Buen trabajo de conteo."</em></p>
+                <p>Luego, haz la pregunta clave. Disfruta del momento de sorpresa y risas. Este es el primer "¡aha!" del taller.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: The Gorilla Reveal -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h2 class="text-6xl md:text-8xl font-bold">Ahora, la pregunta importante...</h2>
+            <p class="mt-8 text-9xl">🦍</p>
+            <p class="mt-4 text-5xl md:text-7xl font-bold">¿Quién vio al gorila?</p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                 <p><strong>Manejo de la Sala:</strong> Dirígete primero a quienes no vieron el gorila para validar su experiencia. <em>"Es una sensación extraña, ¿verdad? Saber que estaba ahí y no haberlo visto".</em></p>
+                 <p><strong>Pregunta 1:</strong> <em>"¿Por qué creen que la mayoría de nosotros nos perdimos algo tan evidente?"</em> (Guía hacia: estábamos concentrados en otra cosa).</p>
+                 <p><strong>Pregunta 2:</strong> <em>"Exacto. Ahora, llevemos esto a nuestro trabajo. ¿Cuáles son los 'gorilas laborales' que podríamos estar ignorando cada día porque estamos demasiado ocupados 'contando pases'?"</em> (Sugiere ejemplos: un empleado quemado, un proceso ineficiente, una idea brillante no escuchada).</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Module 1 Takeaway -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <span class="text-sm font-bold text-blue-400">LECCIÓN 1</span>
+            <h2 class="text-5xl md:text-7xl font-bold mt-2 leading-tight">Ver no es lo mismo que Observar</h2>
+            <div class="my-6 text-8xl">📸</div>
+            <p class="mt-6 text-3xl text-slate-400 max-w-5xl leading-relaxed">
+                Nuestra atención es un recurso limitado. La observación eficaz es un <span class="font-bold text-emerald-400">acto intencional y enfocado</span>. Si no elegimos un foco, nos perderemos los "gorilas": los problemas y oportunidades reales.
+            </p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><strong>Conexión Principal:</strong> <em>"Esta experiencia nos enseña la primera lección: ver es un acto pasivo. Observar es un acto intencional y enfocado. Si no decidimos en qué nos vamos a enfocar, nuestra atención nos traicionará y nos hará perder lo que de verdad importa".</em></p>
+            </div>
+        </div>
+        
+        <!-- Slide 7: Module 2 Intro -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <span class="text-sm font-bold text-blue-400">MÓDULO 2</span>
+            <h2 class="text-5xl md:text-7xl font-bold mt-2">Datos vs. Suposiciones</h2>
+            <p class="mt-4 text-3xl text-slate-400 max-w-3xl">¿Qué pasa si tenemos un foco, pero es el incorrecto?</p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><em>"El ejercicio del gorila nos dejó una lección muy clara: debemos tener un foco. Pero ahora surge una pregunta más compleja y, diría yo, más importante para un líder: ¿Qué pasa si estamos prestando atención, pero nos estamos enfocando en lo incorrecto? ¿Qué sucede cuando nuestras observaciones están contaminadas por nuestros prejuicios? Vamos a explorarlo con una escena que es una de las mejores lecciones de liderazgo que existen".</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Exercise 2 Instructions -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h3 class="text-4xl md:text-6xl font-bold">Ejercicio 2: Instrucciones</h3>
+            <div class="mt-8 p-8 bg-slate-800 rounded-xl max-w-4xl text-left text-3xl space-y-4">
+                <p>Verás una escena de la película <span class="font-bold text-emerald-400">Moneyball</span>.</p>
+                <p><span class="font-bold text-emerald-400">Tu tarea:</span> Anota el <span class="font-bold">lenguaje</span> y los <span class="font-bold">argumentos</span> que usan los cazatalentos para evaluar jugadores. ¿En qué se fijan?</p>
+            </div>
+            <div class="speaker-notes">
+                <h4>Notas del Facilitador:</h4>
+                <p><strong>Preparación:</strong> Ten el pizarrón listo con el título "Argumentos de los Cazatalentos". Tu rol es ser un "espejo", reflejando lo que el grupo te dice.</p>
+                <p><em>"Verán una escena de 'Moneyball'. El contexto: un equipo de béisbol ha perdido a sus estrellas y tiene poco dinero. Su tarea es escuchar el lenguaje que usan los cazatalentos. Anoten las razones que dan. ¿En qué se fijan?"</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Video 2 -->
+        <div class="slide h-full flex-col justify-center items-center">
+             <h3 class="text-4xl md:text-5xl font-bold mb-6">El Caso de los Cazatalentos</h3>
+             <div class="video-container w-full max-w-4xl">
+                <iframe data-src="https://www.youtube-nocookie.com/embed/HS3k6MQ6GI4" title="Moneyball - The Problem" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p>Al terminar, pide al grupo sus anotaciones y escríbelas en el pizarrón.</p>
+                <p><em>"Excelente, díganme qué escucharon. ¿Cuáles eran los criterios de estos 'expertos'?"</em> (Ej: "tiene buen porte", "su novia es fea", "lanza raro", etc.).</p>
+            </div>
+        </div>
+        
+        <!-- Slide 10: The Core Question -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h2 class="text-5xl md:text-7xl font-bold">La pregunta que lo cambia todo:</h2>
+            <p class="mt-8 text-6xl md:text-8xl font-bold p-8 bg-slate-800 rounded-xl my-8">"¿Cuál es el problema?"</p>
+            <p class="text-3xl text-slate-400 max-w-4xl">Los cazatalentos observaban, pero diagnosticaban el problema incorrecto.</p>
+            <div class="speaker-notes">
+                <h4>Notas del Facilitador:</h4>
+                <p><strong>El Momento Clave:</strong> La revelación de "la pregunta" es el punto central. Haz una pausa dramática.</p>
+                <p><em>"(Señalando el pizarrón) Miren esta lista. Es fascinante. Después de toda esta discusión, Billy Beane los detiene con una sola pregunta. ¿Quién la recuerda?"</em> (La respuesta es: "¿Cuál es el problema?").</p>
+                <p><strong>Análisis:</strong> <em>"¿Por qué esa pregunta es tan poderosa? Ellos creían que el problema era 'clonar' al jugador. Billy Beane les muestra que el problema real es '¿cómo compramos victorias con poco dinero?', lo que significa que necesitan comprar 'carreras', no 'jugadores que se vean bien'".</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Module 2 Takeaway -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <span class="text-sm font-bold text-blue-400">LECCIÓN 2</span>
+            <h2 class="text-5xl md:text-7xl font-bold mt-2 leading-tight">Observación Superficial vs. Diagnóstica</h2>
+            <div class="my-6 text-8xl">🧠 → 📊</div>
+            <p class="mt-6 text-3xl text-slate-400 max-w-5xl leading-relaxed">
+                La observación eficaz busca <span class="font-bold text-emerald-400">datos medibles</span> que respondan al problema real, no <span class="font-bold text-red-400">juicios de valor</span> basados en suposiciones.
+            </p>
+            <div class="speaker-notes">
+                 <h4>Guion del Facilitador:</h4>
+                 <p><strong>Conexión Principal:</strong> <em>"Y aquí está la segunda gran lección. La lista en el pizarrón no son datos, son juicios. Los cazatalentos usaban una observación superficial. Billy Beane los obligó a usar una observación diagnóstica. Como líderes, ¿cuántas veces nos quedamos en la superficie en lugar de preguntar 'cuál es el verdadero problema aquí'?".</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Module 3 Intro -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <span class="text-sm font-bold text-blue-400">MÓDULO 3</span>
+            <h2 class="text-5xl md:text-7xl font-bold mt-2">Los 4 Principios de la Observación Efectiva</h2>
+            <p class="mt-4 text-3xl text-slate-400 max-w-4xl">Un marco práctico para convertir la observación en una disciplina.</p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><em>"Perfecto. Recapitulemos. Con el gorila, vimos que debemos tener un foco. Con Moneyball, que ese foco debe estar en el problema real y basarse en datos. Hemos entendido el 'porqué' nuestras observaciones fallan. Ahora, vamos a pasar al 'cómo'. La buena noticia es que no es un arte misterioso; es una disciplina que se apoya en cuatro principios. Pensemos en ellos como el manual de instrucciones para ser observadores de alto impacto".</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 13: The 4 Principles -->
+        <div class="slide h-full flex-col justify-center items-center gap-6">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4 text-center">Los 4 Principios</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
+                <div class="bg-slate-800 p-8 rounded-xl">
+                    <h3 class="text-3xl font-bold flex items-center gap-3"><span class="text-3xl">⏳</span> Gestión del Tiempo</h3>
+                    <p class="text-xl text-slate-300 mt-3 leading-relaxed">Hacer observaciones <span class="font-bold">frecuentes y breves</span>, no eventos largos y formales. Esto captura la realidad, no una actuación.</p>
+                </div>
+                <div class="bg-slate-800 p-8 rounded-xl">
+                    <h3 class="text-3xl font-bold flex items-center gap-3"><span class="text-3xl">🎯</span> Foco Específico</h3>
+                    <p class="text-xl text-slate-300 mt-3 leading-relaxed">Tener un <span class="font-bold">objetivo claro</span> antes de observar. No puedes verlo todo. ¿Qué buscas exactamente?</p>
+                </div>
+                <div class="bg-slate-800 p-8 rounded-xl">
+                    <h3 class="text-3xl font-bold flex items-center gap-3"><span class="text-3xl">✍️</span> Evidencia Concreta</h3>
+                    <p class="text-xl text-slate-300 mt-3 leading-relaxed">Registrar lo que una cámara grabaría: <span class="font-bold">hechos, datos y citas textuales</span>. No opiniones ni juicios.</p>
+                </div>
+                <div class="bg-slate-800 p-8 rounded-xl">
+                    <h3 class="text-3xl font-bold flex items-center gap-3"><span class="text-3xl">🗝️</span> Identificar la Palanca</h3>
+                    <p class="text-xl text-slate-300 mt-3 leading-relaxed">Encontrar la <span class="font-bold">única acción clave</span> que generará el mayor impacto. No abrumar con una lista de errores.</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><strong>Tu Misión:</strong> Hacer que la teoría sea práctica y relevante. Usa los ejemplos y las frases clave.</p>
+                <ul>
+                    <li><strong>⏳ Tiempo:</strong> <em>"Frase Clave: Piensa en tu observación como una película, no como una foto. Diez visitas de 5 min > una de 50 min. Ves la realidad, no una actuación."</em></li>
+                    <li><strong>🎯 Foco:</strong> <em>"Frase Clave: No vayas de caza sin saber qué animal buscas. Antes de entrar al aula, decide: 'Hoy observaré la técnica de Vigilancia Activa'. Esto entrena a tu cerebro para capturar evidencia relevante."</em></li>
+                    <li><strong>✍️ Evidencia:</strong> <em>"Frase Clave: Sé una cámara de video, no un crítico de cine. No digas 'la clase fue un caos', di '5 alumnos se levantaron durante la transición'. Los datos abren conversaciones, los juicios las cierran."</em></li>
+                     <li><strong>🗝️ Palanca:</strong> <em>"Frase Clave: No le pidas a un docente que suba una montaña, muéstrale el primer escalón. No abrumes con 10 cosas a mejorar. Encuentra la única acción, como usar 'Llamada en Frío', que generará el mayor impacto."</em></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 14: Module 4 Intro (School Context) -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <span class="text-sm font-bold text-blue-400">MÓDULO 4</span>
+            <h2 class="text-5xl md:text-7xl font-bold mt-2">Actividad Práctica en el Aula</h2>
+            <p class="mt-4 text-3xl text-slate-400 max-w-4xl">Vamos a entrenar nuestro cerebro para separar la evidencia del juicio en un contexto escolar.</p>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><em>"Ahora vamos a la práctica en el lugar que más nos importa: el salón de clases. Nos enfocaremos en el Principio #3: Evidencia Concreta. Este es, quizás, el paso más difícil de dominar, pero el que tiene el mayor retorno de inversión en el desarrollo de nuestros docentes. Vamos a separar los hechos de la historia que nos contamos sobre ellos."</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 15: The T-Chart Activity (School Context) -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h3 class="text-4xl md:text-6xl font-bold">Evidencia vs. Juicio en el Aula</h3>
+            <p class="mt-4 text-3xl text-slate-400">¿Es lo que una cámara grabaría o la historia que te cuentas?</p>
+            <div class="mt-8 p-8 bg-slate-800 rounded-xl max-w-6xl w-full text-left text-2xl">
+                <p class="font-bold text-3xl text-center mb-6">Clasifica las siguientes observaciones de clase:</p>
+                <ul class="list-decimal list-inside space-y-3">
+                    <li>"La maestra tiene un mal manejo de grupo y la clase es un caos".</li>
+                    <li>"Durante la transición, 5 alumnos se levantaron y hablaron en voz alta. La maestra repitió la instrucción 3 veces".</li>
+                    <li>"Los alumnos no están interesados y la lección es aburrida".</li>
+                    <li>"Cuando la maestra preguntó '¿Alguna pregunta?', miró al grupo por 1 segundo y, al no ver manos, continuó".</li>
+                    <li>"El alumno Pérez es un estudiante disruptivo y no respeta la autoridad".</li>
+                </ul>
+            </div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                 <p><strong>Tu Misión:</strong> Fomentar el debate. El aprendizaje está en la discusión.</p>
+                 <p><em>"Voy a leer una serie de frases que podrían surgir de una observación de clase. Para cada una, debatirán y decidirán si es Evidencia o Juicio. Prepárense para defender su elección."</em></p>
+                 <p><strong>Preguntas para guiar:</strong> <em>"¿Hay alguna palabra en esa frase que sea una opinión y no un hecho? (Ej: 'caos', 'aburrida', 'disruptivo'). ¿Cómo lo reescribirían para convertirlo en evidencia pura, como lo haría 'Enseña como un maestro'?"</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 16: The T-Chart Revealed (School Context) -->
+        <div class="slide h-full flex-col justify-center items-center">
+            <h3 class="text-4xl md:text-6xl font-bold mb-6">La Solución</h3>
+            <div class="grid grid-cols-2 gap-6 max-w-6xl w-full">
+                <div class="bg-emerald-900/50 border border-emerald-500 rounded-xl p-6">
+                    <h4 class="text-3xl font-bold text-emerald-300 text-center">Evidencia ✅</h4>
+                    <p class="text-center text-base mb-4 text-slate-400">(Lo que una cámara grabaría)</p>
+                    <ul class="space-y-4 text-xl text-slate-200">
+                        <li class="bg-slate-800 p-4 rounded-lg">"Durante la transición, 5 alumnos se levantaron... La maestra repitió la instrucción 3 veces".</li>
+                        <li class="bg-slate-800 p-4 rounded-lg">"Cuando la maestra preguntó '¿Alguna pregunta?', miró por 1 segundo y continuó".</li>
+                        <li class="bg-slate-800 p-4 rounded-lg">"El alumno Pérez respondió: 'Ya voy', y no guardó su celular de inmediato". (Asumiendo que esta es la evidencia detrás del juicio de "disruptivo")</li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/50 border border-red-500 rounded-xl p-6">
+                    <h4 class="text-3xl font-bold text-red-300 text-center">Juicio ❌</h4>
+                    <p class="text-center text-base mb-4 text-slate-400">(La historia que te cuentas)</p>
+                    <ul class="space-y-4 text-xl text-slate-200">
+                        <li class="bg-slate-800 p-4 rounded-lg">"La maestra tiene un mal manejo de grupo y la clase es un caos".</li>
+                        <li class="bg-slate-800 p-4 rounded-lg">"Los alumnos no están interesados y la lección es aburrida".</li>
+                        <li class="bg-slate-800 p-4 rounded-lg">"El alumno Pérez es un estudiante disruptivo y no respeta la autoridad".</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                 <h4>Guion del Facilitador:</h4>
+                 <p><strong>Reflexión Final:</strong> <em>"Observen la diferencia. Ahora, la pregunta más importante: ¿Qué pasa cuando iniciamos una conversación con un docente con un juicio como 'tu manejo de grupo fue malo' vs. con una evidencia como 'noté que durante la transición pasó esto...'?".</em></p>
+                 <p><strong>Conclusión Clave:</strong> El juicio genera defensividad. La evidencia abre la puerta a una conversación de coaching sobre estrategias concretas y medibles.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 17: Final Takeaways -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h2 class="text-5xl md:text-7xl font-bold">Resumen de Lecciones Clave</h2>
+            <div class="mt-8 space-y-6 max-w-4xl w-full text-left">
+                <div class="bg-slate-800 p-6 rounded-xl text-3xl flex items-center gap-5">
+                    <span class="text-4xl">🎯</span>
+                    <p>1. <span class="font-bold">Ten un foco intencional</span> para no perderte el "gorila".</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl text-3xl flex items-center gap-5">
+                    <span class="text-4xl">🔎</span>
+                    <p>2. <span class="font-bold">Diagnostica el problema real</span> antes de buscar soluciones.</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl text-3xl flex items-center gap-5">
+                    <span class="text-4xl">⚖️</span>
+                    <p>3. <span class="font-bold">Separa la evidencia del juicio</span> para construir confianza y seguridad.</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><em>"Hemos cubierto mucho terreno. Si se van de aquí con solo tres ideas, que sean estas:"</em></p>
+                <p><em>"Primero, sean intencionales con su foco, como aprendimos con el gorila."</em></p>
+                <p><em>"Segundo, asegúrense de resolver el problema correcto, no el superficial, como en Moneyball."</em></p>
+                <p><em>"Y tercero, y lo más importante, hablen desde la evidencia, no desde el juicio. Esto es lo que crea seguridad psicológica y permite el crecimiento real."</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 18: Call to Action -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h2 class="text-5xl md:text-7xl font-bold">Tu Compromiso</h2>
+            <div class="mt-8 p-10 bg-blue-900/50 border border-blue-500 rounded-xl max-w-5xl">
+                <p class="text-4xl text-slate-200 leading-normal">En tu próxima conversación importante esta semana, haz una pausa y pregúntate:</p>
+                <p class="mt-8 text-5xl font-bold text-emerald-300">"¿Cuál es la evidencia concreta que tengo?"</p>
+                <p class="mt-8 text-4xl text-slate-200 leading-normal">Inicia la conversación desde ahí.</p>
+            </div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><strong>Cierre con impacto:</strong> <em>"El conocimiento es inútil sin acción. Por eso, quiero pedirles un pequeño compromiso. No se trata de cambiar todo de la noche a la mañana. Se trata de dar un solo paso."</em></p>
+                <p><em>"En su próxima conversación de retroalimentación, o incluso en una reunión de equipo, los reto a que, antes de hablar, hagan una pausa y piensen: '¿Cuál es la evidencia concreta que tengo?'. Y que inicien su intervención desde ahí. Ese pequeño cambio transformará la calidad de su liderazgo y de sus relaciones."</em></p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Thank You / Q&A -->
+        <div class="slide h-full flex-col justify-center items-center text-center">
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Gracias</h1>
+            <p class="mt-4 text-4xl md:text-5xl text-slate-300">Preguntas y Respuestas</p>
+            <div class="mt-8 text-8xl">🤝</div>
+            <div class="speaker-notes">
+                <h4>Guion del Facilitador:</h4>
+                <p><em>"Muchas gracias a todos por su energía, su participación y su honestidad hoy. Hemos explorado ideas complejas y se han retado a sí mismos. Ahora me encantaría abrir el espacio para cualquier pregunta, comentario o reflexión que tengan."</em></p>
+                 <p>Abre el espacio para preguntas y respuestas. Agradece a todos por su participación activa y su vulnerabilidad durante los ejercicios.</p>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContainer = document.querySelector('.flex-grow').parentElement;
+            const presentationContainer = document.getElementById('presentation-container');
+            const template = document.getElementById('slide-template');
+            const slidesContent = template.content.cloneNode(true);
+            presentationContainer.appendChild(slidesContent);
+
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const presenterModeBtn = document.getElementById('presenterModeBtn');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            let presenterWindow = null;
+
+            // Expose navigation functions to the global scope for the presenter window
+            window.nextSlide = nextSlide;
+            window.prevSlide = prevSlide;
+
+            function showSlide(index) {
+                // Detener todos los videos antes de cambiar de diapositiva
+                slides.forEach(slide => {
+                    const iframe = slide.querySelector('iframe');
+                    if (iframe && iframe.src) {
+                        const currentSrc = iframe.getAttribute('src');
+                        if (currentSrc.includes('autoplay=1')) {
+                           iframe.setAttribute('src', iframe.dataset.src);
+                        }
+                    }
+                });
+
+                // Ocultar todas las diapositivas
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                });
+
+                // Mostrar la diapositiva objetivo y reproducir su video si tiene uno
+                if (slides[index]) {
+                    slides[index].classList.add('active');
+                    const activeIframe = slides[index].querySelector('iframe');
+                    if (activeIframe && activeIframe.dataset.src) {
+                        activeIframe.src = activeIframe.dataset.src + '?autoplay=1&mute=1';
+                    }
+                }
+                
+                updateControls();
+                updatePresenterWindow();
+            }
+
+            function updateControls() {
+                // Update slide counter
+                slideCounter.textContent = `Diapositiva ${currentSlide + 1} / ${totalSlides}`;
+                
+                // Update button states
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+
+                if (currentSlide === totalSlides - 1) {
+                    nextBtn.textContent = 'Fin';
+                } else {
+                    nextBtn.textContent = 'Siguiente';
+                }
+            }
+            
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            }
+
+            function toggleFullScreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        alert(`Error al intentar activar la pantalla completa: ${err.message} (${err.name})`);
+                    });
+                } else {
+                  if (document.exitFullscreen) {
+                    document.exitFullscreen(); 
+                  }
+                }
+            }
+            
+            function launchPresenterMode() {
+                presenterWindow = window.open('', 'presenterView', 'width=1200,height=800');
+                if (!presenterWindow) {
+                    alert('Por favor, permite las ventanas emergentes para esta funcionalidad.');
+                    return;
+                }
+
+                const presenterHTML = `
+                    <!DOCTYPE html>
+                    <html lang="es">
+                    <head>
+                        <title>Modo Presentador</title>
+                        <script src="https://cdn.tailwindcss.com"><\/script>
+                        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+                        <style>
+                            body { font-family: 'Inter', sans-serif; overflow: hidden; }
+                            #current-slide-view .slide { display: flex; opacity: 1; transform: scale(0.95); transform-origin: top left; }
+                            #next-slide-view .slide { display: flex; opacity: 1; transform: scale(0.8); transform-origin: top left; }
+                            #notes-view h4 { font-weight: bold; color: #60A5FA; margin-bottom: 0.5rem; }
+                            #notes-view p, #notes-view ul { font-size: 0.9rem; line-height: 1.6; color: #CBD5E1; margin-bottom: 0.75rem;}
+                            #notes-view ul { list-style-position: inside; padding-left: 0.5rem; }
+                            #notes-view strong { color: #F87171; }
+                            #notes-view em { color: #A5B4FC; font-style: italic;}
+                        </style>
+                    </head>
+                    <body class="bg-slate-900 text-white flex flex-col h-screen">
+                        <div class="flex-grow grid grid-cols-2 grid-rows-2 gap-4 p-4 h-full">
+                            <div class="col-span-1 row-span-2 bg-slate-800 rounded-lg p-4 flex flex-col">
+                                <h3 class="text-xl font-bold mb-2 text-slate-300">Diapositiva Actual</h3>
+                                <div id="current-slide-view" class="flex-grow border border-slate-700 rounded-md overflow-hidden bg-slate-900"></div>
+                            </div>
+                            <div class="col-span-1 row-span-1 bg-slate-800 rounded-lg p-4 flex flex-col">
+                                <h3 class="text-xl font-bold mb-2 text-slate-300">Siguiente Diapositiva</h3>
+                                <div id="next-slide-view" class="flex-grow border border-slate-700 rounded-md overflow-hidden bg-slate-900"></div>
+                            </div>
+                            <div class="col-span-1 row-span-1 bg-slate-800 rounded-lg p-4 flex flex-col">
+                                <h3 class="text-xl font-bold mb-2 text-slate-300">Notas del Facilitador</h3>
+                                <div id="notes-view" class="flex-grow overflow-auto p-2 text-slate-300"></div>
+                            </div>
+                        </div>
+                        <footer class="w-full bg-slate-900/50 p-4 flex justify-center items-center border-t border-slate-700">
+                            <div class="flex items-center gap-4">
+                                <button id="presenterPrevBtn" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg">Anterior</button>
+                                <div id="presenter-slide-counter" class="text-lg font-bold text-slate-300 w-32 text-center"></div>
+                                <button id="presenterNextBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg">Siguiente</button>
+                            </div>
+                        </footer>
+                        <script>
+                            document.addEventListener('keydown', (e) => {
+                                if (e.key === 'ArrowRight' || e.key === ' ') window.opener && window.opener.nextSlide();
+                                if (e.key === 'ArrowLeft') window.opener && window.opener.prevSlide();
+                            });
+                            document.getElementById('presenterNextBtn').addEventListener('click', () => window.opener && window.opener.nextSlide());
+                            document.getElementById('presenterPrevBtn').addEventListener('click', () => window.opener && window.opener.prevSlide());
+                        <\/script>
+                    </body>
+                    </html>
+                `;
+
+                presenterWindow.document.write(presenterHTML);
+                presenterWindow.document.close();
+                
+                document.querySelector('footer').style.display = 'none';
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.warn("No se pudo entrar a pantalla completa automáticamente:", err);
+                });
+
+                setTimeout(() => updatePresenterWindow(), 100);
+
+                presenterWindow.onbeforeunload = () => {
+                    document.querySelector('footer').style.display = 'flex';
+                    if(document.fullscreenElement) document.exitFullscreen();
+                    presenterWindow = null;
+                };
+            }
+
+            function updatePresenterWindow() {
+                if (!presenterWindow || presenterWindow.closed) return;
+
+                // Update current slide preview
+                const currentSlideContent = slides[currentSlide].cloneNode(true);
+                const currentNotes = currentSlideContent.querySelector('.speaker-notes');
+                if (currentNotes) currentNotes.remove();
+                presenterWindow.document.getElementById('current-slide-view').innerHTML = '';
+                presenterWindow.document.getElementById('current-slide-view').appendChild(currentSlideContent);
+
+                // Update next slide preview
+                if (slides[currentSlide + 1]) {
+                    const nextSlideContent = slides[currentSlide + 1].cloneNode(true);
+                    const nextNotes = nextSlideContent.querySelector('.speaker-notes');
+                    if (nextNotes) nextNotes.remove();
+                    presenterWindow.document.getElementById('next-slide-view').innerHTML = '';
+                    presenterWindow.document.getElementById('next-slide-view').appendChild(nextSlideContent);
+                } else {
+                    presenterWindow.document.getElementById('next-slide-view').innerHTML = '<div class="flex items-center justify-center h-full text-2xl text-slate-500">Fin de la presentación</div>';
+                }
+
+                // Update notes
+                const notesContent = slides[currentSlide].querySelector('.speaker-notes');
+                presenterWindow.document.getElementById('notes-view').innerHTML = notesContent ? notesContent.innerHTML : '<p class="text-slate-500">No hay notas para esta diapositiva.</p>';
+                
+                // Update counter
+                presenterWindow.document.getElementById('presenter-slide-counter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+            }
+
+            // Event Listeners
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            fullscreenBtn.addEventListener('click', toggleFullScreen);
+            presenterModeBtn.addEventListener('click', launchPresenterMode);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') { // Spacebar for next
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+
+            // Initial setup
+            showSlide(currentSlide);
+        });
+    </script>
+</body>
+</html>
+
+
+
