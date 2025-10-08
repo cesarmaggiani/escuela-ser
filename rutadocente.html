@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: Ruta Docente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        #slides-wrapper {
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* Ocultar las notas en la vista principal */
+        .slide .speaker-notes {
+            display: none;
+        }
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        /* Estilos para video responsivo */
+        .aspect-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .aspect-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* Estilos para ocultar la barra de controles */
+        #controls {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(100%);
+            pointer-events: none;
+        }
+        #presentation-container:hover #controls {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center h-screen">
+
+    <main id="presentation-container" class="w-full h-full">
+        <div id="slides-wrapper" class="w-full h-full">
+
+            <!-- Slide 1: Título -->
+            <div class="slide active w-full h-full flex flex-col justify-center items-center text-center p-8 bg-slate-900 text-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>¡Buenos días/tardes a todos! Gracias por estar aquí. Hoy vamos a dedicar los próximos 30 minutos a una herramienta poderosa que nos ayudará a ser más estratégicos en nuestra enseñanza: la Ruta Docente. Nuestro único objetivo es que al salir de aquí, todos tengamos claro cómo usarla para transformar los datos de las evaluaciones en aprendizaje real para nuestros alumnos.</p>
+                </div>
+                <h1 class="text-6xl font-black tracking-tight mb-4">Nuestra Ruta Docente</h1>
+                <p class="text-3xl font-light text-slate-300">Del Dato a la Acción</p>
+                <div class="mt-8 border-t-4 border-cyan-400 w-24"></div>
+                <p class="mt-8 text-xl text-slate-400">Una herramienta para potenciar el aprendizaje</p>
+            </div>
+
+            <!-- Slide 2: El Porqué 1 -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p><strong>(Hacer una pausa después de leer la cita)</strong>. Esta frase nos resulta familiar a todos. Ese momento después de calificar, cuando vemos los resultados y sentimos esa mezcla de preocupación y urgencia. Es una sensación que todos compartimos. Hoy vamos a canalizar esa urgencia, no hacia la frustración, sino hacia la acción planificada.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-8">¿Qué hacemos cuando no aprenden?</h2>
+                <div class="bg-gray-100 p-10 rounded-xl shadow-md">
+                    <p class="text-3xl text-gray-700 italic">"Después de una evaluación, vemos que un grupo de alumnos no logró el aprendizaje esperado."</p>
+                </div>
+            </div>
+
+            <!-- Slide 3: El Porqué 2 -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-white">
+                 <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Aquí es donde entra en juego la Ruta Docente. Este diagrama es la idea central de hoy. Pasamos de un <strong>Diagnóstico</strong> (que ya hacemos con las evaluaciones) a una <strong>Mejora</strong> real en el aprendizaje. El puente que conecta ambos es la <strong>Estrategia</strong>. La Ruta Docente es ese puente. No es un formato más que llenar; es el mapa que nosotros mismos diseñamos para guiar a nuestros alumnos al éxito.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-12">De la Urgencia a la Estrategia</h2>
+                <div class="flex items-center justify-center space-x-8 text-xl">
+                    <div class="text-center">
+                        <div class="bg-blue-100 text-blue-800 rounded-full w-32 h-32 flex items-center justify-center text-4xl shadow-lg"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        <p class="mt-4 font-bold">Diagnóstico</p>
+                        <p class="text-gray-500">(Evaluación)</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right-long text-5xl text-gray-300"></i>
+                    <div class="text-center">
+                        <div class="bg-purple-100 text-purple-800 rounded-full w-32 h-32 flex items-center justify-center text-4xl shadow-lg"><i class="fa-solid fa-map-signs"></i></div>
+                        <p class="mt-4 font-bold">Estrategia</p>
+                        <p class="text-gray-500">(Ruta Docente)</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right-long text-5xl text-gray-300"></i>
+                    <div class="text-center">
+                        <div class="bg-green-100 text-green-800 rounded-full w-32 h-32 flex items-center justify-center text-4xl shadow-lg"><i class="fa-solid fa-seedling"></i></div>
+                        <p class="mt-4 font-bold">Mejora</p>
+                        <p class="text-gray-500">(Aprendizaje)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 4: El Qué -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Entonces, ¿cómo funciona? Se basa en tres principios clave. <strong>Primero, Enfócate:</strong> No podemos atacar 10 brechas a la vez. Elegimos las 2 o 3 batallas más importantes que nos darán la mayor victoria. <strong>Segundo, Apaláncate:</strong> No partimos de cero. ¿Qué nos funcionó ya? ¿Qué fortalezas tienen nuestros alumnos? Usamos eso como nuestra base. <strong>Y tercero, Planifica:</strong> Dividimos el gran problema en pasos pequeños y manejables, semana a semana. Es un plan de acción, no una lista de deseos.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-12">Conociendo la "Ruta Docente"</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <div class="bg-gray-50 p-8 rounded-lg shadow">
+                        <i class="fa-solid fa-bullseye text-5xl text-red-500 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">1. Enfócate</h3>
+                        <p class="text-gray-600">Establece 2 a 4 brechas o metas clave.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-lg shadow">
+                        <i class="fa-solid fa-hand-fist text-5xl text-green-500 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">2. Apaláncate</h3>
+                        <p class="text-gray-600">Identifica los éxitos que ya tienes para impulsar a tus alumnos.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-lg shadow">
+                        <i class="fa-regular fa-calendar-days text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">3. Planifica</h3>
+                        <p class="text-gray-600">Desarrolla tu estrategia semana a semana.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Transición a Modelaje -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-slate-800 text-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Muy bien, ya vimos la teoría. Pero esto solo cobra vida cuando lo vemos en la práctica. Así que vamos a analizar un ejemplo real y detallado. Imaginemos que somos un profesor de Español de segundo de secundaria y acabamos de recibir los resultados de nuestro primer examen trimestral.</p>
+                </div>
+                <i class="fa-solid fa-microscope text-7xl mb-6 text-cyan-400"></i>
+                <h2 class="text-5xl font-bold">Veámoslo en Acción</h2>
+                <p class="text-2xl mt-4 text-slate-300">Ejemplo Práctico: Lengua y Literatura, 2º de Secundaria</p>
+            </div>
+
+            <!-- Slide 6: Ejemplo - Diagnóstico -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Lo primero es el diagnóstico honesto. La <strong>Brecha Clave</strong> es clara: más de la mitad de mis alumnos no sabe diferenciar entre la opinión del autor (el argumento) y los hechos que la respaldan (la evidencia). Pero no todo son malas noticias. Mi <strong>Éxito a Apalancar</strong> es que en los debates se defienden muy bien, usan ejemplos. ¡Ahí hay una habilidad que puedo usar! No están en blanco, solo necesitan estructurar ese pensamiento en la escritura.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-8">Paso 1: El Diagnóstico</h2>
+                <div class="flex flex-col md:flex-row gap-8 w-full max-w-5xl">
+                    <div class="flex-1 bg-red-50 border border-red-200 p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-red-800 mb-4"><i class="fa-solid fa-chart-line-down mr-2"></i>Brecha Clave</h3>
+                        <p class="text-red-700 text-lg">El 60% de los estudiantes no distingue <strong>argumentos</strong> de <strong>evidencia</strong> en textos.</p>
+                    </div>
+                    <div class="flex-1 bg-green-50 border border-green-200 p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-green-800 mb-4"><i class="fa-solid fa-hand-fist mr-2"></i>Éxito a Apalancar</h3>
+                        <p class="text-green-700 text-lg">Son muy buenos en <strong>debates orales</strong>, donde usan ejemplos para defender sus ideas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Ejemplo - Plan de Acción -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Ahora, vamos a la ruta. <strong>(Señalar la Semana 1)</strong>. El primer objetivo no es resolver todo, es solo <strong>diferenciar la tesis de los argumentos</strong>. El 'cómo' es crucial: un debate para activar, yo modelo el proceso, y luego ellos practican en parejas. La medición es un ticket de salida, algo rápido y concreto. <strong>(Señalar la Semana 2)</strong>. Una vez que dominan eso, subimos el nivel: ahora vamos a <strong>distinguir los argumentos de la evidencia</strong>. El 'cómo' se basa en lo anterior: usamos el mismo texto, introducimos el concepto de evidencia y lo conectamos con un organizador gráfico. De nuevo, la medición es clara y observable. Esta es la esencia: un plan progresivo, específico y medible.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-8">Paso 2: La Ruta Semanal</h2>
+                <div class="w-full max-w-7xl shadow-xl rounded-lg overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th class="p-3">Semana</th>
+                                <th class="p-3">¿Qué? (Objetivo)</th>
+                                <th class="p-3">¿Cómo? (Acciones Clave)</th>
+                                <th class="p-3">¿Cómo mediré? (Indicador)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            <tr class="border-b">
+                                <td class="p-3 font-bold align-top">Semana 1</td>
+                                <td class="p-3 align-top">Diferenciar la <strong>tesis</strong> de los <strong>argumentos</strong> centrales.</td>
+                                <td class="p-3 align-top">1. Activar con debate corto.<br>2. Modelar en voz alta el subrayado de tesis vs. argumentos.<br>3. Práctica guiada en parejas con código de color.</td>
+                                <td class="p-3 align-top text-blue-600 font-medium">El 80% de los equipos subraya correctamente los argumentos.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold align-top">Semana 2</td>
+                                <td class="p-3 align-top">Distinguir los <strong>argumentos</strong> de la <strong>evidencia</strong> que los apoya.</td>
+                                <td class="p-3 align-top">1. Conectar con el 'cómo' convencer.<br>2. Introducir concepto de evidencia (datos, ejemplos).<br>3. Práctica individual con organizador gráfico de 2 columnas.</td>
+                                <td class="p-3 align-top text-blue-600 font-medium">El 75% de los organizadores gráficos conecta bien argumento y evidencia.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Slide 8: Seguimiento -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-white">
+                 <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Finalmente, ¿qué pasa después de ejecutar el plan? Nos reunimos a conversar. Y quiero ser muy claro aquí: esta conversación no es para fiscalizar si cumplieron o no. Es para reflexionar juntos. Para celebrar lo que funcionó y, más importante, para analizar por qué algo no funcionó y qué podemos hacer diferente la próxima vez. Es una conversación de dos profesionales buscando mejorar. Mi rol es ser un coach, no un supervisor.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-12">Más que un Papel: Una Conversación de Crecimiento</h2>
+                <div class="bg-gray-50 p-10 rounded-xl shadow-md w-full max-w-3xl">
+                    <p class="text-2xl text-gray-500 mb-6"><strong class="text-red-600">NO es</strong> una revisión administrativa.</p>
+                    <p class="text-2xl text-gray-800 mb-6"><strong class="text-green-600">SÍ es</strong> una reflexión conjunta.</p>
+                    <ul class="text-left text-xl space-y-4 list-none">
+                        <li><i class="fa-solid fa-check-circle text-green-500 mr-3"></i>Celebrar logros</li>
+                        <li><i class="fa-solid fa-check-circle text-green-500 mr-3"></i>Analizar desafíos</li>
+                        <li><i class="fa-solid fa-check-circle text-green-500 mr-3"></i>Ajustar a futuro</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 9: Resumen y Próximos Pasos -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>En resumen, la Ruta Docente nos ayuda a ser <strong>Intencionales</strong>, porque elegimos nuestras batallas; <strong>Estratégicos</strong>, porque tenemos un plan; y <strong>Efectivos</strong>, porque medimos nuestro progreso. Ahora, los próximos pasos son claros: Tienen hasta el <strong>[mencionar fecha]</strong> para elaborar su primera ruta. No están solos, estaré pasando por sus salones y disponible para asesorías individuales. Empecemos.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-8">Resumen y Próximos Pasos</h2>
+                <div class="flex flex-col md:flex-row gap-8 w-full max-w-5xl">
+                    <div class="flex-1 bg-blue-50 border border-blue-200 p-6 rounded-lg text-center">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">En Resumen <i class="fa-solid fa-award"></i></h3>
+                        <ul class="text-left text-xl space-y-2 list-none mx-auto inline-block">
+                           <li>🎯 Intencionales</li>
+                           <li>🗺️ Estratégicos</li>
+                           <li>📈 Efectivos</li>
+                        </ul>
+                    </div>
+                    <div class="flex-1 bg-yellow-50 border border-yellow-200 p-6 rounded-lg text-center">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">Próximos Pasos <i class="fa-solid fa-shoe-prints"></i></h3>
+                        <ul class="text-left text-xl space-y-2 list-none mx-auto inline-block">
+                           <li>1. Elaborar su Ruta Docente.</li>
+                           <li>2. <strong>Establecer fecha límite.</strong></li>
+                           <li>3. Apoyo individual disponible.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 10: Preguntas -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Muy bien, hemos cubierto mucho en poco tiempo. Ahora quiero escucharles a ustedes. ¿Qué dudas tienen? ¿Qué inquietudes les surgen? No hay preguntas pequeñas. Hablemos de tiempo, de cómo aplicarlo a su materia, de cualquier cosa que les esté pasando por la mente ahora mismo.</p>
+                </div>
+                <h2 class="text-6xl font-black text-gray-800">¿Preguntas o Dudas?</h2>
+                <i class="fa-regular fa-comments text-9xl mt-8 text-gray-300"></i>
+            </div>
+            
+            <!-- Slide 11: Analogía Apolo 13 -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center p-8 bg-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Para cerrar, quiero dejarles una analogía poderosa de la película Apolo 13. En esta escena, los ingenieros enfrentan un problema de vida o muerte: el filtro de aire cuadrado no cabe en el espacio redondo. Su solución, usando solo los recursos disponibles, es exactamente lo que hacemos con la Ruta Docente.</p>
+                    <p><strong>Punto 1: El Diagnóstico.</strong> Tienen un problema claro (sube el CO2). Nosotros tenemos los resultados de la evaluación.</p>
+                    <p><strong>Punto 2: Los Recursos.</strong> Ellos tienen una caja de objetos aleatorios. Nosotros tenemos nuestras estrategias exitosas y el talento de los alumnos.</p>
+                    <p><strong>Punto 3: El Plan.</strong> Ellos crean un plan paso a paso. Nosotros diseñamos nuestra Ruta Docente.</p>
+                    <p>Cada vez que llenen su Ruta, piensen en esto. No están llenando un formato, están diseñando la solución para asegurar el éxito de su misión.</p>
+                </div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-6">Nuestro Momento "Apolo 13"</h2>
+                <div class="w-full max-w-4xl">
+                    <div class="aspect-container rounded-lg overflow-hidden shadow-2xl bg-black">
+                        <iframe src="https://www.youtube.com/embed/IY0LGrfcd0A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <p class="mt-6 text-xl text-gray-600 text-center max-w-4xl">
+                    Al igual que los ingenieros, tomamos un <strong>problema claro</strong>, usamos los <strong>recursos que tenemos</strong> y creamos un <strong>plan estratégico</strong> para garantizar el éxito.
+                </p>
+            </div>
+
+             <!-- Slide 12: Cierre -->
+            <div class="slide w-full h-full flex flex-col justify-center items-center text-center p-8 bg-slate-900 text-white">
+                <div class="speaker-notes">
+                    <h4 class="font-bold mb-2">Notas del Presentador:</h4>
+                    <p>Muchísimas gracias por su tiempo y su disposición. Recuerdo que esta herramienta es un medio, no un fin. El fin siempre será el aprendizaje de nuestros alumnos. Y estoy convencido de que trabajando juntos de esta manera, lo vamos a potenciar enormemente. ¡Excelente día a todos!</p>
+                </div>
+                <h2 class="text-6xl font-bold mb-6">¡Gracias!</h2>
+                <p class="text-3xl font-light text-slate-300 italic">"Juntos transformamos los datos en aprendizaje."</p>
+            </div>
+        </div>
+        
+        <!-- Controles de Navegación -->
+        <div id="controls" class="fixed bottom-0 left-0 right-0 bg-gray-800 bg-opacity-90 text-white p-4 flex items-center justify-between shadow-lg">
+            <div class="flex items-center gap-4">
+                <button id="notes-btn" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md transition-colors" title="Abrir Notas del Presentador"><i class="fa-solid fa-clipboard"></i></button>
+                <button id="fullscreen-btn" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md transition-colors" title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="prev-btn" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-md transition-colors"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                <span id="slide-counter" class="text-lg font-medium"></span>
+                <button id="next-btn" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-md transition-colors">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            <div><!-- Espacio en blanco para centrar los controles --></div>
+        </div>
+    </main>
+    
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        const notesBtn = document.getElementById('notes-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        
+        let currentSlide = 0;
+        let notesWindow = null;
+
+        function updateNotesWindow() {
+            if (notesWindow && !notesWindow.closed) {
+                const currentNotes = slides[currentSlide].querySelector('.speaker-notes');
+                const notesContentDiv = notesWindow.document.getElementById('notes-content');
+                const slideIndicatorDiv = notesWindow.document.getElementById('slide-indicator');
+
+                if (currentNotes && notesContentDiv) {
+                    notesContentDiv.innerHTML = currentNotes.innerHTML;
+                } else if (notesContentDiv) {
+                    notesContentDiv.innerHTML = '<p>No hay notas para esta diapositiva.</p>';
+                }
+                
+                if(slideIndicatorDiv) {
+                     slideIndicatorDiv.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
+                }
+            }
+        }
+
+        function showSlide(index) {
+            // Pausar video de YouTube si se cambia de diapositiva
+            const currentIframe = slides[currentSlide].querySelector('iframe');
+            if (currentIframe) {
+                currentIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            }
+
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+            updateNotesWindow();
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        notesBtn.addEventListener('click', () => {
+            if (notesWindow && !notesWindow.closed) {
+                notesWindow.close();
+            } else {
+                notesWindow = window.open('', 'presenterNotes', 'width=400,height=600,scrollbars=yes,resizable=yes');
+                if (notesWindow) {
+                    notesWindow.document.write(`
+                        <html>
+                            <head>
+                                <title>Notas del Presentador</title>
+                                <script src="https://cdn.tailwindcss.com"><\/script>
+                                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+                                <style>
+                                    body { font-family: 'Inter', sans-serif; padding: 1.5rem; background-color: #fefcbf; color: #374151; }
+                                    h4 { font-weight: bold; font-size: 1.125rem; margin-bottom: 0.5rem; }
+                                    p { line-height: 1.6; }
+                                    #slide-indicator { font-size: 0.875rem; color: #6b7280; position: fixed; top: 0.5rem; right: 1rem; }
+                                </style>
+                            </head>
+                            <body>
+                                <div id="slide-indicator"></div>
+                                <div id="notes-content"></div>
+                            </body>
+                        </html>
+                    `);
+                    notesWindow.document.close();
+                    updateNotesWindow();
+
+                    notesBtn.innerHTML = '<i class="fa-solid fa-window-restore"></i>';
+                    notesBtn.title = 'Cerrar Notas del Presentador';
+
+                    notesWindow.addEventListener('beforeunload', () => {
+                        notesWindow = null;
+                        notesBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
+                        notesBtn.title = 'Abrir Notas del Presentador';
+                    });
+                } else {
+                    alert('No se pudo abrir la ventana de notas. Revisa si tu navegador está bloqueando las ventanas emergentes.');
+                }
+            }
+        });
+        
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error al intentar activar la pantalla completa: ${err.message} (${err.name})`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
