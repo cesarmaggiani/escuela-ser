@@ -374,7 +374,7 @@
         }
 
         function main(data) {
-            // ... (The entire main function and its helpers go here, exactly as in the previous versions) ...
+            // ... (El código de la función `main` y sus sub-funciones va aquí) ...
         }
 
         // =================================================================================
@@ -382,29 +382,45 @@
         // =================================================================================
         function getMainContentHTML() {
             return `
-                <!-- All your HTML sections go here -->
-                <!-- Sección de Resumen -->
+                <!-- Contenido de las secciones -->
                 <section id="resumen" class="content-section fade-in">
-                   <!-- ... content of resumen ... -->
+                    <div class="flex flex-wrap justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Resumen General</h2>
+                        <div class="mt-4 sm:mt-0">
+                            <label for="period-filter" class="text-sm font-medium text-gray-700 mr-2">Filtrar por:</label>
+                            <select id="period-filter" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Matrícula Total</p><p id="summary-matricula" class="text-3xl font-bold text-gray-800">0</p></div><div class="bg-blue-100 p-3 rounded-full"><i data-lucide="user-check" class="h-6 w-6 text-blue-500"></i></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Alumnos BAP</p><p id="summary-bap" class="text-3xl font-bold text-gray-800">0</p></div><div class="bg-orange-100 p-3 rounded-full"><i data-lucide="accessibility" class="h-6 w-6 text-orange-500"></i></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Asistencia Promedio</p><p id="summary-asistencia" class="text-3xl font-bold text-gray-800">0%</p></div><div class="bg-green-100 p-3 rounded-full"><i data-lucide="calendar-check-2" class="h-6 w-6 text-green-500"></i></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Bajas de Estudiantes</p><p id="summary-bajas" class="text-3xl font-bold text-gray-800">0</p></div><div class="bg-red-100 p-3 rounded-full"><i data-lucide="user-minus" class="h-6 w-6 text-red-500"></i></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Docentes Activos</p><p id="summary-docentes" class="text-3xl font-bold text-gray-800">0</p></div><div class="bg-indigo-100 p-3 rounded-full"><i data-lucide="briefcase" class="h-6 w-6 text-indigo-500"></i></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Asistencia Padres</p><p id="summary-padres" class="text-3xl font-bold text-gray-800">0%</p></div><div class="bg-teal-100 p-3 rounded-full"><i data-lucide="users" class="h-6 w-6 text-teal-500"></i></div></div>
+                        <div id="summary-matematicas-card" class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Prom. Matemáticas</p><p id="summary-matematicas" class="text-3xl font-bold text-gray-800">0.0</p></div><div class="bg-yellow-100 p-3 rounded-full"><i data-lucide="function-square" class="h-6 w-6 text-yellow-500"></i></div></div>
+                        <div id="summary-espanol-card" class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Prom. Español</p><p id="summary-espanol" class="text-3xl font-bold text-gray-800">0.0</p></div><div class="bg-purple-100 p-3 rounded-full"><i data-lucide="pilcrow" class="h-6 w-6 text-purple-500"></i></div></div>
+                        <div id="summary-ciencias-card" class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Prom. Ciencias</p><p id="summary-ciencias" class="text-3xl font-bold text-gray-800">0.0</p></div><div class="bg-green-100 p-3 rounded-full"><i data-lucide="flask-conical" class="h-6 w-6 text-green-500"></i></div></div>
+                        <div id="summary-ingles-card" class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Prom. Inglés</p><p id="summary-ingles" class="text-3xl font-bold text-gray-800">0.0</p></div><div class="bg-blue-100 p-3 rounded-full"><i data-lucide="languages" class="h-6 w-6 text-blue-500"></i></div></div>
+                    </div>
                 </section>
-
-                <!-- Sección de Estudiantes -->
-                <section id="estudiantes" class="content-section hidden fade-in">
-                   <!-- ... content of estudiantes ... -->
-                </section>
-                
-                <!-- ... All other sections ... -->
-                
-                <!-- Sección de Expediente del Estudiante -->
-                <section id="expediente-estudiante" class="content-section hidden fade-in">
-                    <!-- ... content of expediente-estudiante ... -->
-                </section>
+                <section id="estudiantes" class="content-section hidden fade-in"></section>
+                <section id="docentes" class="content-section hidden fade-in"></section>
+                <section id="calificaciones" class="content-section hidden fade-in"></section>
+                <section id="calificaciones-grado" class="content-section hidden fade-in"></section>
+                <section id="boletos-salida" class="content-section hidden fade-in"></section>
+                <section id="expediente-estudiante" class="content-section hidden fade-in"></section>
+                <section id="asistencia-padres" class="content-section hidden fade-in"></section>
             `;
         }
 
     </script>
+
 </body>
 </html>
+
+
+
 
 
 
