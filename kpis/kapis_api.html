@@ -62,7 +62,7 @@
 
     <script>
         // =================================================================================
-        // PASO 1: INSERTA AQUÍ TUS CREDENCIALES Y DATOS DE LA HOJA DE CÁLCULO
+        // CONFIGURACIÓN DE API Y AUTENTICACIÓN
         // =================================================================================
         const CLIENT_ID = '207428727335-bfsgio74gs2irr3o1va1ts1jspti0gsh.apps.googleusercontent.com';
         const SPREADSHEET_ID = '1rT8ecRJXMrZu0a4gO7nWTv9k4LpXkJ4Jo731Bqa5hb0';
@@ -75,10 +75,6 @@
         let gisInited = false;
         
         document.getElementById('authorize_button').style.visibility = 'hidden';
-
-        // =================================================================================
-        // LÓGICA DE AUTENTICACIÓN DE GOOGLE
-        // =================================================================================
 
         window.gapiLoaded = function() {
             gapi.load('client', initializeGapiClient);
@@ -128,7 +124,7 @@
                 gapi.client.setToken('');
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('app-content').style.display = 'none';
-                document.getElementById('app-content').innerHTML = ''; // Limpiar contenido
+                document.getElementById('app-content').innerHTML = '';
                 document.getElementById('auth-status').innerText = 'Sesión cerrada.';
             }
         }
@@ -146,6 +142,9 @@
             loginScreen.style.display = 'none';
             appContent.innerHTML = getAppContentHTML(); 
             appContent.style.display = 'flex';
+            
+            // Re-asignar el evento de cierre de sesión porque el botón se acaba de crear
+            document.getElementById('signout_button').onclick = handleSignoutClick;
             
             const loadingIndicator = document.getElementById('loading-indicator');
             const mainContainer = document.getElementById('main-container');
@@ -321,7 +320,7 @@
         // SCRIPT PRINCIPAL DE LA APLICACIÓN
         // =================================================================================
         function main(data) {
-             // El resto del código de la función `main` y sus helpers va aquí
+            // ... (El código de la función `main` y sus helpers va aquí)
         }
 
         // =================================================================================
@@ -329,53 +328,63 @@
         // =================================================================================
         function getMainContentHTML() {
             return `
-                <aside id="sidebar" class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out z-20"></aside>
-                <div class="flex-1 flex flex-col overflow-hidden">
-                    <header class="flex justify-between items-center py-4 px-6 bg-white border-b-2"></header>
-                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6">
-                        <div id="loading-indicator" class="text-center p-10"></div>
-                        <div id="main-container" class="container mx-auto hidden">
-                            ${getSectionsHTML()}
-                        </div>
-                    </main>
-                </div>
+               ${getAppContentHTML()}
+            `;
+        }
+
+        function getAppContentHTML() {
+            // Esta función ahora contiene toda la estructura de la aplicación.
+            return `
+            <aside id="sidebar" class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out z-20">
+                <a href="#" class="text-white flex items-center space-x-2 px-4">
+                    <i data-lucide="bar-chart-3" class="h-8 w-8"></i>
+                    <span class="text-2xl font-extrabold">Control Escolar</span>
+                </a>
+                <nav>
+                    <a href="#resumen" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link active-link"><i data-lucide="home" class="inline-block w-5 h-5 mr-2"></i> Resumen</a>
+                    <a href="#estudiantes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i> Estudiantes</a>
+                    <a href="#docentes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="briefcase" class="inline-block w-5 h-5 mr-2"></i> Docentes</a>
+                    <a href="#calificaciones" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="book-marked" class="inline-block w-5 h-5 mr-2"></i> Calificaciones</a>
+                    <a href="#calificaciones-grado" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="graduation-cap" class="inline-block w-5 h-5 mr-2"></i> Calificaciones por Grado</a>
+                    <a href="#boletos-salida" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="ticket" class="inline-block w-5 h-5 mr-2"></i> Boletos de Salida</a>
+                    <a href="#expediente-estudiante" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="contact-2" class="inline-block w-5 h-5 mr-2"></i> Expediente Estudiante</a>
+                    <a href="#asistencia-padres" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i> Escuela para Padres</a>
+                </nav>
+            </aside>
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <header class="flex justify-between items-center py-4 px-6 bg-white border-b-2">
+                    <button id="menu-button" class="text-gray-500 focus:outline-none md:hidden"><i data-lucide="menu" class="h-6 w-6"></i></button>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">Periodo Actual: 2025-2026</span>
+                    </div>
+                    <div class="flex items-center ml-auto">
+                        <span id="user-profile" class="text-sm text-gray-600 mr-4"></span>
+                        <button id="signout_button" class="text-sm text-indigo-600 hover:text-indigo-800">Cerrar Sesión</button>
+                    </div>
+                </header>
+                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6">
+                    <div id="loading-indicator" class="text-center p-10">
+                        <i data-lucide="loader-2" class="mx-auto h-12 w-12 text-gray-400 animate-spin"></i>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">Cargando datos...</h3>
+                        <p class="mt-1 text-sm text-gray-500">Obteniendo la información desde Google Sheets.</p>
+                    </div>
+                    <div id="main-container" class="container mx-auto hidden">
+                        ${getSectionsHTML()}
+                    </div>
+                </main>
+            </div>
             `;
         }
 
         function getSectionsHTML() {
+            // Esta función devuelve todo el HTML de las secciones del tablero.
             return `
-                <section id="resumen" class="content-section fade-in">
-                    <!-- Contenido completo de la sección Resumen -->
-                </section>
-                <section id="estudiantes" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Estudiantes -->
-                </section>
-                <section id="docentes" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Docentes -->
-                </section>
-                <section id="calificaciones" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Calificaciones -->
-                </section>
-                <section id="calificaciones-grado" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Calificaciones por Grado -->
-                </section>
-                <section id="boletos-salida" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Boletos de Salida -->
-                </section>
-                <section id="expediente-estudiante" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Expediente Estudiante -->
-                </section>
-                <section id="asistencia-padres" class="content-section hidden fade-in">
-                    <!-- Contenido completo de la sección Escuela para Padres -->
-                </section>
+                <!-- Contenido de las secciones -->
             `;
         }
     </script>
 </body>
 </html>
-
-
-
 
 
 
