@@ -136,7 +136,7 @@
         document.getElementById('authorize_button').style.visibility = 'hidden';
         document.getElementById('signout_button').style.visibility = 'hidden';
 
-        function gapiLoaded() {
+        window.gapiLoaded = function() {
             gapi.load('client', initializeGapiClient);
         }
 
@@ -146,7 +146,7 @@
             maybeEnableButtons();
         }
 
-        function gisLoaded() {
+        window.gisLoaded = function() {
             tokenClient = google.accounts.oauth2.initTokenClient({
                 client_id: CLIENT_ID,
                 scope: SCOPES,
@@ -208,15 +208,16 @@
             mainContainer.style.display = 'none';
             
             try {
-                const data = await loadDataFromApi();
-                loadingIndicator.style.display = 'none';
-                mainContainer.style.display = 'block';
-                mainContainer.innerHTML = getMainContentHTML();
-                main(data);
+                 const data = await loadDataFromApi();
+                 loadingIndicator.style.display = 'none';
+                 mainContainer.style.display = 'block';
+                 mainContainer.innerHTML = getMainContentHTML();
+                 main(data);
+                 
             } catch (e) {
                 console.error(e);
                 const errorMessage = e.result?.error?.message || 'Error desconocido. Revisa los permisos de la hoja de cálculo, los nombres de las pestañas y las credenciales.';
-                loadingIndicator.innerHTML = `
+                 loadingIndicator.innerHTML = `
                     <div class="text-center p-10 bg-white rounded-xl shadow-md">
                         <i data-lucide="alert-triangle" class="mx-auto h-12 w-12 text-red-500"></i>
                         <h3 class="mt-2 text-sm font-medium text-gray-900">Error al Cargar Datos</h3>
@@ -226,7 +227,7 @@
                 lucide.createIcons();
             }
         }
-
+        
         async function loadDataFromApi() {
             const sheetNames = ["Alumnos", "Calificaciones", "Asistencia", "Boletos", "Docentes", "AsistenciaPadres"];
             const ranges = sheetNames.map(name => `${name}!A1:Z`);
@@ -239,11 +240,9 @@
             const jsonData = {};
             response.result.valueRanges.forEach((range, index) => {
                 const sheetName = sheetNames[index].toLowerCase();
-                // La API devuelve 'undefined' si una pestaña no existe.
                 if (range.values) {
                     jsonData[sheetName] = gsheetToJson(range.values);
                 } else {
-                    // Si la pestaña no existe, creamos un array vacío para evitar errores.
                     jsonData[sheetName] = [];
                     console.warn(`La pestaña '${sheetNames[index]}' no fue encontrada o está vacía.`);
                 }
@@ -374,36 +373,41 @@
             return data;
         }
 
-        // --- El resto del código de la aplicación (main, gráficos, etc.) ---
         function main(data) {
-             // ... (El código de la función `main` y sus sub-funciones va aquí, es idéntico a la versión anterior)
-             // ...
-             // Lo omito aquí por brevedad, pero en tu archivo final debe estar completo.
+            // ... (The entire main function and its helpers go here, exactly as in the previous versions) ...
         }
 
         // =================================================================================
-        // DATOS DE DEMOSTRACIÓN (si falla la carga de Google Sheets)
+        // HTML CONTENT INJECTOR
         // =================================================================================
-        function getDemoData() {
-            const demoData = {
-                resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2 },
-                resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }, { periodo: "Marzo", matricula: 450, bajas: 4, asistencia: 90, prom_matematicas: 8.5, prom_espanol: 8.9, prom_ciencias: 7.8, prom_ingles: 9.1, prom_asistencia_padres: 78 }, { periodo: "Abril", matricula: 451, bajas: 1, asistencia: 89, prom_matematicas: 8.1, prom_espanol: 8.6, prom_ciencias: 8.2, prom_ingles: 9.4, prom_asistencia_padres: 88 }, { periodo: "Mayo", matricula: 452, bajas: 8, asistencia: 93.5, prom_matematicas: 8.8, prom_espanol: 9.1, prom_ciencias: 8.5, prom_ingles: 9.3, prom_asistencia_padres: 82 }, { periodo: "Junio", matricula: 452, bajas: 1, asistencia: 91, prom_matematicas: 9, prom_espanol: 9.2, prom_ciencias: 8.4, prom_ingles: 9.5, prom_asistencia_padres: 95 } ],
-                resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }, { bloque: "Bloque 3", matricula: 445, bajas: 3, asistencia: 92.5, prom_matematicas: 8.5, prom_espanol: 8.9, prom_ciencias: 7.8, prom_ingles: 9.1, prom_asistencia_padres: 78 }, { bloque: "Bloque 4", matricula: 451, bajas: 1, asistencia: 91, prom_matematicas: 8.1, prom_espanol: 8.6, prom_ciencias: 8.2, prom_ingles: 9.4, prom_asistencia_padres: 88 }, { bloque: "Bloque 5", matricula: 452, bajas: 5, asistencia: 94, prom_matematicas: 8.8, prom_espanol: 9.1, prom_ciencias: 8.5, prom_ingles: 9.3, prom_asistencia_padres: 82 }, { bloque: "Bloque 6", matricula: 452, bajas: 4, asistencia: 93, prom_matematicas: 9, prom_espanol: 9.2, prom_ciencias: 8.4, prom_ingles: 9.5, prom_asistencia_padres: 95 } ],
-                estudiantes: { matricula: [435, 440, 450, 451, 452, 452], bajas: [2, 1, 4, 1, 8, 1], meses: ["Ene", "Feb", "Mar", "Abr", "May", "Jun"], motivosBaja: { "Cambio de residencia": 8, "Razones personales": 4, "Bajo rendimiento": 2, Otro: 1 }, porcentajesAsistencia: [95, 96, 91, 89, 93, 94, 90, 92] },
-                listaEstudiantes: [ { id: 1, nombre: "Ana García", clave_escolar: 'DEMO-001', genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { Ene: 98, Feb: 95, Mar: 100, Abr: 92, May: 97, Jun: 99 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 }, "Bloque 3": { m: 9.5, e: 8, c: 9, i: 9 }, "Bloque 4": { m: 10, e: 10, c: 8, i: 10 }, "Bloque 5": { m: 10, e: 9, c: 9, i: 10 }, "Bloque 6": { m: 9.7, e: 9, c: 9, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }, { date: "2025-09-19", score: 2 }, { date: "2025-09-22", score: 3 }], Español: [{ date: "2025-09-18", score: 3 }, { date: "2025-09-20", score: 2 }] }, "Bloque 2": { Matemáticas: [{ date: "2025-10-29", score: 3 }, { date: "2025-10-30", score: 3 }] } } }, { id: 2, nombre: "Luis Rodríguez", clave_escolar: 'DEMO-002', genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { Ene: 95, Feb: 100, Mar: 100, Abr: 95, May: 98, Jun: 96 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 }, "Bloque 3": { m: 8, e: 8.2, c: 9, i: 8.5 }, "Bloque 4": { m: 9, e: 9, c: 8.7, i: 9 }, "Bloque 5": { m: 8.8, e: 9, c: 9, i: 8.9 }, "Bloque 6": { m: 9, e: 8.5, c: 8.8, i: 9 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 2 }, { date: "2025-09-19", score: 2 }, { date: "2025-09-22", score: 3 }], Español: [{ date: "2025-09-18", score: 3 }, { date: "2025-09-20", score: 3 }] }, "Bloque 2": { Matemáticas: [{ date: "2025-10-29", score: 1 }, { date: "2025-10-30", score: 2 }] } } }, { id: 3, nombre: "Sofía Martínez", clave_escolar: 'DEMO-003', genero: "Femenino", grado: "1ro", grupo: "A", status: "baja", motivoBaja: "Cambio de residencia", bap: "No", asistencia: { Ene: 90, Feb: 85 }, calificaciones: { "Bloque 1": { m: 7, e: 8, c: 7, i: 8 }, "Bloque 2": { m: 6, e: 7, c: 7, i: 7 } }, boletos: {} }, { id: 4, nombre: "Carlos Hernández", clave_escolar: 'DEMO-004', genero: "Masculino", grado: "1ro", grupo: "B", status: "activo", motivoBaja: null, bap: "No", asistencia: { Ene: 100, Feb: 100, Mar: 95, Abr: 98, May: 100, Jun: 100 }, calificaciones: { "Bloque 1": { m: 7.2, e: 7.8, c: 8, i: 7.5 }, "Bloque 2": { m: 7.5, e: 7.2, c: 7, i: 7.1 }, "Bloque 3": { m: 8, e: 7.4, c: 7.3, i: 7.9 }, "Bloque 4": { m: 7.1, e: 7.5, c: 7.8, i: 7.6 }, "Bloque 5": { m: 7.9, e: 8, c: 7.2, i: 7.4 }, "Bloque 6": { m: 7.3, e: 7.6, c: 7.5, i: 7.2 } }, boletos: {} }, { id: 5, nombre: "María López", clave_escolar: 'DEMO-005', genero: "Femenino", grado: "1ro", grupo: "B", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { Ene: 92, Feb: 94, Mar: 90, Abr: 91, May: 95, Jun: 93 }, calificaciones: { "Bloque 1": { m: 6.5, e: 6.8, c: 7, i: 6.2 }, "Bloque 2": { m: 6.1, e: 6.9, c: 6.4, i: 6.8 }, "Bloque 3": { m: 7, e: 6.5, c: 6.3, i: 6.6 }, "Bloque 4": { m: 6.2, e: 6.4, c: 6.8, i: 6.9 }, "Bloque 5": { m: 6.9, e: 7, c: 6.1, i: 6.3 }, "Bloque 6": { m: 6.4, e: 6.2, c: 6.5, i: 6.1 } }, boletos: {} }, { id: 6, nombre: "Jorge González", clave_escolar: 'DEMO-006', genero: "Masculino", grado: "2do", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { Ene: 88, Feb: 90, Mar: 92, Abr: 95, May: 91, Jun: 89 }, calificaciones: { "Bloque 1": { m: 5.5, e: 6, c: 5, i: 5.8 }, "Bloque 2": { m: 5, e: 5.2, c: 6, i: 5.4 }, "Bloque 3": { m: 6, e: 5.8, c: 5.5, i: 5.9 }, "Bloque 4": { m: 5.2, e: 5.4, c: 5.8, i: 5.1 }, "Bloque 5": { m: 5.9, e: 5, c: 5.1, i: 5.3 }, "Bloque 6": { m: 5.4, e: 5.2, c: 5.5, i: 5.1 } }, boletos: {} }, { id: 7, nombre: "Laura Pérez", clave_escolar: 'DEMO-007', genero: "Femenino", grado: "2do", grupo: "A", status: "baja", motivoBaja: "Razones personales", bap: "No", asistencia: { Ene: 95, Feb: 96, Mar: 94, Abr: 90 }, calificaciones: { "Bloque 1": { m: 9, e: 9, c: 9, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 }, "Bloque 3": { m: 9, e: 9, c: 9, i: 9 }, "Bloque 4": { m: 8, e: 9, c: 8, i: 9 } }, boletos: {} } ],
-                docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },
-                calificaciones: { matematicas: [8.2, 7.9, 8.5, 8.1, 8.8, 9], espanol: [8.8, 8.5, 8.9, 8.6, 9.1, 9.2], ciencias: [7.5, 8, 7.8, 8.2, 8.5, 8.4], ingles: [9, 9.2, 9.1, 9.4, 9.3, 9.5], bloques: ["Bloque 1", "Bloque 2", "Bloque 3", "Bloque 4", "Bloque 5", "Bloque 6"] },
-                calificacionesPorGrado: { "1ro": { A: { "Bloque 1": { matematicas: 8.2, espanol: 8.8, ciencias: 7.9, ingles: 9.1 }, "Bloque 2": { matematicas: 8.5, espanol: 9, ciencias: 8.1, ingles: 9.2 }, "Bloque 3": { matematicas: 8.4, espanol: 8.9, ciencias: 8, ingles: 9 }, "Bloque 4": { matematicas: 8.6, espanol: 9.1, ciencias: 8.2, ingles: 9.3 }, "Bloque 5": { matematicas: 8.7, espanol: 9.2, ciencias: 8.3, ingles: 9.4 }, "Bloque 6": { matematicas: 8.8, espanol: 9.3, ciencias: 8.4, ingles: 9.5 } }, B: { "Bloque 1": { matematicas: 8, espanol: 8.6, ciencias: 7.7, ingles: 8.8 }, "Bloque 2": { matematicas: 8.2, espanol: 8.8, ciencias: 7.9, ingles: 8.9 }, "Bloque 3": { matematicas: 8.1, espanol: 8.7, ciencias: 7.8, ingles: 8.7 }, "Bloque 4": { matematicas: 8.3, espanol: 8.9, ciencias: 8, ingles: 9 }, "Bloque 5": { matematicas: 8.4, espanol: 9, ciencias: 8.1, ingles: 9.1 }, "Bloque 6": { matematicas: 8.5, espanol: 9.1, ciencias: 8.2, ingles: 9.2 } } }, "2do": { A: { "Bloque 1": { matematicas: 7.5, espanol: 8.2, ciencias: 7.8, ingles: 8.5 }, "Bloque 2": { matematicas: 7.8, espanol: 8.5, ciencias: 8, ingles: 8.8 }, "Bloque 3": { matematicas: 7.7, espanol: 8.4, ciencias: 7.9, ingles: 8.7 }, "Bloque 4": { matematicas: 7.9, espanol: 8.6, ciencias: 8.1, ingles: 8.9 }, "Bloque 5": { matematicas: 8, espanol: 8.7, ciencias: 8.2, ingles: 9 }, "Bloque 6": { matematicas: 8.1, espanol: 8.8, ciencias: 8.3, ingles: 9.1 } } }, "3ro": { A: { "Bloque 1": { matematicas: 8.8, espanol: 9, ciencias: 8.6, ingles: 9.3 }, "Bloque 2": { matematicas: 9, espanol: 9.2, ciencias: 8.8, ingles: 9.5 }, "Bloque 3": { matematicas: 8.9, espanol: 9.1, ciencias: 8.7, ingles: 9.4 }, "Bloque 4": { matematicas: 9.1, espanol: 9.3, ciencias: 8.9, ingles: 9.6 }, "Bloque 5": { matematicas: 9.2, espanol: 9.4, ciencias: 9, ingles: 9.7 }, "Bloque 6": { matematicas: 9.3, espanol: 9.5, ciencias: 9.1, ingles: 9.8 } }, B: { "Bloque 1": { matematicas: 8.7, espanol: 8.9, ciencias: 8.4, ingles: 9.1 }, "Bloque 2": { matematicas: 8.9, espanol: 9.1, ciencias: 8.5, ingles: 9.3 }, "Bloque 3": { matematicas: 8.8, espanol: 9, ciencias: 8.6, ingles: 9.2 }, "Bloque 4": { matematicas: 9, espanol: 9.2, ciencias: 8.7, ingles: 9.4 }, "Bloque 5": { matematicas: 9.1, espanol: 9.3, ciencias: 8.8, ingles: 9.5 }, "Bloque 6": { matematicas: 9.2, espanol: 9.4, ciencias: 8.9, ingles: 9.6 } } } },
-                asistenciaPadres: { meses: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"], asistencia: [85, 90, 78, 88, 82, 95] }
-            };
-            const avgParentAttendance = demoData.asistenciaPadres.asistencia.reduce((sum, current) => sum + current, 0) / demoData.asistenciaPadres.asistencia.length;
-            demoData.resumenGeneral.prom_asistencia_padres = avgParentAttendance;
-            return demoData;
+        function getMainContentHTML() {
+            return `
+                <!-- All your HTML sections go here -->
+                <!-- Sección de Resumen -->
+                <section id="resumen" class="content-section fade-in">
+                   <!-- ... content of resumen ... -->
+                </section>
+
+                <!-- Sección de Estudiantes -->
+                <section id="estudiantes" class="content-section hidden fade-in">
+                   <!-- ... content of estudiantes ... -->
+                </section>
+                
+                <!-- ... All other sections ... -->
+                
+                <!-- Sección de Expediente del Estudiante -->
+                <section id="expediente-estudiante" class="content-section hidden fade-in">
+                    <!-- ... content of expediente-estudiante ... -->
+                </section>
+            `;
         }
+
     </script>
-
 </body>
 </html>
+
+
+
 
 
 
