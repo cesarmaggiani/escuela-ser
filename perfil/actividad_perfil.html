@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificador de Perfiles Educativos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .choice-btn.correct {
+            background-color: #10B981 !important; /* Green-500 */
+            border-color: #059669 !important;
+            color: white !important;
+        }
+        .choice-btn.incorrect {
+            background-color: #EF4444 !important; /* Red-500 */
+            border-color: #DC2626 !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 flex flex-col items-center justify-center min-h-screen p-4 text-gray-800">
+
+    <div class="w-full max-w-2xl text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">Clasificador de Perfiles Educativos</h1>
+        <p class="text-lg text-gray-600 mb-6">Ubica el enunciado en la sección correcta.</p>
+
+        <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+            <!-- Score and Progress -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-left">
+                    <span class="text-gray-500 text-sm">Puntuación</span>
+                    <p class="text-2xl font-bold text-[#E11B7E]" id="score">0</p>
+                </div>
+                 <div class="text-right">
+                    <span class="text-gray-500 text-sm">Progreso</span>
+                    <p class="text-2xl font-bold text-gray-900" id="progress">0 / 0</p>
+                </div>
+            </div>
+
+            <!-- Statement Card -->
+            <div id="statement-card" class="bg-gray-100 rounded-lg min-h-[120px] md:min-h-[140px] flex items-center justify-center p-6 mb-6">
+                <p id="statement-text" class="text-xl md:text-2xl font-semibold leading-relaxed text-gray-900"></p>
+            </div>
+
+            <!-- Choice Buttons -->
+            <div id="choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <button data-level="primaria" class="choice-btn text-lg font-bold p-4 rounded-lg transition-transform transform hover:scale-105 bg-[#009BD1] hover:bg-[#008AC0] text-white">
+                    🖍️ Primaria
+                </button>
+                <button data-level="secundaria" class="choice-btn text-lg font-bold p-4 rounded-lg transition-transform transform hover:scale-105 bg-[#E11B7E] hover:bg-[#C81871] text-white">
+                    🌉 Secundaria
+                </button>
+                <button data-level="preparatoria" class="choice-btn text-lg font-bold p-4 rounded-lg transition-transform transform hover:scale-105 bg-[#FCCC32] hover:bg-[#E4B62C] text-gray-900">
+                    🚀 Preparatoria
+                </button>
+            </div>
+            
+            <!-- Feedback and Next Button -->
+            <div class="min-h-[80px] flex flex-col items-center justify-center">
+                 <p id="feedback-text" class="text-xl font-bold mb-4"></p>
+                 <button id="next-button" class="bg-gray-800 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition-colors w-full md:w-auto hidden">
+                    Siguiente
+                 </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statements = [
+                // Primaria
+                { text: 'Domina la lectura comprensiva y la escritura de párrafos claros.', level: 'primaria' },
+                { text: 'Maneja con fluidez las operaciones matemáticas fundamentales.', level: 'primaria' },
+                { text: 'Desarrolla la curiosidad y hace preguntas para entender el mundo.', level: 'primaria' },
+                { text: 'Es resiliente; entiende que cometer errores es parte fundamental del aprendizaje.', level: 'primaria' },
+                { text: 'Demuestra respeto por sus compañeros y maestros, y sigue las reglas de la comunidad.', level: 'primaria' },
+                { text: 'Participa con energía y entusiasmo en las actividades escolares.', level: 'primaria' },
+                { text: 'Sigue rutinas e instrucciones de manera consistente.', level: 'primaria' },
+                { text: 'Mantiene sus materiales y su espacio de trabajo organizados.', level: 'primaria' },
+                { text: 'Aprende a colaborar en equipo en tareas sencillas.', level: 'primaria' },
+
+                // Secundaria
+                { text: 'Es un pensador crítico que analiza textos, debate ideas y respalda sus argumentos con evidencia.', level: 'secundaria' },
+                { text: 'Aplica conceptos matemáticos abstractos para resolver problemas complejos.', level: 'secundaria' },
+                { text: 'Se comunica de manera efectiva, tanto de forma oral como escrita.', level: 'secundaria' },
+                { text: 'Es un líder emergente que explora sus intereses en actividades extracriculares y colabora en equipo.', level: 'secundaria' },
+                { text: 'Demuestra integridad y se hace responsable de sus propias acciones y decisiones.', level: 'secundaria' },
+                { text: 'Desarrolla empatía y una mayor conciencia social.', level: 'secundaria' },
+                { text: 'Toma apuntes de manera efectiva para procesar información.', level: 'secundaria' },
+                { text: 'Gestiona su tiempo para equilibrar sus responsabilidades académicas y personales.', level: 'secundaria' },
+                { text: 'Participa activamente en las discusiones de clase, aportando sus propias ideas.', level: 'secundaria' },
+
+                // Preparatoria
+                { text: 'Está "a prueba de universidad", habiendo superado cursos de nivel avanzado.', level: 'preparatoria' },
+                { text: 'Domina habilidades del siglo XXI como la resolución de problemas complejos y la colaboración.', level: 'preparatoria' },
+                { text: 'Es un joven profesional, independiente y proactivo, que actúa con madurez e integridad.', level: 'preparatoria' },
+                { text: 'Sabe abogar por sí mismo y sus necesidades (auto-abogacía), buscando ayuda cuando la necesita.', level: 'preparatoria' },
+                { text: 'Es un modelo a seguir y contribuye positivamente a la cultura de su escuela.', level: 'preparatoria' },
+                { text: 'Con el apoyo de su escuela, ha desarrollado un plan de vida y carrera sólido.', level: 'preparatoria' },
+                { text: 'Gestiona cargas de trabajo complejas y proyectos a largo plazo de manera independiente.', level: 'preparatoria' },
+                { text: 'Busca activamente oportunidades de liderazgo y enriquecimiento que se alineen con sus metas.', level: 'preparatoria' }
+            ];
+
+            let shuffledStatements = [];
+            let currentStatementIndex = 0;
+            let score = 0;
+
+            const scoreEl = document.getElementById('score');
+            const progressEl = document.getElementById('progress');
+            const statementTextEl = document.getElementById('statement-text');
+            const choiceButtons = document.querySelectorAll('.choice-btn');
+            const feedbackTextEl = document.getElementById('feedback-text');
+            const nextButton = document.getElementById('next-button');
+
+            function startGame() {
+                shuffledStatements = [...statements].sort(() => Math.random() - 0.5);
+                currentStatementIndex = 0;
+                score = 0;
+                updateScore();
+                loadNextStatement();
+            }
+
+            function loadNextStatement() {
+                if (currentStatementIndex >= shuffledStatements.length) {
+                    endGame();
+                    return;
+                }
+
+                resetState();
+                const currentStatement = shuffledStatements[currentStatementIndex];
+                statementTextEl.textContent = currentStatement.text;
+                progressEl.textContent = `${currentStatementIndex + 1} / ${shuffledStatements.length}`;
+            }
+
+            function resetState() {
+                feedbackTextEl.innerHTML = '';
+                feedbackTextEl.className = 'text-xl font-bold mb-4';
+                nextButton.classList.add('hidden');
+                choiceButtons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.className = 'choice-btn text-lg font-bold p-4 rounded-lg transition-transform transform hover:scale-105';
+                     if (btn.dataset.level === 'primaria') btn.classList.add('bg-[#009BD1]', 'hover:bg-[#008AC0]', 'text-white');
+                     if (btn.dataset.level === 'secundaria') btn.classList.add('bg-[#E11B7E]', 'hover:bg-[#C81871]', 'text-white');
+                     if (btn.dataset.level === 'preparatoria') btn.classList.add('bg-[#FCCC32]', 'hover:bg-[#E4B62C]', 'text-gray-900');
+                });
+            }
+
+            function handleChoice(e) {
+                const selectedLevel = e.target.dataset.level;
+                const correctLevel = shuffledStatements[currentStatementIndex].level;
+
+                choiceButtons.forEach(btn => btn.disabled = true);
+
+                if (selectedLevel === correctLevel) {
+                    e.target.classList.add('correct');
+                    feedbackTextEl.textContent = '¡Correcto!';
+                    feedbackTextEl.classList.add('text-green-500');
+                    score++;
+                    updateScore();
+                } else {
+                    e.target.classList.add('incorrect');
+                    const correctButton = document.querySelector(`.choice-btn[data-level="${correctLevel}"]`);
+                    correctButton.classList.add('correct');
+                    const correctLevelText = correctLevel.charAt(0).toUpperCase() + correctLevel.slice(1);
+                    feedbackTextEl.innerHTML = `Incorrecto. La respuesta es: <strong class="text-[#009BD1]">${correctLevelText}</strong>`;
+                    feedbackTextEl.classList.add('text-red-500');
+                }
+
+                currentStatementIndex++;
+                nextButton.classList.remove('hidden');
+            }
+
+            function updateScore() {
+                scoreEl.textContent = score;
+            }
+            
+            function endGame() {
+                statementTextEl.textContent = `¡Juego Terminado! Tu puntuación final es ${score} de ${statements.length}.`;
+                document.getElementById('choices-container').classList.add('hidden');
+                feedbackTextEl.textContent = '';
+                nextButton.textContent = 'Reiniciar Juego';
+            }
+
+            choiceButtons.forEach(button => button.addEventListener('click', handleChoice));
+
+            nextButton.addEventListener('click', () => {
+                if (currentStatementIndex >= shuffledStatements.length) {
+                    document.getElementById('choices-container').classList.remove('hidden');
+                    nextButton.textContent = 'Siguiente';
+                    startGame();
+                } else {
+                    loadNextStatement();
+                }
+            });
+
+            startGame();
+        });
+    </script>
+</body>
+</html>
+
