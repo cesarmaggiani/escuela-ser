@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El plano educativo: la presentación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .slide {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.hidden {
+            opacity: 0;
+        }
+        .slide.visible {
+            opacity: 1;
+        }
+        /* Estilos para el iframe responsivo */
+        .responsive-iframe-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .responsive-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* Estilos para la app en pantalla completa */
+        main:fullscreen {
+            background-color: #111827; /* bg-gray-900 */
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Ocultar botones en pantalla completa */
+        main:fullscreen #navigation {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-5xl mx-auto">
+        <div id="presentation-container" class="overflow-hidden relative">
+            
+            <!-- Barra de Progreso -->
+            <div class="w-full h-2 mb-8">
+                <div id="progressBar" class="bg-[#E11B7E] h-2 transition-all duration-300 rounded-full"></div>
+            </div>
+
+            <div class="p-8 md:p-12 pt-0">
+                <!-- Contenedor de Diapositivas -->
+                <div id="slides-container" class="relative min-h-[450px] md:min-h-[500px] flex items-center justify-center">
+                    
+                    <!-- Slide 1: Título -->
+                    <div class="slide w-full text-center">
+                        <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">El plano educativo</h1>
+                        <p class="text-xl md:text-2xl text-[#FCCC32]">Forjando el perfil del estudiante exitoso</p>
+                    </div>
+
+                    <!-- Slide 2: Trailer -->
+                    <div class="slide w-full hidden">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4 text-center">Nuestra misión urgente</h2>
+                        <div class="responsive-iframe-container rounded-lg overflow-hidden shadow-lg">
+                            <iframe class="responsive-iframe" src="https://www.youtube.com/embed/ZKTfaro96dg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-center text-gray-300 mt-4 text-lg">La pregunta clave: ¿Debería el futuro de un niño depender de la suerte?</p>
+                    </div>
+
+                    <!-- Slide 3: Pregunta de Reflexión #1 -->
+                    <div class="slide w-full hidden text-center">
+                        <i data-lucide="message-circle-question" class="w-16 h-16 mx-auto text-[#009BD1] mb-4"></i>
+                        <h2 class="text-2xl font-semibold text-white mb-4">Pausa para reflexionar</h2>
+                        <p class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                           Si la educación en su comunidad fuera una lotería, ¿qué tan seguras están las familias de que al entrar a su escuela, han ganado el premio mayor?
+                        </p>
+                    </div>
+
+                    <!-- Slide 4: Metáforas -->
+                    <div class="slide w-full hidden">
+                         <h2 class="text-3xl font-bold text-white mb-8 text-center">Nuestra promesa: un plano maestro</h2>
+                         <div class="grid md:grid-cols-2 gap-8 text-center">
+                            <div class="bg-gray-700/50 p-8 rounded-lg">
+                                <span class="text-6xl mb-4 block">🌉</span>
+                                <h3 class="text-2xl font-bold text-[#FCCC32]">La secundaria es el PUENTE</h3>
+                                <p class="text-gray-300 mt-2">Forjamos pensadores críticos y responsables, listos para un reto mayor.</p>
+                            </div>
+                             <div class="bg-gray-700/50 p-8 rounded-lg">
+                                <span class="text-6xl mb-4 block">🚀</span>
+                                <h3 class="text-2xl font-bold text-[#FCCC32]">La preparatoria es la PLATAFORMA DE LANZAMIENTO</h3>
+                                <p class="text-gray-300 mt-2">Impulsamos a los estudiantes a la universidad y a una vida de opciones.</p>
+                            </div>
+                         </div>
+                    </div>
+                    
+                    <!-- Slide 5: Intro Secundaria -->
+                    <div class="slide w-full text-center hidden">
+                        <span class="text-8xl mb-4 block">🌉</span>
+                        <h2 class="text-4xl font-bold text-white">El puente: la visión de la secundaria</h2>
+                        <p class="text-xl text-[#FCCC32] mt-2">El objetivo: forjar al...</p>
+                    </div>
+
+                    <!-- Slide 6: Perfil Secundaria -->
+                    <div class="slide w-full hidden">
+                        <h2 class="text-3xl font-bold text-white mb-6 text-center">Perfil del "Navegante Responsable"</h2>
+                        <div class="grid md:grid-cols-3 gap-6 text-center">
+                            <div class="bg-gray-700/50 p-6 rounded-lg">
+                                <i data-lucide="brain-circuit" class="w-12 h-12 mx-auto text-[#009BD1] mb-3"></i>
+                                <h3 class="text-xl font-semibold text-white">Pensador crítico</h3>
+                                <p class="text-gray-300 mt-2 text-sm">Analiza, debate y respalda sus argumentos con evidencia sólida.</p>
+                            </div>
+                            <div class="bg-gray-700/50 p-6 rounded-lg">
+                                <i data-lucide="users" class="w-12 h-12 mx-auto text-[#E11B7E] mb-3"></i>
+                                <h3 class="text-xl font-semibold text-white">Líder emergente</h3>
+                                <p class="text-gray-300 mt-2 text-sm">Explora pasiones en clubes o deportes y colabora eficazmente.</p>
+                            </div>
+                            <div class="bg-gray-700/50 p-6 rounded-lg">
+                                <i data-lucide="clipboard-list" class="w-12 h-12 mx-auto text-[#FCCC32] mb-3"></i>
+                                <h3 class="text-xl font-semibold text-white">Estudiante autónomo</h3>
+                                <p class="text-gray-300 mt-2 text-sm">Toma apuntes efectivos y se apropia de su proceso de aprendizaje.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 7: Acciones Líder Secundaria -->
+                    <div class="slide w-full hidden">
+                        <h2 class="text-3xl font-bold text-white mb-6 text-center">Acciones clave del líder de secundaria</h2>
+                         <div class="space-y-4 text-left">
+                            <div class="bg-gray-700/50 p-4 rounded-lg flex items-start gap-4">
+                               <i data-lucide="megaphone" class="w-8 h-8 text-[#009BD1] flex-shrink-0 mt-1"></i>
+                               <div>
+                                   <h3 class="font-semibold text-white text-lg">Eleve el nivel del discurso</h3>
+                                   <p class="text-gray-300">Convierta cada aula en un gimnasio para la mente. Fomente el debate intelectual por encima del silencio obediente.</p>
+                               </div>
+                            </div>
+                             <div class="bg-gray-700/50 p-4 rounded-lg flex items-start gap-4">
+                               <i data-lucide="dribbble" class="w-8 h-8 text-[#E11B7E] flex-shrink-0 mt-1"></i>
+                               <div>
+                                   <h3 class="font-semibold text-white text-lg">Haga que la escuela cobre vida</h3>
+                                   <p class="text-gray-300">Impulse clubes, deportes y artes como laboratorios de carácter, resiliencia y pasión. No son "extras", son esenciales.</p>
+                               </div>
+                            </div>
+                            <div class="bg-gray-700/50 p-4 rounded-lg flex items-start gap-4">
+                               <i data-lucide="shield-check" class="w-8 h-8 text-[#FCCC32] flex-shrink-0 mt-1"></i>
+                               <div>
+                                   <h3 class="font-semibold text-white text-lg">Modele y exija la responsabilidad</h3>
+                                   <p class="text-gray-300">Cree una cultura donde se aprenda de los errores. Celebre públicamente el esfuerzo y la perseverancia, no solo el resultado final.</p>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 8: Pregunta de Reflexión #2 -->
+                    <div class="slide w-full hidden text-center">
+                        <i data-lucide="message-circle-question" class="w-16 h-16 mx-auto text-[#FCCC32] mb-4"></i>
+                        <h2 class="text-2xl font-semibold text-white mb-4">Pausa para reflexionar: el puente</h2>
+                        <p class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                           ¿Cuál es la habilidad más importante que le falta a su estudiante promedio al terminar la secundaria para ser un "Navegante Responsable"?
+                        </p>
+                    </div>
+                    
+                    <!-- Slide 9: Intro Preparatoria -->
+                    <div class="slide w-full text-center hidden">
+                        <span class="text-8xl mb-4 block">🚀</span>
+                        <h2 class="text-4xl font-bold text-white">La plataforma de lanzamiento: visión de la preparatoria</h2>
+                        <p class="text-xl text-[#FCCC32] mt-2">El objetivo: construir al...</p>
+                    </div>
+
+                    <!-- Slide 10: Perfil Preparatoria -->
+                    <div class="slide w-full hidden">
+                        <h2 class="text-3xl font-bold text-white mb-6 text-center">Perfil del "Arquitecto de su Futuro"</h2>
+                        <div class="grid md:grid-cols-3 gap-6 text-center">
+                            <div class="bg-gray-700/50 p-6 rounded-lg">
+                                <i data-lucide="graduation-cap" class="w-12 h-12 mx-auto text-[#009BD1] mb-3"></i>
+                                <h3 class="text-xl font-semibold text-white">"A prueba de universidad"</h3>
+                                <p class="text-gray-300 mt-2 text-sm">Domina cursos de nivel avanzado (AP, Créditos Duales) y está listo para el rigor académico.</p>
+                            </div>
+                            <div class="bg-gray-700/50 p-6 rounded-lg">
+                                <i data-lucide="briefcase" class="w-12 h-12 mx-auto text-[#E11B7E] mb-3"></i>
+                                <h3 class="text-xl font-semibold text-white">Joven profesional</h3>
+                                <p class="text-gray-300 mt-2 text-sm">Es independiente, proactivo y sabe abogar por sí mismo y sus necesidades (auto-abogacía).</p>
+                            </div>
+                            <div class="bg-gray-700/50 p-6 rounded-lg">
+                                <i data-lucide="map" class="w-12 h-12 mx-auto text-[#FCCC32] mb-3"></i>
+                                <h3 class="text-xl font-semibold text-white">Navegador experto</h3>
+                                <p class="text-gray-300 mt-2 text-sm">Gracias al apoyo de su escuela, tiene un plan de vida y carrera sólido y bien investigado.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 11: Acciones Líder Preparatoria -->
+                    <div class="slide w-full hidden">
+                        <h2 class="text-3xl font-bold text-white mb-6 text-center">Acciones clave del líder de preparatoria</h2>
+                        <div class="space-y-4 text-left">
+                            <div class="bg-gray-700/50 p-4 rounded-lg flex items-start gap-4">
+                               <i data-lucide="bar-chart-3" class="w-8 h-8 text-[#009BD1] flex-shrink-0 mt-1"></i>
+                               <div>
+                                   <h3 class="font-semibold text-white text-lg">Haga de la universidad el estándar</h3>
+                                   <p class="text-gray-300">Impulse una política de "Cursos Avanzados para Todos". Su trabajo es eliminar la barrera entre la preparatoria y la universidad.</p>
+                               </div>
+                            </div>
+                             <div class="bg-gray-700/50 p-4 rounded-lg flex items-start gap-4">
+                               <i data-lucide="compass" class="w-8 h-8 text-[#E11B7E] flex-shrink-0 mt-1"></i>
+                               <div>
+                                   <h3 class="font-semibold text-white text-lg">Haga del plan de vida una prioridad</h3>
+                                   <p class="text-gray-300">Asegúrese de que cada estudiante tenga un plan post-graduación. Involucre a las familias y garantice que nadie se quede atrás.</p>
+                               </div>
+                            </div>
+                            <div class="bg-gray-700/50 p-4 rounded-lg flex items-start gap-4">
+                               <i data-lucide="user-check" class="w-8 h-8 text-[#FCCC32] flex-shrink-0 mt-1"></i>
+                               <div>
+                                   <h3 class="font-semibold text-white text-lg">Fomente una cultura de alta autonomía</h3>
+                                   <p class="text-gray-300">Trate a los estudiantes como los jóvenes adultos que son. Deles propiedad real sobre sus decisiones para que aprendan a liderarse a sí mismos.</p>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 12: Pregunta de Reflexión #3 -->
+                    <div class="slide w-full hidden text-center">
+                        <i data-lucide="message-circle-question" class="w-16 h-16 mx-auto text-[#FCCC32] mb-4"></i>
+                        <h2 class="text-2xl font-semibold text-white mb-4">Pausa para reflexionar: la plataforma</h2>
+                        <p class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                           ¿Qué sistema o creencia en su preparatoria es el mayor obstáculo para que CADA estudiante se convierta en un "Arquitecto de su Futuro"?
+                        </p>
+                    </div>
+                    
+                    <!-- Slide 13: Resumen -->
+                    <div class="slide w-full hidden">
+                         <h2 class="text-3xl font-bold text-white mb-8 text-center">Una sola trayectoria</h2>
+                         <div class="grid md:grid-cols-2 gap-8">
+                            <div class="text-center border border-gray-600 p-6 rounded-lg">
+                                <h3 class="text-2xl font-bold text-[#009BD1] mb-4">🌉 Navegante Responsable</h3>
+                                <ul class="text-gray-300 space-y-2 text-left list-disc list-inside">
+                                    <li>Pensador crítico</li>
+                                    <li>Líder emergente</li>
+                                    <li>Estudiante autónomo</li>
+                                </ul>
+                            </div>
+                             <div class="text-center border border-gray-600 p-6 rounded-lg">
+                                <h3 class="text-2xl font-bold text-[#009BD1] mb-4">🚀 Arquitecto de su Futuro</h3>
+                                <ul class="text-gray-300 space-y-2 text-left list-disc list-inside">
+                                    <li>"A prueba de universidad"</li>
+                                    <li>Joven profesional</li>
+                                    <li>Navegador experto</li>
+                                </ul>
+                             </div>
+                         </div>
+                         <p class="text-center text-gray-300 mt-6">Construimos metódicamente uno para que se convierta en el otro. Su liderazgo es el pegamento.</p>
+                    </div>
+
+                    <!-- Slide 14: Pregunta de Reflexión #4 -->
+                    <div class="slide w-full hidden text-center">
+                        <i data-lucide="message-circle-question" class="w-16 h-16 mx-auto text-[#E11B7E] mb-4"></i>
+                        <h2 class="text-2xl font-semibold text-white mb-4">Pausa para reflexionar: la trayectoria</h2>
+                        <p class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                          ¿Cuál es la desconexión más grande entre su secundaria y su preparatoria que impide una trayectoria fluida para el estudiante?
+                        </p>
+                    </div>
+
+                    <!-- Slide 15: Cierre -->
+                    <div class="slide w-full text-center hidden">
+                        <h2 class="text-4xl font-bold text-white mb-4">El compromiso del líder</h2>
+                        <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                           Las familias del tráiler rezaban por una oportunidad. Nuestros estudiantes ya la tienen. Su responsabilidad es convertir esa oportunidad en una certeza. Enfóquense en estos perfiles. Realicen estas acciones. <br><br> <span class="text-[#FCCC32] font-semibold">Ese es el trabajo que cambia vidas.</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+             <!-- Controles de Navegación -->
+            <div id="navigation" class="absolute bottom-8 right-8 flex gap-3">
+                <button id="fullscreenButton" class="bg-gray-600 hover:bg-gray-500 text-white font-bold p-3 rounded-full transition-colors">
+                    <i data-lucide="fullscreen" class="w-6 h-6"></i>
+                </button>
+                <button id="notesButton" class="bg-gray-600 hover:bg-gray-500 text-white font-bold p-3 rounded-full transition-colors">
+                    <i data-lucide="notebook-text" class="w-6 h-6"></i>
+                </button>
+                <button id="prevButton" class="bg-gray-600 hover:bg-gray-500 text-white font-bold p-3 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                </button>
+                <button id="nextButton" class="bg-[#009BD1] hover:bg-[#008AC0] text-white font-bold p-3 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i data-lucide="arrow-right" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const notesButton = document.getElementById('notesButton');
+            const fullscreenButton = document.getElementById('fullscreenButton');
+            const progressBar = document.getElementById('progressBar');
+            const presentationElement = document.querySelector('main');
+            let currentSlide = 0;
+            let notesWindow = null;
+
+            const speakerNotes = [
+                // Slide 1
+                `<h3>Notas: Diapositiva de título</h3><p>Buenas tardes a todos. Hoy vamos a hablar de un plano, un blueprint, para construir estudiantes exitosos. No se trata de suerte ni de magia, sino de un diseño intencional. Nuestro objetivo es que al salir de aquí, tengan una visión clara del perfil que queremos forjar y las acciones para lograrlo.</p>`,
+                // Slide 2
+                `<h3>Notas: Trailer</h3><p>Antes de hablar de soluciones, conectemos con el problema. Este video nos recuerda la urgencia y la responsabilidad que tenemos. No es solo un trabajo, es la oportunidad de vida para muchos niños. <strong>Consejo:</strong> Haga una pausa después del video. Deje que el mensaje resuene en silencio por unos segundos.</p>`,
+                // Slide 3
+                `<h3>Notas: Reflexión #1</h3><p>Esta es su primera pausa para una reflexión honesta. Dé 30-60 segundos para pensar en silencio. Luego, si el ambiente lo permite, pida a 1 o 2 voluntarios que compartan su pensamiento. El objetivo es establecer una base de humildad y propósito compartido. No se necesita una solución, solo una reflexión sincera.</p>`,
+                // Slide 4
+                `<h3>Notas: Metáforas</h3><p>Aquí establecemos el marco conceptual de toda la sesión. Use las manos para gesticular un 'puente' y una 'plataforma de lanzamiento'. La simplicidad de estas metáforas es su poder. Repítalas a lo largo de la presentación para anclar los conceptos.</p>`,
+                // Slide 5
+                `<h3>Notas: Intro secundaria</h3><p>Transición clara. "Ahora vamos a desglosar la primera estructura: El Puente". El enfoque aquí no es solo la supervivencia académica, es la transformación deliberada de un niño en un joven estudiante.</p>`,
+                // Slide 6
+                `<h3>Notas: Perfil secundaria</h3><p>Deténgase en cada uno de los tres pilares. <strong>'Pensador Crítico'</strong> no es solo que respondan, es que pregunten. <strong>'Líder Emergente'</strong> no es sobre ser el jefe, es sobre colaborar. <strong>'Estudiante Autónomo'</strong> es la base de todo lo que vendrá.</p>`,
+                // Slide 7
+                `<h3>Notas: Acciones secundaria</h3><p>Haga esto muy práctico. No son teorías, son acciones observables para un líder. Use frases como: 'Cuando camine por los pasillos...' o 'Cuando revise los planes...'. El líder debe visualizarse ejecutando estas acciones.</p>`,
+                // Slide 8
+                `<h3>Notas: Reflexión #2</h3><p>Otra pausa crucial. Esta pregunta los obliga a diagnosticar su propia escuela. La clave es la palabra 'habilidad'. ¿Qué es lo que no estamos enseñando explícitamente? Anime a la honestidad. 'Quizás es la toma de apuntes, quizás la gestión del tiempo'.</p>`,
+                // Slide 9
+                `<h3>Notas: Intro preparatoria</h3><p>El tono cambia aquí. Es más serio, más enfocado. La secundaria fue sobre construir la base. La preparatoria es sobre ejecutar el lanzamiento. El margen de error es menor.</p>`,
+                // Slide 10
+                `<h3>Notas: Perfil preparatoria</h3><p>Enfatice la evolución desde el perfil anterior. <strong>'A Prueba de Universidad'</strong> es el estándar, no la excepción. <strong>'Joven Profesional'</strong> se trata de hábitos y comunicación. <strong>'Navegador Experto'</strong> es el resultado de un sistema, no de la suerte.</p>`,
+                // Slide 11
+                `<h3>Notas: Acciones preparatoria</h3><p>Aquí las acciones son de alto nivel y sistémicas. 'Hacer de la universidad el estándar' es una decisión de política escolar. 'Hacer del plan de vida una prioridad' cambia cómo se asignan los recursos. 'Fomentar la autonomía' es un cambio cultural.</p>`,
+                // Slide 12
+                `<h3>Notas: Reflexión #3</h3><p>Esta es una pregunta difícil. Puede que la respuesta sea incómoda: 'Nuestra creencia de que no todos los chicos pueden con cursos AP', o 'Nuestro sistema de calificaciones que premia la obediencia sobre el pensamiento crítico'. Anime a la valentía.</p>`,
+                // Slide 13
+                `<h3>Notas: Resumen</h3><p>Visualmente, conecte las dos columnas. Dibuje una línea imaginaria de un perfil al otro. El mensaje es claro: es un solo sistema, una sola trayectoria. El éxito de la preparatoria depende de la calidad de la secundaria.</p>`,
+                // Slide 14
+                `<h3>Notas: Reflexión #4</h3><p>Esta pregunta se enfoca en la alineación. Es una pregunta sobre la colaboración entre líderes y equipos. ¿Hablan los maestros de secundaria con los de preparatoria? ¿Están alineados los currículos? ¿La cultura es coherente?</p>`,
+                // Slide 15
+                `<h3>Notas: Cierre</h3><p>Termine con la misma energía y urgencia con la que empezó. Vuelva a la emoción del tráiler. El llamado a la acción debe ser inspirador y claro. No es un 'ojalá', es un 'vamos a hacerlo'. Agradezca su tiempo y su compromiso.</p>`
+            ];
+            
+            lucide.createIcons();
+
+            function updateNotesWindow() {
+                if (notesWindow && !notesWindow.closed) {
+                    notesWindow.document.body.innerHTML = `
+                        <style>
+                            body { font-family: 'Inter', sans-serif; background-color: #1F2937; color: #D1D5DB; padding: 2rem; font-size: 1.1rem; line-height: 1.6;}
+                            h3 { color: #FCCC32; font-size: 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid #4B5563; padding-bottom: 0.5rem;}
+                            p { margin-bottom: 1rem; }
+                            strong { color: #ffffff; }
+                        </style>
+                        ${speakerNotes[currentSlide]}
+                    `;
+                    notesWindow.document.title = `Notas - Diapositiva ${currentSlide + 1}`;
+                }
+            }
+
+            function showSlide(index) {
+                slides.forEach((slide) => {
+                    slide.classList.add('hidden', 'absolute', 'inset-0');
+                    slide.classList.remove('visible', 'relative');
+                });
+                
+                const slideToShow = slides[index];
+                if (slideToShow) {
+                    slideToShow.classList.remove('hidden', 'absolute', 'inset-0');
+                    slideToShow.classList.add('visible', 'relative');
+                }
+                
+                currentSlide = index;
+                updateUI();
+                updateNotesWindow();
+            }
+
+            function updateUI() {
+                const progress = ((currentSlide + 1) / slides.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                prevButton.disabled = currentSlide === 0;
+                nextButton.disabled = currentSlide === slides.length - 1;
+            }
+
+            function toggleFullScreen() {
+                if (!document.fullscreenElement) {
+                    presentationElement.requestFullscreen().catch(err => {
+                        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+
+            function updateFullscreenIcon() {
+                const iconElement = fullscreenButton.querySelector('i');
+                if (document.fullscreenElement) {
+                    iconElement.setAttribute('data-lucide', 'minimize-2');
+                } else {
+                    iconElement.setAttribute('data-lucide', 'fullscreen');
+                }
+                lucide.createIcons();
+            }
+
+            notesButton.addEventListener('click', () => {
+                if (!notesWindow || notesWindow.closed) {
+                    notesWindow = window.open('', 'notesWindow', 'width=800,height=600,scrollbars=yes,resizable=yes');
+                    updateNotesWindow();
+                } else {
+                    notesWindow.focus();
+                }
+            });
+
+            fullscreenButton.addEventListener('click', toggleFullScreen);
+            document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
+            prevButton.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            });
+
+            nextButton.addEventListener('click', () => {
+                if (currentSlide < slides.length - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextButton.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevButton.click();
+                } else if (e.key.toLowerCase() === 'f') {
+                    e.preventDefault();
+                    toggleFullScreen();
+                }
+            });
+
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>
+
