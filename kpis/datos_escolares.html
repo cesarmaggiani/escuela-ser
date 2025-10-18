@@ -190,7 +190,64 @@
                             </div>
                         </div>
                     </section>
-                    <section id="asistencia-padres" class="content-section hidden fade-in"><h2 class="text-3xl font-bold mb-6 text-gray-800">Escuela para Padres</h2><div class="bg-white p-6 rounded-xl shadow-md"><h3 class="font-bold text-lg text-gray-700">Asistencia Mensual a Juntas</h3><canvas id="asistenciaPadresChart" class="mt-4"></canvas></div></section>
+                    <section id="asistencia-padres" class="content-section hidden fade-in space-y-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Escuela para Padres</h2>
+                    
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Asistencia Promedio</p>
+                                    <p id="padres-promedio-asistencia" class="text-3xl font-bold text-gray-800">0%</p>
+                                </div>
+                                <div class="bg-teal-100 p-3 rounded-full"><i data-lucide="pie-chart" class="h-6 w-6 text-teal-500"></i></div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <p class="text-sm font-medium text-gray-500">Sesión con Mayor Asistencia 🏆</p>
+                                <p id="padres-mejor-sesion" class="text-xl font-bold text-gray-800 mt-2 truncate" title="N/A">N/A</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <p class="text-sm font-medium text-gray-500">Sesión con Menor Asistencia</p>
+                                <p id="padres-peor-sesion" class="text-xl font-bold text-gray-800 mt-2 truncate" title="N/A">N/A</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Total de Asistencias</p>
+                                    <p id="padres-total-asistentes" class="text-3xl font-bold text-gray-800">0</p>
+                                </div>
+                                 <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="users" class="h-6 w-6 text-blue-500"></i></div>
+                            </div>
+                        </div>
+                    
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="font-bold text-lg text-gray-700">Asistencia por Sesión</h3>
+                                <canvas id="asistenciaPadresChart" class="mt-4"></canvas>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="font-bold text-lg text-gray-700">Tendencia de Asistencia</h3>
+                                <canvas id="asistenciaPadresTrendChart" class="mt-4"></canvas>
+                            </div>
+                        </div>
+                    
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="font-bold text-lg text-gray-700 mb-4">Detalle de Sesiones</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"># Sesión</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título de la Sesión</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asistentes / Esperados</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Asistencia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="padres-sesiones-tabla" class="bg-white divide-y divide-gray-200">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
@@ -317,7 +374,6 @@
                     return;
                 }
 
-                // ⭐ SOLUCIÓN DEFINITIVA: Establecer explícitamente el nuevo token en el cliente GAPI.
                 gapi.client.setToken(resp);
 
                 document.getElementById('login-screen').classList.add('hidden');
@@ -453,7 +509,7 @@
         }
         
         function processRealData(jsonData) {
-            const data = { resumenGeneral: {}, resumenMensual: [], resumenPorBloque: [], estudiantes: {}, docentes: {}, asistenciaPadres: {} };
+            const data = { resumenGeneral: {}, resumenMensual: [], resumenPorBloque: [], estudiantes: {}, docentes: {}, asistenciaPadres: [] };
             const validAlumnos = jsonData.alumnos.filter(a => a.id && a.clave_escolar && a.nombre && a.nombre.trim() !== '');
             const validStudentKeys = new Set(validAlumnos.map(a => a.clave_escolar));
             const validCalificaciones = jsonData.calificaciones.filter(c => validStudentKeys.has(c.clave_escolar));
@@ -491,7 +547,31 @@
             data.resumenGeneral.asistencia = allActiveStudentAttendanceValues.length > 0 ? allActiveStudentAttendanceValues.reduce((a, b) => a + b, 0) / allActiveStudentAttendanceValues.length : 0;
 
             if(jsonData.docentes && jsonData.docentes.length > 0) { data.docentes = { altas: jsonData.docentes.map(d => parseInt(d.altas) || 0), bajas: jsonData.docentes.map(d => parseInt(d.bajas) || 0), meses: jsonData.docentes.map(d => MESES_MAP[parseInt(d.mes)] || d.mes) }; data.resumenGeneral.docentes = jsonData.docentes.length; } else { data.docentes = {altas: [], bajas: [], meses: []}; data.resumenGeneral.docentes = 0; }
-            if(jsonData.asistenciaPadres && jsonData.asistenciaPadres.length > 0){ data.asistenciaPadres = { asistencia: jsonData.asistenciaPadres.map(d => parseInt(d.porcentaje_asistencia) || 0), meses: jsonData.asistenciaPadres.map(d => MESES_MAP[parseInt(d.mes)] || d.mes) }; const avgParentAttendance = data.asistenciaPadres.asistencia.length > 0 ? data.asistenciaPadres.asistencia.reduce((s, c) => s + c, 0) / data.asistenciaPadres.asistencia.length : 0; data.resumenGeneral.prom_asistencia_padres = avgParentAttendance || 0; } else { data.asistenciaPadres = {asistencia: [], meses: []}; data.resumenGeneral.prom_asistencia_padres = 0; }
+            
+            // --- LÓGICA MEJORADA PARA ASISTENCIA DE PADRES ---
+            if (jsonData.asistenciaPadres && jsonData.asistenciaPadres.length > 0) {
+                data.asistenciaPadres = jsonData.asistenciaPadres
+                    .filter(d => d.asistentes != null && String(d.asistentes).trim() !== '') // Filtra sesiones sin asistentes
+                    .map(d => ({
+                        sesion: parseInt(d.sesion) || 0,
+                        porcentaje_asistencia: parseFloat(String(d.porcentaje_asistencia).replace('%', '')) || 0,
+                        fecha: d.fecha || 'N/A',
+                        titulo_sesion: d.titulo_sesion || `Sesión ${d.sesion}`,
+                        esperados: parseInt(d.esperados) || 0,
+                        asistentes: parseInt(d.asistentes) || 0,
+                    })).sort((a, b) => a.sesion - b.sesion); 
+
+                const allPercentages = data.asistenciaPadres.map(d => d.porcentaje_asistencia).filter(p => p > 0);
+                if (allPercentages.length > 0) {
+                    const avgParentAttendance = allPercentages.reduce((sum, current) => sum + current, 0) / allPercentages.length;
+                    data.resumenGeneral.prom_asistencia_padres = avgParentAttendance;
+                } else {
+                    data.resumenGeneral.prom_asistencia_padres = 0;
+                }
+            } else {
+                data.asistenciaPadres = []; 
+                data.resumenGeneral.prom_asistencia_padres = 0;
+            }
             return data;
         }
 
@@ -535,7 +615,116 @@
             function updateExpedienteView(a){ const b=data.listaEstudiantes.find(b=>b.id==a); if(!b)return; getEl("expediente-nombre").textContent=b.nombre,getEl("expediente-grupo").textContent=`${b.grado} - ${b.grupo}`,getEl("expediente-genero").textContent=b.genero; const c=getEl("expediente-estatus");c.textContent=b.status.charAt(0).toUpperCase()+b.status.slice(1),c.className=`text-lg font-semibold ${"activo"===b.status?"text-green-600":"text-red-600"}`,getEl("expediente-bap").textContent=b.bap||"No", getEl("expediente-clave").textContent = b.clave_escolar || b.id || 'N/A'; let d=0,e=0;if(b.calificaciones&&Object.keys(b.calificaciones).length>0){for(const a in b.calificaciones){const c=b.calificaciones[a];for(const key in c) {d+=c[key]||0,e++}}}const f=e>0?d/e:0;getEl("expediente-promedio").textContent=f.toFixed(2); const g=getNivelDeLogro(f),h=getEl("expediente-nivel-logro");h.textContent=g.nivel,h.className=`text-base font-bold px-2 py-1 rounded-md inline-block align-middle ${g.color}`; const i=getEl("expediente-block-filter");i.innerHTML='<option value="General">General</option>';const j=Object.keys(b.calificaciones||{}).sort();j.forEach(a=>{const b=document.createElement("option");b.value=a,b.textContent=a,i.appendChild(b)}); const initialAverages = updateExpedienteSubjectAverages(b,"General"); updateExpedienteRadarChart(initialAverages, "General"); const studentMonths = Object.keys(b.asistencia).sort((a,b) => a-b).map(num => MESES_MAP[num]); const studentAttendance = Object.keys(b.asistencia).sort((a,b) => a-b).map(key => b.asistencia[key]); if(expedienteAsistenciaChartInstance)expedienteAsistenciaChartInstance.destroy(); expedienteAsistenciaChartInstance=new Chart(getEl("expedienteAsistenciaChart"),{type:"bar",options:{responsive:!0,plugins:{datalabels:{...datalabelConfig, formatter: (v) => v ? `${v}%` : ''}},scales:{y:{beginAtZero:!1,min:70,max:100.5}}}}); expedienteAsistenciaChartInstance.data={labels:studentMonths,datasets:[{label:"% de Asistencia",data:studentAttendance,backgroundColor:"rgba(22, 163, 74, 0.6)",borderColor:"rgba(22, 163, 74, 1)",borderWidth:1}]},expedienteAsistenciaChartInstance.update(); const m=data.calificaciones.bloques,n=m.map(a=>b.calificaciones[a]?.m||null),o=m.map(a=>b.calificaciones[a]?.e||null),p=m.map(a=>b.calificaciones[a]?.c||null),q=m.map(a=>b.calificaciones[a]?.i||null); if(expedienteCalificacionesChartInstance)expedienteCalificacionesChartInstance.destroy(); expedienteCalificacionesChartInstance=new Chart(getEl("expedienteCalificacionesChart"),{type:"bar",data:{labels:m,datasets:[{label:"Matemáticas",data:n,backgroundColor:"rgba(234, 179, 8, 0.7)"},{label:"Español",data:o,backgroundColor:"rgba(139, 92, 246, 0.7)"},{label:"Ciencias",data:p,backgroundColor:"rgba(22, 163, 74, 0.7)"},{label:"Inglés",data:q,backgroundColor:"rgba(37, 99, 235, 0.7)"}]}, options:{responsive:!0,plugins:{datalabels: datalabelConfig},scales:{y:{beginAtZero:!0,min:0,max:10.5}}}}); expedienteCalificacionesChartInstance.update() }
             function updateExpedienteSubjectAverages(a,b){if(!a)return;let c={m:NaN,e:NaN,c:NaN,i:NaN};if(a.calificaciones&&Object.keys(a.calificaciones).length>0)if("General"===b){const b={m:[],e:[],c:[],i:[]};for(const d in a.calificaciones){const e=a.calificaciones[d];Object.keys(e).forEach(a=>{b[a]&&b[a].push(e[a])})} Object.keys(b).forEach(a=>{b[a].length>0&&(c[a]=b[a].reduce((a,b)=>a+b,0)/b[a].length)})}else{const d=a.calificaciones[b]||{};c.m=d.m,c.e=d.e,c.c=d.c,c.i=d.i} const d=c.m,e=getNivelDeLogro(d);getEl("expediente-prom-mat").textContent=isNaN(d)?"N/A":d.toFixed(2),getEl("expediente-nivel-mat").textContent=isNaN(d)?"":e.nivel,getEl("expediente-nivel-mat").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(d)?"":e.color}`;const f=c.e,g=getNivelDeLogro(f);getEl("expediente-prom-esp").textContent=isNaN(f)?"N/A":f.toFixed(2),getEl("expediente-nivel-esp").textContent=isNaN(f)?"":g.nivel,getEl("expediente-nivel-esp").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(f)?"":g.color}`;const h=c.c,i=getNivelDeLogro(h);getEl("expediente-prom-cie").textContent=isNaN(h)?"N/A":h.toFixed(2),getEl("expediente-nivel-cie").textContent=isNaN(h)?"":i.nivel,getEl("expediente-nivel-cie").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(h)?"":i.color}`;const j=c.i,k=getNivelDeLogro(j);getEl("expediente-prom-ing").textContent=isNaN(j)?"N/A":j.toFixed(2),getEl("expediente-nivel-ing").textContent=isNaN(j)?"":k.nivel,getEl("expediente-nivel-ing").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(j)?"":k.color}`; return c;}
             function updateExpedienteRadarChart(averages, blockName) { if(!getEl("expedienteRadarChart")) return; if (expedienteRadarChartInstance) expedienteRadarChartInstance.destroy(); const subjectMap = { m: 'Matemáticas', e: 'Español', c: 'Ciencias', i: 'Inglés' }; const labels = [], dataPoints = []; Object.keys(subjectMap).forEach(key => { if (!isNaN(averages[key])) { labels.push(subjectMap[key]); dataPoints.push(averages[key]); } }); expedienteRadarChartInstance = new Chart(getEl("expedienteRadarChart"), { type: 'radar', data: { labels: labels, datasets: [{ label: `Promedio (${blockName})`, data: dataPoints, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 2 }] }, options: { responsive: true, scales: { r: { beginAtZero: true, min: 0, max: 10, ticks: { stepSize: 2 } } }, plugins: { legend: { position: 'top' }, datalabels: { color: '#36A2EB', font: {weight: 'bold'}, formatter: (v) => parseFloat(v).toFixed(1) } } } }); }
-            if(getEl("asistenciaPadresChart")) {new Chart(getEl("asistenciaPadresChart"),{type:"bar",data:{labels:data.asistenciaPadres.meses,datasets:[{label:"% de Asistencia de Padres",data:data.asistenciaPadres.asistencia,backgroundColor:"rgba(20, 184, 166, 0.6)",borderColor:"rgba(15, 118, 110, 1)",borderWidth:1}]},options:{responsive:!0,scales:{y:{beginAtZero:!1,min:60,max:100,ticks:{callback:function(a){return a+"%"}}}},plugins:{legend:{display:!1}}}});}
+            
+            // --- FUNCIÓN ACTUALIZADA PARA LA SECCIÓN DE PADRES ---
+            function createAsistenciaPadresSection(data) {
+                const section = getEl('asistencia-padres');
+                if (!section) return; // Si la sección no existe por permisos, no hacer nada.
+                if (!data.asistenciaPadres || data.asistenciaPadres.length === 0) {
+                    section.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Escuela para Padres</h2><p class="text-center text-gray-500 bg-white p-10 rounded-xl shadow-md">No hay datos de asistencia de padres disponibles.</p>';
+                    return;
+                }
+            
+                const sesiones = data.asistenciaPadres;
+                
+                // 1. Calcular KPIs
+                const totalAsistencias = sesiones.reduce((sum, s) => sum + s.asistentes, 0);
+                const promedioAsistencia = data.resumenGeneral.prom_asistencia_padres || 0;
+            
+                let mejorSesion = { porcentaje_asistencia: -1, titulo_sesion: 'N/A' };
+                let peorSesion = { porcentaje_asistencia: 101, titulo_sesion: 'N/A' };
+                sesiones.forEach(s => {
+                    if (s.porcentaje_asistencia > mejorSesion.porcentaje_asistencia) mejorSesion = s;
+                    if (s.porcentaje_asistencia < peorSesion.porcentaje_asistencia) peorSesion = s;
+                });
+            
+                // 2. Poblar las tarjetas de KPIs
+                getEl('padres-promedio-asistencia').textContent = `${promedioAsistencia.toFixed(1)}%`;
+                getEl('padres-total-asistentes').textContent = totalAsistencias;
+                const mejorSesionEl = getEl('padres-mejor-sesion');
+                mejorSesionEl.textContent = `${mejorSesion.titulo_sesion} (${mejorSesion.porcentaje_asistencia.toFixed(1)}%)`;
+                mejorSesionEl.title = `${mejorSesion.titulo_sesion} (${mejorSesion.porcentaje_asistencia.toFixed(1)}%)`;
+                const peorSesionEl = getEl('padres-peor-sesion');
+                peorSesionEl.textContent = `${peorSesion.titulo_sesion} (${peorSesion.porcentaje_asistencia.toFixed(1)}%)`;
+                peorSesionEl.title = `${peorSesion.titulo_sesion} (${peorSesion.porcentaje_asistencia.toFixed(1)}%)`;
+            
+                // 3. Crear Gráfica de Barras Principal (Asistencia por Sesión)
+                const barChartCanvas = getEl('asistenciaPadresChart');
+                if (barChartCanvas) {
+                    if (barChartCanvas.chart) barChartCanvas.chart.destroy();
+                    barChartCanvas.chart = new Chart(barChartCanvas, {
+                        type: 'bar',
+                        data: {
+                            labels: sesiones.map(s => `Sesión ${s.sesion}: ${s.titulo_sesion}`),
+                            datasets: [{
+                                label: '% de Asistencia',
+                                data: sesiones.map(s => s.porcentaje_asistencia),
+                                backgroundColor: 'rgba(20, 184, 166, 0.7)',
+                                borderColor: 'rgba(15, 118, 110, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: { y: { beginAtZero: false, min: 50, max: 100, ticks: { callback: (val) => val + '%' } } },
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        afterLabel: function(context) {
+                                            const sesionData = sesiones[context.dataIndex];
+                                            return `Fecha: ${sesionData.fecha}\n${sesionData.asistentes} de ${sesionData.esperados} padres asistieron.`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // 4. Crear Gráfica de Barras de Tendencia
+                const trendChartCanvas = getEl('asistenciaPadresTrendChart');
+                if (trendChartCanvas) {
+                    if (trendChartCanvas.chart) trendChartCanvas.chart.destroy();
+                    trendChartCanvas.chart = new Chart(trendChartCanvas, {
+                        type: 'bar', // <-- CAMBIO AQUÍ: de 'line' a 'bar'
+                        data: {
+                            labels: sesiones.map(s => `Sesión ${s.sesion}`),
+                            datasets: [{
+                                label: 'Tendencia de Asistencia (%)',
+                                data: sesiones.map(s => s.porcentaje_asistencia),
+                                backgroundColor: 'rgba(59, 130, 246, 0.7)', // Color de relleno para barras
+                                borderColor: 'rgba(59, 130, 246, 1)',   // Color del borde para barras
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: { y: { beginAtZero: false, min: 50, max: 100, ticks: { callback: (val) => val + '%' } } },
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
+                
+                // 5. Poblar la Tabla Detallada
+                const tablaBody = getEl('padres-sesiones-tabla');
+                if(tablaBody) {
+                    tablaBody.innerHTML = ''; // Limpiar datos previos
+                    sesiones.forEach(s => {
+                        const row = `
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${s.sesion}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.titulo_sesion}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.fecha}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.asistentes} / ${s.esperados}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">${s.porcentaje_asistencia.toFixed(1)}%</td>
+                            </tr>
+                        `;
+                        tablaBody.innerHTML += row;
+                    });
+                }
+            }
+
             periodFilter.addEventListener('change', (e) => updateSummary(e.target.value));
             if(gradeFilter) gradeFilter.addEventListener('change', e => { const selectedGrade = e.target.value; if (selectedGrade === 'Todos') { groupFilter.innerHTML = '<option value="Todos">Todos</option>'; groupFilter.disabled = true; } else { groupFilter.disabled = false; populateGroupFilter(selectedGrade); } updateCalificacionesGradoCharts(selectedGrade, groupFilter.value, blockFilter.value, genderFilterCal.value); });
             if(groupFilter) groupFilter.addEventListener('change', e => { updateCalificacionesGradoCharts(gradeFilter.value, e.target.value, blockFilter.value, genderFilterCal.value); });
@@ -544,6 +733,7 @@
             if(getEl('expediente-block-filter')) getEl('expediente-block-filter').addEventListener('change', () => { const studentId = getEl('expediente-student-filter').value; if(studentId){ const student = data.listaEstudiantes.find(s => s.id == studentId); const selectedBlock = getEl('expediente-block-filter').value; const newAverages = updateExpedienteSubjectAverages(student, selectedBlock); updateExpedienteRadarChart(newAverages, selectedBlock); }});
             async function generateStudentPDF() { const studentName = getEl('expediente-nombre').textContent || "Estudiante"; const fileName = `Expediente-${studentName.replace(/ /g, '_')}.pdf`; const downloadButton = getEl('download-pdf-button'); const contentToCapture = getEl('expediente-container'); downloadButton.style.visibility = 'hidden'; try { const canvas = await html2canvas(contentToCapture, { scale: 2, backgroundColor: '#ffffff', onclone: (clonedDoc) => { const filterContainer = clonedDoc.getElementById('expediente-filter-container'); if (filterContainer) { const selectedBlock = document.getElementById('expediente-block-filter').value; filterContainer.innerHTML = `<p class="text-right text-sm text-gray-600 font-medium mb-4">Mostrando resultados para: <strong>${selectedBlock}</strong></p>`; } Array.from(clonedDoc.getElementsByTagName('canvas')).forEach(canvasEl => { if (canvasEl.__chartjs__) { canvasEl.__chartjs__.options.animation = false; } }); } }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' }); const pageHeight = pdf.internal.pageSize.getHeight() - 20; const pageWidth = pdf.internal.pageSize.getWidth() - 20; const pageRatio = pageWidth / pageHeight; const imgWidth = canvas.width; const imgHeight = canvas.height; const imgRatio = imgWidth / imgHeight; let finalWidth, finalHeight; if (imgRatio > pageRatio) { finalWidth = pageWidth; finalHeight = finalWidth / imgRatio; } else { finalHeight = pageHeight; finalWidth = finalHeight * imgRatio; } const x = (pdf.internal.pageSize.getWidth() - finalWidth) / 2; const y = 10; pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight); pdf.save(fileName); } catch (error) { console.error("Error al generar el PDF:", error); alert("Hubo un error al generar el PDF. Revisa la consola para más detalles."); } finally { downloadButton.style.visibility = 'visible'; } }
             if(getEl('download-pdf-button')) getEl('download-pdf-button').addEventListener('click', generateStudentPDF);
+            
             lucide.createIcons();
             populateFilter();
             updateSummary('General');
@@ -557,10 +747,18 @@
             setupBoletosFilters();
             updateBoletosChart();
             setupExpedienteFilters();
+            createAsistenciaPadresSection(data); 
             manageVisibility();
         }
         function getDemoData() {
-            return {resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],listaEstudiantes: [ { id: 1, clave_escolar: 'DEMO-001', nombre: "Ana García (Demo)", genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { 9: 98, 10: 95 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }] } } }, { id: 2, clave_escolar: 'DEMO-002', nombre: "Luis Rodríguez (Demo)", genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { 9: 95, 10: 100 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 } }, boletos: {} } ],docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },calificaciones: { matematicas: [8.2, 7.9], espanol: [8.8, 8.5], ciencias: [7.5, 8], ingles: [9, 9.2], bloques: ["Bloque 1", "Bloque 2"] },asistenciaPadres: { meses: ["Enero", "Febrero", "Marzo"], asistencia: [85, 90, 78] }, estudiantes: {meses: ["Agosto", "Septiembre"], matricula: [450, 452]}};
+            return {resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],listaEstudiantes: [ { id: 1, clave_escolar: 'DEMO-001', nombre: "Ana García (Demo)", genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { 9: 98, 10: 95 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }] } } }, { id: 2, clave_escolar: 'DEMO-002', nombre: "Luis Rodríguez (Demo)", genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { 9: 95, 10: 100 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 } }, boletos: {} } ],docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },calificaciones: { matematicas: [8.2, 7.9], espanol: [8.8, 8.5], ciencias: [7.5, 8], ingles: [9, 9.2], bloques: ["Bloque 1", "Bloque 2"] },
+            // --- DATOS DE DEMO PARA PADRES ---
+            asistenciaPadres: [
+                { sesion: 1, porcentaje_asistencia: 85.0, fecha: "2025-09-15", titulo_sesion: "Crianza Positiva (Demo)", esperados: 200, asistentes: 170 },
+                { sesion: 2, porcentaje_asistencia: 92.5, fecha: "2025-10-20", titulo_sesion: "Seguridad en Internet (Demo)", esperados: 200, asistentes: 185 },
+                { sesion: 3, porcentaje_asistencia: 80.0, fecha: "2025-11-18", titulo_sesion: "Apoyo en Tareas (Demo)", esperados: 200, asistentes: 160 }
+            ], 
+            estudiantes: {meses: ["Agosto", "Septiembre"], matricula: [450, 452]}};
         }
     </script>
 </body>
