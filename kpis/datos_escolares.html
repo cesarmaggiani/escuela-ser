@@ -83,6 +83,7 @@
                 <a href="#boletos-salida" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="ticket" class="inline-block w-5 h-5 mr-2"></i> Boletos de Salida</a>
                 <a href="#expediente-estudiante" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="contact-2" class="inline-block w-5 h-5 mr-2"></i> Expediente Estudiante</a>
                 <a href="#asistencia-padres" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i> Escuela para Padres</a>
+                <a href="#desarrollo-profesional" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="award" class="inline-block w-5 h-5 mr-2"></i> Desarrollo Profesional</a>
             </nav>
         </aside>
 
@@ -302,6 +303,36 @@
                             </div>
                         </div>
                     </section>
+                    
+                    <section id="desarrollo-profesional" class="content-section hidden fade-in space-y-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Desarrollo Profesional</h2>
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="font-bold text-lg text-gray-700 mb-4">Sesiones Impartidas</h3>
+                            
+                            <div id="desarrollo-profesional-placeholder" class="text-center p-10 hidden">
+                                <i data-lucide="info" class="mx-auto h-12 w-12 text-gray-400"></i>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">Sin datos</h3>
+                                <p class="mt-1 text-sm text-gray-500">No se encontraron sesiones de desarrollo profesional con fecha.</p>
+                            </div>
+                            
+                            <div id="desarrollo-profesional-tabla-container" class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bloque</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tema</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brecha</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Objetivo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="desarrollo-profesional-tabla-body" class="bg-white divide-y divide-gray-200">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
             </main>
         </div>
@@ -311,7 +342,7 @@
         const CLIENT_ID = '207428727335-bfsgio74gs2irr3o1va1ts1jspti0gsh.apps.googleusercontent.com'; // <-- REEMPLAZA ESTO
 
         const MASTER_SHEET_ID = '1HsjHb-zuhHrblvvLoH3jnIaUn9nTir85GTyL8-A60QA'; // <-- REEMPLAZA ESTO
-        const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8';           // <-- REEMPLAZA ESTO
+        const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8'; // <-- REEMPLAZA ESTO
 
         let SELECTED_SPREADSHEET_ID = null;
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/userinfo.email';
@@ -325,7 +356,8 @@
             docentes: 'Docentes!A:Z',
             asistenciaPadres: 'AsistenciaPadres!A:Z',
             matricula: 'Matricula!A:Z',
-            entregables: 'Entregables!A:Z'
+            entregables: 'Entregables!A:Z',
+            desarrolloProfesional: 'DesarrolloProfesional!A:Z'
         };
         const MESES_MAP = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         const SCHOOL_YEAR_MONTH_ORDER = ["Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio"];
@@ -354,39 +386,30 @@
             maybeEnableButtons();
         }
 
-        // ===== FUNCIÓN loadSchoolList ACTUALIZADA CON VERIFICACIÓN =====
         async function loadSchoolList() {
             console.log("Intentando cargar lista de escuelas..."); // Log
-
-            // ===== VERIFICACIÓN MEJORADA =====
             let attempts = 0;
             while ((typeof gapi === 'undefined' || !gapi?.client?.sheets?.spreadsheets) && attempts < 10) {
                  console.warn(`gapi.client.sheets no está listo (intento ${attempts + 1}). Esperando 500ms...`);
-                 await new Promise(resolve => setTimeout(resolve, 500)); // Espera 500ms
+                 await new Promise(resolve => setTimeout(resolve, 500));
                  attempts++;
             }
-
             if (!gapi?.client?.sheets?.spreadsheets) {
                  console.error("ERROR CRÍTICO: La API de Google Sheets no se inicializó después de varios intentos.");
                  alert("Error: No se pudo conectar con la API de Google Sheets. Por favor, recarga la página.");
                  document.getElementById('school-selector').innerHTML = '<option>Error de conexión API</option>';
-                 return; // Detiene la función si falla
+                 return;
             }
-            // ===== FIN DE VERIFICACIÓN MEJORADA =====
-
             try {
                 console.log("API lista. Obteniendo datos de escuelas..."); // Log
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: MASTER_SHEET_ID,
                     range: 'Escuelas!A2:C',
                 });
-
                 const schoolSelector = document.getElementById('school-selector');
                 const loginButton = document.getElementById('login-button');
-
                 schoolSelector.innerHTML = '<option value="">-- Por favor, selecciona --</option>';
                 const schools = response.result.values || [];
-
                 if (schools.length > 0) {
                     schools.forEach(school => {
                         const schoolName = school[0];
@@ -403,9 +426,8 @@
                         }
                     });
                     schoolSelector.disabled = false;
-                    loginButton.disabled = true; // Sigue deshabilitado hasta seleccionar
+                    loginButton.disabled = true;
                     loginButton.classList.add('opacity-50', 'cursor-not-allowed');
-
                     schoolSelector.addEventListener('change', () => {
                         if (schoolSelector.value) {
                             loginButton.disabled = false;
@@ -419,12 +441,11 @@
                     schoolSelector.innerHTML = '<option>No se encontraron escuelas</option>';
                 }
             } catch (error) {
-                console.error("Error DETALLADO al cargar la lista de escuelas:", error); // Log detallado
+                console.error("Error DETALLADO al cargar la lista de escuelas:", error);
                 document.getElementById('school-selector').innerHTML = '<option>Error al cargar</option>';
                 alert("No se pudo cargar la lista de escuelas. Revisa que el ID de la Hoja Maestra y la Clave de API sean correctos y que la hoja sea pública o compartida.");
             }
         }
-        // =============================================================
 
         function maybeEnableButtons() {
             console.log("Llamando a maybeEnableButtons. gapiInited:", gapiInited, "gisInited:", gisInited); // Log
@@ -439,30 +460,23 @@
             const selectedOption = schoolSelector.options[schoolSelector.selectedIndex];
             const logoUrl = selectedOption.dataset.logoUrl;
             const schoolName = selectedOption.textContent;
-
             SELECTED_SPREADSHEET_ID = schoolSelector.value;
-
             if (!SELECTED_SPREADSHEET_ID) {
                 alert('Por favor, selecciona una escuela antes de iniciar sesión.');
                 return;
             }
-
             tokenClient.callback = async (resp) => {
                 if (resp.error !== undefined) {
                     alert("Error de autenticación. Por favor, intenta de nuevo.");
                     console.error(resp);
                     return;
                 }
-
                 gapi.client.setToken(resp);
-
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-wrapper').classList.remove('hidden');
                 document.getElementById('signout_button').classList.remove('hidden');
-
                 const sidebarLogo = document.getElementById('school-logo-sidebar');
                 const defaultIcon = document.getElementById('default-icon');
-
                 if (logoUrl && sidebarLogo) {
                     sidebarLogo.src = logoUrl;
                     sidebarLogo.classList.remove('hidden');
@@ -471,25 +485,20 @@
                     if (sidebarLogo) sidebarLogo.classList.add('hidden');
                     if (defaultIcon) defaultIcon.classList.remove('hidden');
                 }
-
                 const schoolNameHeader = document.getElementById('school-name-header');
                 if (schoolNameHeader) {
                     schoolNameHeader.textContent = schoolName;
                     schoolNameHeader.classList.remove('hidden');
                 }
-
                 const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                     headers: { 'Authorization': `Bearer ${gapi.client.getToken().access_token}` }
                 });
                 const userInfo = await userInfoResponse.json();
-
                 const userInfoEl = document.getElementById('user-info');
                 userInfoEl.textContent = userInfo.email;
                 userInfoEl.classList.remove('hidden');
-
                 await loadAndProcessData(userInfo.email);
             };
-
             if (gapi.client.getToken() === null) {
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             } else {
@@ -502,7 +511,6 @@
             if (token !== null) {
                 google.accounts.oauth2.revoke(token.access_token);
                 gapi.client.setToken('');
-
                 const sidebarLogo = document.getElementById('school-logo-sidebar');
                 const defaultIcon = document.getElementById('default-icon');
                 if (sidebarLogo) {
@@ -512,13 +520,11 @@
                 if (defaultIcon) {
                     defaultIcon.classList.remove('hidden');
                 }
-
                 const schoolNameHeader = document.getElementById('school-name-header');
                 if (schoolNameHeader) {
                     schoolNameHeader.textContent = '';
                     schoolNameHeader.classList.add('hidden');
                 }
-
                 document.getElementById('app-wrapper').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('main-container').classList.add('hidden');
@@ -527,7 +533,6 @@
                 document.getElementById('signout_button').classList.add('hidden');
                 document.getElementById('user-info').classList.add('hidden');
                 document.querySelectorAll('.nav-link').forEach(link => link.style.display = 'none');
-
                 SELECTED_SPREADSHEET_ID = null;
                 const schoolSelector = document.getElementById('school-selector');
                 if(schoolSelector) {
@@ -546,13 +551,10 @@
         async function loadAndProcessData(userEmail) {
             const loadingIndicator = document.getElementById('loading-indicator');
             const unauthorizedMessage = document.getElementById('unauthorized-message');
-
             loadingIndicator.classList.remove('hidden');
             document.getElementById('main-container').classList.add('hidden');
             unauthorizedMessage.classList.add('hidden');
-
             try {
-                // ===== VERIFICACIÓN API ANTES DE USARLA =====
                 let attempts = 0;
                 while ((typeof gapi === 'undefined' || !gapi?.client?.sheets?.spreadsheets?.values) && attempts < 10) {
                      console.warn(`gapi.client.sheets.values no está listo en loadAndProcessData (intento ${attempts + 1}). Esperando 500ms...`);
@@ -562,21 +564,16 @@
                 if (!gapi?.client?.sheets?.spreadsheets?.values) {
                      throw new Error("La API de Google Sheets no se inicializó correctamente para batchGet.");
                 }
-                // ===== FIN VERIFICACIÓN =====
-
                 const response = await gapi.client.sheets.spreadsheets.values.batchGet({
                     spreadsheetId: SELECTED_SPREADSHEET_ID,
                     ranges: Object.values(SHEET_RANGES),
                 });
-
                 const jsonData = {};
                 Object.keys(SHEET_RANGES).forEach((key, index) => {
                     jsonData[key] = sheetsArrayToJson(response.result.valueRanges[index]?.values || []);
                 });
-
                 const permissionsList = jsonData.permisos || [];
                 let userPermissions = permissionsList.find(p => p.Email && p.Email.toLowerCase() === userEmail.toLowerCase());
-
                 if (!userPermissions) {
                     loadingIndicator.classList.add('hidden');
                     unauthorizedMessage.classList.remove('hidden');
@@ -585,14 +582,10 @@
                     alert('Acceso Denegado. Tu cuenta no tiene permisos para ver este tablero.');
                     return;
                 }
-
                 const data = (jsonData.alumnos.length === 0) ? getDemoData() : processRealData(jsonData);
-
                 main(data, userPermissions);
-
                 loadingIndicator.classList.add('hidden');
                 document.getElementById('main-container').classList.remove('hidden');
-
             } catch (error) {
                 console.error("Error al cargar datos o permisos desde la API:", error);
                 loadingIndicator.innerHTML = `<i data-lucide="alert-triangle" class="mx-auto h-12 w-12 text-red-500"></i><h3 class="mt-2 text-sm font-medium text-gray-900">Error al cargar datos</h3><p class="mt-1 text-sm text-gray-500">No se pudo obtener la información. Revisa que la hoja de cálculo sea correcta y tengas permiso para verla.<br>(${error.message || 'Error desconocido'})</p>`;
@@ -601,7 +594,16 @@
         }
 
         function processRealData(jsonData) {
-            const data = { resumenGeneral: {}, resumenMensual: [], resumenPorBloque: [], estudiantes: {}, docentes: {}, asistenciaPadres: [], entregables: [] };
+            const data = {
+                resumenGeneral: {},
+                resumenMensual: [],
+                resumenPorBloque: [],
+                estudiantes: {},
+                docentes: {},
+                asistenciaPadres: [],
+                entregables: [],
+                desarrolloProfesional: []
+            };
             const validAlumnos = jsonData.alumnos.filter(a => a.id && a.clave_escolar && a.nombre && a.nombre.trim() !== '');
             const validStudentKeys = new Set(validAlumnos.map(a => a.clave_escolar));
             const validCalificaciones = jsonData.calificaciones.filter(c => validStudentKeys.has(c.clave_escolar));
@@ -671,6 +673,43 @@
 
             data.entregables = (jsonData.entregables || []).filter(e => e.Categoria && e.NombreEntregable && e.FechaLimite);
 
+            if (jsonData.desarrolloProfesional && jsonData.desarrolloProfesional.length > 0) {
+                data.desarrolloProfesional = jsonData.desarrolloProfesional
+                    // Filtrar solo filas con fecha
+                    .filter(sesion => sesion.fecha && String(sesion.fecha).trim() !== '') // <-- LÍNEA MODIFICADA
+                    .map(sesion => {
+                        const parts = String(sesion.fecha).split('/');
+                        let fechaObj = null;
+                        if (parts.length === 3) {
+                            const day = parseInt(parts[0], 10);
+                            const month = parseInt(parts[1], 10) - 1;
+                            const year = parseInt(parts[2], 10);
+                            if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                                const fullYear = (year < 100) ? 2000 + year : year;
+                                fechaObj = new Date(fullYear, month, day);
+                            }
+                        }
+                        return {
+                            bloque: sesion.bloque || 'N/A',
+                            fecha: sesion.fecha,
+                            fechaObj: fechaObj,
+                            brecha: sesion.brecha || 'N/A',
+                            tema: sesion.tema || 'N/A', // Aceptar tema vacío
+                            objetivo: sesion.objetivo || 'N/A'
+                        };
+                    })
+                    .sort((a, b) => {
+                        if (a.fechaObj && b.fechaObj) {
+                            return b.fechaObj - a.fechaObj;
+                        }
+                        if (a.fechaObj) return -1;
+                        if (b.fechaObj) return 1;
+                        return 0;
+                    });
+            } else {
+                data.desarrolloProfesional = [];
+            }
+
             return data;
         }
 
@@ -678,7 +717,18 @@
             const nav = document.getElementById('main-nav');
             const navLinks = nav.querySelectorAll('.nav-link');
             let firstVisibleLink = null;
-            const permissionMap = { 'resumen': 'Resumen', 'entregables': 'Entregables', 'estudiantes': 'Estudiantes', 'docentes': 'Docentes', 'calificaciones': 'Calificaciones', 'calificaciones-grado': 'Calificaciones por Grado', 'boletos-salida': 'Boletos de Salida', 'expediente-estudiante': 'Expediente Estudiante', 'asistencia-padres': 'Escuela para Padres' };
+            const permissionMap = {
+                'resumen': 'Resumen',
+                'entregables': 'Entregables',
+                'estudiantes': 'Estudiantes',
+                'docentes': 'Docentes',
+                'calificaciones': 'Calificaciones',
+                'calificaciones-grado': 'Calificaciones por Grado',
+                'boletos-salida': 'Boletos de Salida',
+                'expediente-estudiante': 'Expediente Estudiante',
+                'asistencia-padres': 'Escuela para Padres',
+                'desarrollo-profesional': 'Desarrollo Profesional'
+            };
             navLinks.forEach(link => { const sectionName = link.getAttribute('href').substring(1); const permissionKey = permissionMap[sectionName]; if (permissions[permissionKey] === 'TRUE') { link.style.display = 'block'; if (!firstVisibleLink) { firstVisibleLink = link; } } else { link.style.display = 'none'; const sectionElement = document.getElementById(sectionName); if (sectionElement) { sectionElement.remove(); } } });
             if (permissions[permissionMap['estudiantes']] !== 'TRUE') { const cardBajas = document.getElementById('card-bajas'); if (cardBajas) cardBajas.style.display = 'none'; }
             if (permissions[permissionMap['docentes']] !== 'TRUE') { const cardDocentes = document.getElementById('card-docentes'); if (cardDocentes) cardDocentes.style.display = 'none'; }
@@ -752,15 +802,12 @@
             function createEntregablesSection(data) {
                 const section = getEl('entregables');
                 if (!section) return;
-
                 if (!data.entregables || data.entregables.length === 0) {
                     section.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Entregables</h2><p class="text-center text-gray-500 bg-white p-10 rounded-xl shadow-md">No hay fechas de entregables configuradas.</p>';
                     return;
                 }
-
                 const hoy = new Date();
-                hoy.setUTCHours(0, 0, 0, 0); // Usar UTC para comparar con fechas UTC
-
+                hoy.setUTCHours(0, 0, 0, 0);
                 const entregables = data.entregables.map(e => {
                     const parts = String(e.FechaLimite).split('-');
                     let fechaObj = new Date(Date.UTC(1970, 0, 1));
@@ -778,14 +825,11 @@
                     }
                     return { ...e, fechaObj: fechaObj };
                 }).filter(e => e.fechaObj && !isNaN(e.fechaObj) && e.fechaObj.getUTCFullYear() > 1970);
-
                 const futuros = entregables
                     .filter(e => e.fechaObj >= hoy)
                     .sort((a, b) => a.fechaObj - b.fechaObj);
-
                 const optionsCompleta = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
                 const optionsCorta = { month: 'short', day: 'numeric', timeZone: 'UTC' };
-
                 const proxEst = futuros.find(e => e.Categoria === 'Estadísticas');
                 const proxEstNombreEl = getEl('prox-estadistica-nombre');
                 const proxEstFechaEl = getEl('prox-estadistica-fecha');
@@ -800,7 +844,6 @@
                     proxEstFechaEl.textContent = 'No hay pendientes';
                     proxEstFechaEl.className = "text-base font-medium text-gray-500 mt-1";
                 }
-
                 const proxPlan = futuros.find(e => e.Categoria === 'Planeación');
                 const proxPlanNombreEl = getEl('prox-planeacion-nombre');
                 const proxPlanFechaEl = getEl('prox-planeacion-fecha');
@@ -815,7 +858,6 @@
                     proxPlanFechaEl.textContent = 'No hay pendientes';
                     proxPlanFechaEl.className = "text-base font-medium text-gray-500 mt-1";
                 }
-
                 const listaCalContainer = getEl('prox-calificacion-lista');
                 const proxCals = futuros.filter(e => e.Categoria === 'Calificaciones').slice(0, 4);
                 if (listaCalContainer) {
@@ -833,7 +875,6 @@
                         listaCalContainer.innerHTML = '<p class="text-gray-500 text-sm">No hay entregas de calificaciones pendientes.</p>';
                     }
                 }
-
                 const tablaBody = getEl('tabla-entregables-body');
                 if (!tablaBody) return;
                 tablaBody.innerHTML = '';
@@ -845,11 +886,9 @@
                     const fechaLimiteMedianoche = new Date(e.fechaObj);
                     const diffTime = fechaLimiteMedianoche - hoy;
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
                     let diasRestantesStr = `${diffDays} día${diffDays !== 1 ? 's' : ''}`;
                     let colorFila = 'hover:bg-gray-50';
                     let colorTextoDias = 'text-gray-800';
-
                     if (diffDays === 0) {
                         diasRestantesStr = '¡Hoy!';
                         colorFila = 'bg-yellow-100 hover:bg-yellow-200';
@@ -862,7 +901,6 @@
                          colorFila = 'bg-gray-100 opacity-70';
                          colorTextoDias = 'text-gray-500';
                     }
-
                     const row = `
                         <tr class="${colorFila}">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${e.Categoria}</td>
@@ -875,6 +913,38 @@
                 lucide.createIcons();
             }
 
+            function createDesarrolloProfesionalSection(data) {
+                const section = getEl('desarrollo-profesional');
+                if (!section) return;
+                const tablaBody = getEl('desarrollo-profesional-tabla-body');
+                const placeholder = getEl('desarrollo-profesional-placeholder');
+                const tablaContainer = getEl('desarrollo-profesional-tabla-container');
+                if (!tablaBody || !placeholder || !tablaContainer) {
+                    console.error("Faltan elementos HTML para la sección Desarrollo Profesional.");
+                    return;
+                }
+                if (!data.desarrolloProfesional || data.desarrolloProfesional.length === 0) {
+                    placeholder.classList.remove('hidden');
+                    tablaContainer.classList.add('hidden');
+                    return;
+                }
+                placeholder.classList.add('hidden');
+                tablaContainer.classList.remove('hidden');
+                tablaBody.innerHTML = '';
+                data.desarrolloProfesional.forEach(sesion => {
+                    const row = `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${sesion.fecha}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${sesion.bloque}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${sesion.tema}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${sesion.brecha}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${sesion.objetivo}</td>
+                        </tr>
+                    `;
+                    tablaBody.innerHTML += row;
+                });
+                lucide.createIcons();
+            }
 
             periodFilter.addEventListener('change', (e) => updateSummary(e.target.value));
             if(gradeFilter) gradeFilter.addEventListener('change', e => { const selectedGrade = e.target.value; if (selectedGrade === 'Todos') { groupFilter.innerHTML = '<option value="Todos">Todos</option>'; groupFilter.disabled = true; } else { groupFilter.disabled = false; populateGroupFilter(selectedGrade); } updateCalificacionesGradoCharts(selectedGrade, groupFilter.value, blockFilter.value, genderFilterCal.value); });
@@ -900,30 +970,57 @@
             setupExpedienteFilters();
             createAsistenciaPadresSection(data);
             createEntregablesSection(data);
+            createDesarrolloProfesionalSection(data);
             manageVisibility();
         }
 
         function getDemoData() {
              return {
-                resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },
-                resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
-                resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
-                listaEstudiantes: [ { id: 1, clave_escolar: 'DEMO-001', nombre: "Ana García (Demo)", genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { 9: 98, 10: 95 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }] } } }, { id: 2, clave_escolar: 'DEMO-002', nombre: "Luis Rodríguez (Demo)", genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { 9: 95, 10: 100 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 } }, boletos: {} } ],
-                docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },
-                calificaciones: { matematicas: [8.2, 7.9], espanol: [8.8, 8.5], ciencias: [7.5, 8], ingles: [9, 9.2], bloques: ["Bloque 1", "Bloque 2"] },
-                asistenciaPadres: [ { sesion: 1, porcentaje_asistencia: 85.0, fecha: "15-09-2025", titulo_sesion: "Crianza Positiva (Demo)", esperados: 200, asistentes: 170 }, { sesion: 2, porcentaje_asistencia: 92.5, fecha: "20-10-2025", titulo_sesion: "Seguridad en Internet (Demo)", esperados: 200, asistentes: 185 }, { sesion: 3, porcentaje_asistencia: 80.0, fecha: "18-11-2025", titulo_sesion: "Apoyo en Tareas (Demo)", esperados: 200, asistentes: 160 } ],
-                estudiantes: {meses: ["Agosto", "Septiembre"], matricula: [450, 452]},
-                entregables: [
-                    { Categoria: "Estadísticas", NombreEntregable: "Reporte Asistencia Sep (Demo)", FechaLimite: "05-10-2025" },
-                    { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B1 (Demo)", FechaLimite: "18-10-2025" },
-                    { Categoria: "Calificaciones", NombreEntregable: "Carga Esp B1 (Demo)", FechaLimite: "19-10-2025" },
-                    { Categoria: "Calificaciones", NombreEntregable: "Carga Cie B1 (Demo)", FechaLimite: "20-10-2025" },
-                    { Categoria: "Calificaciones", NombreEntregable: "Carga Ing B1 (Demo)", FechaLimite: "21-10-2025" },
-                    { Categoria: "Planeación", NombreEntregable: "Entrega Plan Nov (Demo)", FechaLimite: "28-10-2025" },
-                    { Categoria: "Estadísticas", NombreEntregable: "Reporte Asistencia Oct (Demo)", FechaLimite: "05-11-2025" },
-                     { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B2 (Demo)", FechaLimite: "15-12-2025" }
-                ]
-            };
+                 resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },
+                 resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
+                 resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
+                 listaEstudiantes: [ { id: 1, clave_escolar: 'DEMO-001', nombre: "Ana García (Demo)", genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { 9: 98, 10: 95 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }] } } }, { id: 2, clave_escolar: 'DEMO-002', nombre: "Luis Rodríguez (Demo)", genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { 9: 95, 10: 100 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 } }, boletos: {} } ],
+                 docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },
+                 calificaciones: { matematicas: [8.2, 7.9], espanol: [8.8, 8.5], ciencias: [7.5, 8], ingles: [9, 9.2], bloques: ["Bloque 1", "Bloque 2"] },
+                 asistenciaPadres: [ { sesion: 1, porcentaje_asistencia: 85.0, fecha: "15-09-2025", titulo_sesion: "Crianza Positiva (Demo)", esperados: 200, asistentes: 170 }, { sesion: 2, porcentaje_asistencia: 92.5, fecha: "20-10-2025", titulo_sesion: "Seguridad en Internet (Demo)", esperados: 200, asistentes: 185 }, { sesion: 3, porcentaje_asistencia: 80.0, fecha: "18-11-2025", titulo_sesion: "Apoyo en Tareas (Demo)", esperados: 200, asistentes: 160 } ],
+                 estudiantes: {meses: ["Agosto", "Septiembre"], matricula: [450, 452]},
+                 entregables: [
+                     { Categoria: "Estadísticas", NombreEntregable: "Reporte Asistencia Sep (Demo)", FechaLimite: "05-10-2025" },
+                     { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B1 (Demo)", FechaLimite: "18-10-2025" },
+                     { Categoria: "Calificaciones", NombreEntregable: "Carga Esp B1 (Demo)", FechaLimite: "19-10-2025" },
+                     { Categoria: "Calificaciones", NombreEntregable: "Carga Cie B1 (Demo)", FechaLimite: "20-10-2025" },
+                     { Categoria: "Calificaciones", NombreEntregable: "Carga Ing B1 (Demo)", FechaLimite: "21-10-2025" },
+                     { Categoria: "Planeación", NombreEntregable: "Entrega Plan Nov (Demo)", FechaLimite: "28-10-2025" },
+                     { Categoria: "Estadísticas", NombreEntregable: "Reporte Asistencia Oct (Demo)", FechaLimite: "05-11-2025" },
+                      { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B2 (Demo)", FechaLimite: "15-12-2025" }
+                 ],
+                 desarrolloProfesional: [
+                    {
+                        bloque: "Bloque 1 (Demo)",
+                        fecha: "15/09/2025",
+                        fechaObj: new Date(2025, 8, 15),
+                        brecha: "Uso de IA",
+                        tema: "IA en el Aula (Demo)",
+                        objetivo: "Implementar ChatGPT para planeación"
+                    },
+                    {
+                        bloque: "Bloque 1 (Demo)",
+                        fecha: "22/09/2025",
+                        fechaObj: new Date(2025, 8, 22),
+                        brecha: "Evaluación",
+                        tema: "Nuevas Herramientas de Evaluación (Demo)",
+                        objetivo: "Probar 2 nuevas herramientas"
+                    },
+                    { // Ejemplo sin tema
+                        bloque: "Bloque 2 (Demo)",
+                        fecha: "10/10/2025",
+                        fechaObj: new Date(2025, 9, 10),
+                        brecha: "Planificación",
+                        tema: "", // Tema vacío
+                        objetivo: "Revisar planes anuales"
+                    }
+                 ]
+             };
         }
 
     // === Fin del código JavaScript ===
