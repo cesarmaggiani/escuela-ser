@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos Escolares</title>
-    
+
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FurpirvyhqaVyBaZySWALony1vkyTsdz">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,10 +13,10 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
         .sidebar { transition: transform 0.3s ease-in-out; }
@@ -31,20 +31,17 @@
             background-color: #4a5568;
             color: #ffffff;
         }
-
-        /* --- CAMBIO AÑADIDO AQUÍ --- */
         /* Oculta los enlaces de navegación por defecto */
         #main-nav .nav-link {
             display: none;
         }
-        /* ------------------------- */
     </style>
 </head>
 <body class="bg-gray-100">
 
     <div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-gray-100 z-50">
         <div class="bg-white p-8 md:p-12 rounded-xl shadow-2xl text-center w-full max-w-md mx-4">
-            
+
             <div class="flex justify-center items-center mb-4">
                 <img src="https://lh3.googleusercontent.com/d/1perW5iSIdezcMgMQi6ouq593vb6Sc23e" alt="Logotipo" class="h-16 w-auto object-contain">
             </div>
@@ -57,16 +54,16 @@
                     <option selected>Cargando escuelas...</option>
                 </select>
             </div>
-            <button id="login-button" class="bg-blue-600 text-white w-full flex items-center justify-center px-4 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            <button id="login-button" class="bg-blue-600 text-white w-full flex items-center justify-center px-4 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" disabled>
                 <svg class="w-6 h-6 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><path id="a" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></defs><clipPath id="b"><use xlink:href="#a" overflow="visible"/></clipPath><path clip-path="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z"/><path clip-path="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"/><path clip-path="url(#b)" fill="#34A853" d="M0 37l30-23.5 7.9 1L48 0v48H0z"/><path clip-path="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"/></svg>
                 <span class="font-semibold">Iniciar Sesión con Google</span>
             </button>
         </div>
     </div>
-    
+
     <div id="app-wrapper" class="flex h-screen w-full hidden">
         <aside id="sidebar" class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out z-20">
-            
+
             <a href="#" class="text-white flex flex-col items-center space-y-2 px-4">
                 <img src="https://lh3.googleusercontent.com/d/1Dlnf947o9B3ISYf5ylfCSe7XOYl5BRqn" alt="Logo Plataforma" class="h-12 w-auto object-contain">
                 <span class="text-2xl font-extrabold">Datos Escolares</span>
@@ -74,6 +71,7 @@
 
             <nav id="main-nav">
                 <a href="#resumen" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link active-link"><i data-lucide="home" class="inline-block w-5 h-5 mr-2"></i> Resumen</a>
+                <a href="#entregables" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="calendar-check" class="inline-block w-5 h-5 mr-2"></i> Entregables</a>
                 <a href="#estudiantes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i> Estudiantes</a>
                 <a href="#docentes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="briefcase" class="inline-block w-5 h-5 mr-2"></i> Docentes</a>
                 <a href="#calificaciones" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="book-marked" class="inline-block w-5 h-5 mr-2"></i> Calificaciones</a>
@@ -83,12 +81,12 @@
                 <a href="#asistencia-padres" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i> Escuela para Padres</a>
             </nav>
         </aside>
-    
+
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="flex justify-between items-center py-4 px-6 bg-white border-b-2">
                 <div class="flex items-center space-x-4">
                     <button id="menu-button" class="text-gray-500 focus:outline-none md:hidden"><i data-lucide="menu" class="h-6 w-6"></i></button>
-                    
+
                     <div class="flex items-center space-x-3">
                         <i data-lucide="bar-chart-3" id="default-icon" class="h-8 w-8 text-blue-600"></i>
                         <img id="school-logo-sidebar" src="" alt="Logo Escuela" class="h-10 w-auto object-contain hidden rounded-md">
@@ -107,13 +105,13 @@
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Cargando datos...</h3>
                     <p class="mt-1 text-sm text-gray-500">Obteniendo la información desde Google Sheets.</p>
                 </div>
-                
+
                 <div id="unauthorized-message" class="text-center p-10 hidden">
                     <i data-lucide="lock" class="mx-auto h-12 w-12 text-red-500"></i>
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Acceso Denegado</h3>
                     <p class="mt-1 text-sm text-gray-500">Tu cuenta no tiene permisos para ver este tablero. Por favor, contacta al administrador.</p>
                 </div>
-    
+
                 <div id="main-container" class="container mx-auto hidden">
                     <section id="resumen" class="content-section fade-in">
                         <div class="flex flex-wrap justify-between items-center mb-6"><h2 class="text-3xl font-bold text-gray-800">Resumen General</h2><div class="mt-4 sm:mt-0"><label for="period-filter" class="text-sm font-medium text-gray-700 mr-2">Filtrar por:</label><select id="period-filter" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></select></div></div>
@@ -130,6 +128,50 @@
                             <div id="summary-ingles-card" class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between"><div><p class="text-sm font-medium text-gray-500">Prom. Inglés</p><p id="summary-ingles" class="text-3xl font-bold text-gray-800">0.0</p></div><div class="bg-blue-100 p-3 rounded-full"><i data-lucide="languages" class="h-6 w-6 text-blue-500"></i></div></div>
                         </div>
                     </section>
+
+                    <section id="entregables" class="content-section hidden fade-in space-y-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Próximos Entregables</h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <p class="text-sm font-medium text-gray-500 flex items-center"><i data-lucide="bar-chart-3" class="h-5 w-5 mr-2 text-blue-500"></i> Próxima Estadística</p>
+                                <p id="prox-estadistica-nombre" class="text-xl font-bold text-gray-800 mt-2 truncate" title="N/A">N/A</p>
+                                <p id="prox-estadistica-fecha" class="text-lg font-semibold text-blue-600 mt-1">--</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md flex flex-col">
+                                <p class="text-sm font-medium text-gray-500 flex items-center">
+                                    <i data-lucide="book-marked" class="h-5 w-5 mr-2 text-purple-500"></i> Próximas Calificaciones
+                                </p>
+                                <div id="prox-calificacion-lista" class="mt-2 space-y-2 flex-1">
+                                    <p class="text-gray-500 text-sm">No hay entregas de calificaciones pendientes.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <p class="text-sm font-medium text-gray-500 flex items-center"><i data-lucide="clipboard-list" class="h-5 w-5 mr-2 text-green-500"></i> Próxima Planeación</p>
+                                <p id="prox-planeacion-nombre" class="text-xl font-bold text-gray-800 mt-2 truncate" title="N/A">N/A</p>
+                                <p id="prox-planeacion-fecha" class="text-lg font-semibold text-green-600 mt-1">--</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="font-bold text-lg text-gray-700 mb-4">Calendario Completo de Entregables</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Categoría</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entregable</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Límite</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Días Restantes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabla-entregables-body" class="bg-white divide-y divide-gray-200">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
                     <section id="estudiantes" class="content-section hidden fade-in">
                         <h2 class="text-3xl font-bold mb-6 text-gray-800">Estadísticas de Estudiantes</h2>
                         <div class="bg-white p-4 rounded-xl shadow-md mb-6"><div class="flex flex-wrap gap-4 items-center justify-between"><div class="flex flex-wrap gap-4 items-center"><h3 class="font-bold text-lg text-gray-700">Filtros:</h3><div><label for="student-grade-filter" class="text-sm font-medium text-gray-700 mr-2">Grado:</label><select id="student-grade-filter" class="rounded-md border-gray-300 shadow-sm"></select></div><div><label for="student-group-filter" class="text-sm font-medium text-gray-700 mr-2">Grupo:</label><select id="student-group-filter" class="rounded-md border-gray-300 shadow-sm"></select></div><div><label for="student-gender-filter" class="text-sm font-medium text-gray-700 mr-2">Género:</label><select id="student-gender-filter" class="rounded-md border-gray-300 shadow-sm"><option value="Todos">Todos</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option></select></div><div><label for="student-bap-filter" class="text-sm font-medium text-gray-700 mr-2">BAP:</label><select id="student-bap-filter" class="rounded-md border-gray-300 shadow-sm"><option value="Todos">Todos</option><option value="Sí">Sí</option><option value="No">No</option></select></div></div><div class="text-right"><p class="text-sm font-medium text-gray-500">Total Estudiantes</p><p id="student-count-stats" class="text-2xl font-bold text-gray-800">0</p></div></div></div>
@@ -193,14 +235,14 @@
                             </div>
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="font-bold text-lg text-gray-700">Comparativa de Materias</h3><canvas id="expedienteRadarChart" class="mt-4"></canvas></div>
-                                 <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="font-bold text-lg text-gray-700">Evolución de Calificaciones por Bloque</h3><canvas id="expedienteCalificacionesChart" class="mt-4"></canvas></div>
+                                <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="font-bold text-lg text-gray-700">Evolución de Calificaciones por Bloque</h3><canvas id="expedienteCalificacionesChart" class="mt-4"></canvas></div>
                                 <div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2"><h3 class="font-bold text-lg text-gray-700">Historial de Asistencia Mensual</h3><canvas id="expedienteAsistenciaChart" class="mt-4"></canvas></div>
                             </div>
                         </div>
                     </section>
                     <section id="asistencia-padres" class="content-section hidden fade-in space-y-6">
                         <h2 class="text-3xl font-bold text-gray-800">Escuela para Padres</h2>
-                    
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
                                 <div>
@@ -222,10 +264,10 @@
                                     <p class="text-sm font-medium text-gray-500">Total de Asistencias</p>
                                     <p id="padres-total-asistentes" class="text-3xl font-bold text-gray-800">0</p>
                                 </div>
-                                 <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="users" class="h-6 w-6 text-blue-500"></i></div>
+                                <div class="bg-blue-100 p-3 rounded-full"><i data-lucide="users" class="h-6 w-6 text-blue-500"></i></div>
                             </div>
                         </div>
-                    
+
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div class="bg-white p-6 rounded-xl shadow-md">
                                 <h3 class="font-bold text-lg text-gray-700">Asistencia por Sesión</h3>
@@ -236,7 +278,7 @@
                                 <canvas id="asistenciaPadresTrendChart" class="mt-4"></canvas>
                             </div>
                         </div>
-                    
+
                         <div class="bg-white p-6 rounded-xl shadow-md">
                             <h3 class="font-bold text-lg text-gray-700 mb-4">Detalle de Sesiones</h3>
                             <div class="overflow-x-auto">
@@ -263,35 +305,36 @@
 
     <script>
         const CLIENT_ID = '207428727335-bfsgio74gs2irr3o1va1ts1jspti0gsh.apps.googleusercontent.com'; // <-- REEMPLAZA ESTO
-        
+
         const MASTER_SHEET_ID = '1HsjHb-zuhHrblvvLoH3jnIaUn9nTir85GTyL8-A60QA'; // <-- REEMPLAZA ESTO
-        const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8';                       // <-- REEMPLAZA ESTO
-        
+        const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8';           // <-- REEMPLAZA ESTO
+
         let SELECTED_SPREADSHEET_ID = null;
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/userinfo.email';
-        
+
         const SHEET_RANGES = {
-            permisos: 'Permisos!A:Z', 
+            permisos: 'Permisos!A:Z',
             alumnos: 'Alumnos!A:Z',
             calificaciones: 'Calificaciones!A:Z',
             asistencia: 'Asistencia!A:Z',
             boletos: 'Boletos!A:Z',
             docentes: 'Docentes!A:Z',
             asistenciaPadres: 'AsistenciaPadres!A:Z',
-            matricula: 'Matricula!A:Z'
+            matricula: 'Matricula!A:Z',
+            entregables: 'Entregables!A:Z'
         };
         const MESES_MAP = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         const SCHOOL_YEAR_MONTH_ORDER = ["Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio"];
-        
+
         let tokenClient;
         let gapiInited = false, gisInited = false;
-        
+
         document.getElementById('login-button').onclick = handleAuthClick;
         document.getElementById('signout_button').onclick = handleSignoutClick;
 
         function gapiLoaded() { gapi.load('client', initializeGapiClient); }
         function gisLoaded() { tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: '', }); gisInited = true; maybeEnableButtons(); }
-        
+
         async function initializeGapiClient() {
             await gapi.client.init({
                 apiKey: API_KEY,
@@ -300,20 +343,20 @@
             gapiInited = true;
             maybeEnableButtons();
         }
-        
+
         async function loadSchoolList() {
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: MASTER_SHEET_ID,
                     range: 'Escuelas!A2:C',
                 });
-                
+
                 const schoolSelector = document.getElementById('school-selector');
                 const loginButton = document.getElementById('login-button');
-                
+
                 schoolSelector.innerHTML = '<option value="">-- Por favor, selecciona --</option>';
                 const schools = response.result.values || [];
-                
+
                 if (schools.length > 0) {
                     schools.forEach(school => {
                         const schoolName = school[0];
@@ -330,7 +373,6 @@
                         }
                     });
                     schoolSelector.disabled = false;
-                    
                     loginButton.disabled = true;
                     loginButton.classList.add('opacity-50', 'cursor-not-allowed');
 
@@ -354,12 +396,12 @@
                 alert("No se pudo cargar la lista de escuelas. Revisa que el ID de la Hoja Maestra y la Clave de API sean correctos y que la hoja sea pública.");
             }
         }
-        
-        function maybeEnableButtons() { 
-            if (gapiInited && gisInited) { 
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
                 loadSchoolList();
                 lucide.createIcons();
-            } 
+            }
         }
 
         function handleAuthClick() {
@@ -387,7 +429,7 @@
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-wrapper').classList.remove('hidden');
                 document.getElementById('signout_button').classList.remove('hidden');
-                
+
                 const sidebarLogo = document.getElementById('school-logo-sidebar');
                 const defaultIcon = document.getElementById('default-icon');
 
@@ -410,7 +452,7 @@
                     headers: { 'Authorization': `Bearer ${gapi.client.getToken().access_token}` }
                 });
                 const userInfo = await userInfoResponse.json();
-                
+
                 const userInfoEl = document.getElementById('user-info');
                 userInfoEl.textContent = userInfo.email;
                 userInfoEl.classList.remove('hidden');
@@ -430,7 +472,7 @@
             if (token !== null) {
                 google.accounts.oauth2.revoke(token.access_token);
                 gapi.client.setToken('');
-                
+
                 const sidebarLogo = document.getElementById('school-logo-sidebar');
                 const defaultIcon = document.getElementById('default-icon');
                 if (sidebarLogo) {
@@ -446,7 +488,7 @@
                     schoolNameHeader.textContent = '';
                     schoolNameHeader.classList.add('hidden');
                 }
-                
+
                 document.getElementById('app-wrapper').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('main-container').classList.add('hidden');
@@ -469,12 +511,12 @@
             }
         }
 
-        function sheetsArrayToJson(dataArray) { if (!dataArray || dataArray.length < 2) return []; const headers = dataArray[0]; const jsonData = []; for (let i = 1; i < dataArray.length; i++) { const row = dataArray[i]; if (row.length === 0 || row.every(cell => cell.trim() === '')) continue; const obj = {}; for (let j = 0; j < headers.length; j++) { obj[headers[j]] = row[j]; } jsonData.push(obj); } return jsonData; }
-        
+        function sheetsArrayToJson(dataArray) { if (!dataArray || dataArray.length < 2) return []; const headers = dataArray[0]; const jsonData = []; for (let i = 1; i < dataArray.length; i++) { const row = dataArray[i]; if (row.length === 0 || row.every(cell => !cell || cell.trim() === '')) continue; const obj = {}; for (let j = 0; j < headers.length; j++) { obj[headers[j]] = row[j]; } jsonData.push(obj); } return jsonData; }
+
         async function loadAndProcessData(userEmail) {
             const loadingIndicator = document.getElementById('loading-indicator');
             const unauthorizedMessage = document.getElementById('unauthorized-message');
-            
+
             loadingIndicator.classList.remove('hidden');
             document.getElementById('main-container').classList.add('hidden');
             unauthorizedMessage.classList.add('hidden');
@@ -489,7 +531,7 @@
                 Object.keys(SHEET_RANGES).forEach((key, index) => {
                     jsonData[key] = sheetsArrayToJson(response.result.valueRanges[index]?.values || []);
                 });
-                
+
                 const permissionsList = jsonData.permisos || [];
                 let userPermissions = permissionsList.find(p => p.Email && p.Email.toLowerCase() === userEmail.toLowerCase());
 
@@ -497,13 +539,13 @@
                     loadingIndicator.classList.add('hidden');
                     unauthorizedMessage.classList.remove('hidden');
                     console.warn(`Usuario ${userEmail} no encontrado en la hoja de Permisos.`);
-                    handleSignoutClick(); 
+                    handleSignoutClick();
                     alert('Acceso Denegado. Tu cuenta no tiene permisos para ver este tablero.');
                     return;
                 }
 
                 const data = (jsonData.alumnos.length === 0) ? getDemoData() : processRealData(jsonData);
-                
+
                 main(data, userPermissions);
 
                 loadingIndicator.classList.add('hidden');
@@ -515,14 +557,15 @@
                 lucide.createIcons();
             }
         }
-        
+
         function processRealData(jsonData) {
-            const data = { resumenGeneral: {}, resumenMensual: [], resumenPorBloque: [], estudiantes: {}, docentes: {}, asistenciaPadres: [] };
+            const data = { resumenGeneral: {}, resumenMensual: [], resumenPorBloque: [], estudiantes: {}, docentes: {}, asistenciaPadres: [], entregables: [] };
             const validAlumnos = jsonData.alumnos.filter(a => a.id && a.clave_escolar && a.nombre && a.nombre.trim() !== '');
             const validStudentKeys = new Set(validAlumnos.map(a => a.clave_escolar));
             const validCalificaciones = jsonData.calificaciones.filter(c => validStudentKeys.has(c.clave_escolar));
             const validAsistencia = jsonData.asistencia.filter(a => validStudentKeys.has(a.clave_escolar));
             const validBoletos = jsonData.boletos.filter(b => validStudentKeys.has(b.clave_escolar));
+
             data.listaEstudiantes = validAlumnos.map(alumno => {
                 const clave = alumno.clave_escolar, id = alumno.id, calificaciones = {}, asistencia = {}, boletos = {};
                 validCalificaciones.filter(c => c.clave_escolar === clave).forEach(c => { if (c.calificacion && c.bloque && c.materia) { const grade = parseFloat(String(c.calificacion).replace(',', '.')); if (!isNaN(grade)) { const subjectKey = c.materia.toLowerCase().substring(0, 1); if (!calificaciones[c.bloque]) calificaciones[c.bloque] = {}; calificaciones[c.bloque][subjectKey] = grade; } } });
@@ -531,17 +574,21 @@
                 validBoletos.filter(b => b.clave_escolar === clave).forEach(b => { if (b.bloque && b.materia && b.fecha && b.calificacion) { if (!boletos[b.bloque]) boletos[b.bloque] = {}; if (!boletos[b.bloque][b.materia]) boletos[b.bloque][b.materia] = []; boletos[b.bloque][b.materia].push({ date: b.fecha, score: parseInt(b.calificacion) }); } });
                 return { id, clave_escolar: clave, nombre: alumno.nombre, genero: alumno.genero, grado: alumno.grado, grupo: alumno.grupo, status: (String(alumno.status).toLowerCase() === 'baja') ? 'baja' : 'activo', motivoBaja: alumno.motivoBaja, bap: (String(alumno.bap).toLowerCase() === 'true') ? 'Sí' : 'No', calificaciones, asistencia, boletos };
             });
+
             const subjects = [...new Set(validCalificaciones.map(c => c.materia))], blocks = [...new Set(validCalificaciones.map(c => c.bloque))].sort(), subjectKeyMap = { "Matemáticas": "matematicas", "Español": "espanol", "Ciencias": "ciencias", "Inglés": "ingles" };
             data.calificaciones = { bloques: blocks };
             subjects.forEach(subject => { const subjectKey = subjectKeyMap[subject]; if (!subjectKey) return; data.calificaciones[subjectKey] = []; blocks.forEach(block => { const gradesForBlock = validCalificaciones.filter(c => c.bloque === block && c.materia === subject).map(c => parseFloat(String(c.calificacion).replace(',', '.'))).filter(g => !isNaN(g)); data.calificaciones[subjectKey].push(gradesForBlock.length > 0 ? gradesForBlock.reduce((a, b) => a + b, 0) / gradesForBlock.length : 0); }); });
+
             if (jsonData.matricula && jsonData.matricula.length > 0) {
                 data.resumenMensual = jsonData.matricula.map(m => { const monthName = MESES_MAP[parseInt(m.mes)] || m.mes; const monthNumber = MESES_MAP.indexOf(monthName); let monthlyAttendanceTotal = 0; let studentCountForMonth = 0; if (monthNumber > 0) { data.listaEstudiantes.forEach(student => { if (student.status === 'activo' && student.asistencia && student.asistencia[monthNumber] !== undefined) { monthlyAttendanceTotal += student.asistencia[monthNumber]; studentCountForMonth++; } }); } const avgMonthlyAttendance = studentCountForMonth > 0 ? monthlyAttendanceTotal / studentCountForMonth : 0; return { periodo: monthName, matricula: parseInt(m.matricula) || 0, asistencia: avgMonthlyAttendance }; }).sort((a, b) => (SCHOOL_YEAR_MONTH_ORDER.indexOf(a.periodo) - SCHOOL_YEAR_MONTH_ORDER.indexOf(b.periodo)));
                 data.resumenGeneral.matricula = data.resumenMensual[data.resumenMensual.length - 1]?.matricula || 0; data.estudiantes.meses = data.resumenMensual.map(m => m.periodo); data.estudiantes.matricula = data.resumenMensual.map(m => m.matricula);
             } else { data.resumenGeneral.matricula = data.listaEstudiantes.filter(s => s.status === 'activo').length; data.estudiantes.meses = []; data.estudiantes.matricula = []; }
+
             data.resumenPorBloque = blocks.map(block => { const blockSummary = { bloque: block }; subjects.forEach(subject => { const subjectKey = `prom_${subjectKeyMap[subject]}`; if (subjectKey && !subjectKey.endsWith('undefined')) { const gradesInBlock = validCalificaciones.filter(c => c.bloque === block && c.materia === subject).map(c => parseFloat(String(c.calificacion).replace(',', '.'))).filter(g => !isNaN(g)); blockSummary[subjectKey] = gradesInBlock.length > 0 ? gradesInBlock.reduce((a, b) => a + b, 0) / gradesInBlock.length : 0; } }); return blockSummary; });
+
             data.resumenGeneral.bajas = data.listaEstudiantes.filter(s => s.status === 'baja').length; data.resumenGeneral.alumnosBAP = data.listaEstudiantes.filter(s => s.bap === 'Sí' && s.status === 'activo').length;
             subjects.forEach(subject => { const subjectKey = `prom_${subjectKeyMap[subject]}`; const allGrades = validCalificaciones.filter(c => c.materia === subject).map(c => parseFloat(String(c.calificacion).replace(',', '.'))).filter(g => !isNaN(g)); data.resumenGeneral[subjectKey] = allGrades.length > 0 ? allGrades.reduce((a, b) => a + b, 0) / allGrades.length : 0; });
-            
+
             const allActiveStudentAttendanceValues = [];
             data.listaEstudiantes.forEach(student => {
                 if (student.status === 'activo' && student.asistencia) {
@@ -555,11 +602,10 @@
             data.resumenGeneral.asistencia = allActiveStudentAttendanceValues.length > 0 ? allActiveStudentAttendanceValues.reduce((a, b) => a + b, 0) / allActiveStudentAttendanceValues.length : 0;
 
             if(jsonData.docentes && jsonData.docentes.length > 0) { data.docentes = { altas: jsonData.docentes.map(d => parseInt(d.altas) || 0), bajas: jsonData.docentes.map(d => parseInt(d.bajas) || 0), meses: jsonData.docentes.map(d => MESES_MAP[parseInt(d.mes)] || d.mes) }; data.resumenGeneral.docentes = jsonData.docentes.length; } else { data.docentes = {altas: [], bajas: [], meses: []}; data.resumenGeneral.docentes = 0; }
-            
-            // --- LÓGICA MEJORADA PARA ASISTENCIA DE PADRES ---
+
             if (jsonData.asistenciaPadres && jsonData.asistenciaPadres.length > 0) {
                 data.asistenciaPadres = jsonData.asistenciaPadres
-                    .filter(d => d.asistentes != null && String(d.asistentes).trim() !== '') // Filtra sesiones sin asistentes
+                    .filter(d => d.asistentes != null && String(d.asistentes).trim() !== '')
                     .map(d => ({
                         sesion: parseInt(d.sesion) || 0,
                         porcentaje_asistencia: parseFloat(String(d.porcentaje_asistencia).replace('%', '')) || 0,
@@ -567,7 +613,7 @@
                         titulo_sesion: d.titulo_sesion || `Sesión ${d.sesion}`,
                         esperados: parseInt(d.esperados) || 0,
                         asistentes: parseInt(d.asistentes) || 0,
-                    })).sort((a, b) => a.sesion - b.sesion); 
+                    })).sort((a, b) => a.sesion - b.sesion);
 
                 const allPercentages = data.asistenciaPadres.map(d => d.porcentaje_asistencia).filter(p => p > 0);
                 if (allPercentages.length > 0) {
@@ -577,9 +623,12 @@
                     data.resumenGeneral.prom_asistencia_padres = 0;
                 }
             } else {
-                data.asistenciaPadres = []; 
+                data.asistenciaPadres = [];
                 data.resumenGeneral.prom_asistencia_padres = 0;
             }
+
+            data.entregables = (jsonData.entregables || []).filter(e => e.Categoria && e.NombreEntregable && e.FechaLimite);
+
             return data;
         }
 
@@ -587,19 +636,21 @@
             const nav = document.getElementById('main-nav');
             const navLinks = nav.querySelectorAll('.nav-link');
             let firstVisibleLink = null;
-            const permissionMap = { 'resumen': 'Resumen', 'estudiantes': 'Estudiantes', 'docentes': 'Docentes', 'calificaciones': 'Calificaciones', 'calificaciones-grado': 'Calificaciones por Grado', 'boletos-salida': 'Boletos de Salida', 'expediente-estudiante': 'Expediente Estudiante', 'asistencia-padres': 'Escuela para Padres' };
+            const permissionMap = { 'resumen': 'Resumen', 'entregables': 'Entregables', 'estudiantes': 'Estudiantes', 'docentes': 'Docentes', 'calificaciones': 'Calificaciones', 'calificaciones-grado': 'Calificaciones por Grado', 'boletos-salida': 'Boletos de Salida', 'expediente-estudiante': 'Expediente Estudiante', 'asistencia-padres': 'Escuela para Padres' };
             navLinks.forEach(link => { const sectionName = link.getAttribute('href').substring(1); const permissionKey = permissionMap[sectionName]; if (permissions[permissionKey] === 'TRUE') { link.style.display = 'block'; if (!firstVisibleLink) { firstVisibleLink = link; } } else { link.style.display = 'none'; const sectionElement = document.getElementById(sectionName); if (sectionElement) { sectionElement.remove(); } } });
             if (permissions[permissionMap['estudiantes']] !== 'TRUE') { const cardBajas = document.getElementById('card-bajas'); if (cardBajas) cardBajas.style.display = 'none'; }
             if (permissions[permissionMap['docentes']] !== 'TRUE') { const cardDocentes = document.getElementById('card-docentes'); if (cardDocentes) cardDocentes.style.display = 'none'; }
             if (permissions[permissionMap['asistencia-padres']] !== 'TRUE') { const cardPadres = document.getElementById('card-padres'); if (cardPadres) cardPadres.style.display = 'none'; }
             navLinks.forEach(link => link.classList.remove('active-link'));
             if (firstVisibleLink) { firstVisibleLink.classList.add('active-link'); const firstVisibleSection = document.getElementById(firstVisibleLink.getAttribute('href').substring(1)); document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden')); if (firstVisibleSection) { firstVisibleSection.classList.remove('hidden'); } }
+
             Chart.register(ChartDataLabels);
             function getNivelDeLogro(promedio) { if (promedio > 9.5) return { nivel: 'Sobresaliente', color: 'bg-[#c0e6af] text-green-900' }; if (promedio >= 8.0) return { nivel: 'Buen desempeño', color: 'bg-[#ffe599] text-amber-800' }; if (promedio >= 7.0) return { nivel: 'Desempeño medio', color: 'bg-[#f9cb9c] text-orange-900' }; if (promedio >= 6.0) return { nivel: 'Bajo desempeño', color: 'bg-[#e06666] text-white' }; return { nivel: 'Foco Rojo', color: 'bg-[#990000] text-white' }; }
             const getEl = (id) => document.getElementById(id);
             const summaryMatricula = getEl('summary-matricula'), summaryBap = getEl('summary-bap'), summaryAsistencia = getEl('summary-asistencia'), summaryBajas = getEl('summary-bajas'), summaryDocentes = getEl('summary-docentes'), summaryMatematicas = getEl('summary-matematicas'), summaryEspanol = getEl('summary-espanol'), summaryCiencias = getEl('summary-ciencias'), summaryIngles = getEl('summary-ingles'), summaryPadres = getEl('summary-padres'), periodFilter = getEl('period-filter'), gradeFilter = getEl('grade-filter'), groupFilter = getEl('group-filter'), blockFilter = getEl('block-filter'), genderFilterCal = getEl('gender-filter-cal'), studentCountGrades = getEl('student-count-grades'), studentGradeFilter = getEl('student-grade-filter'), studentGroupFilter = getEl('student-group-filter'), studentGenderFilter = getEl('student-gender-filter'), studentBapFilter = getEl('student-bap-filter'), studentCountStats = getEl('student-count-stats'), asistenciaChartTitle = getEl('asistencia-chart-title'), boletoBlockFilter = getEl('boleto-block-filter'), boletoGradeFilter = getEl('boleto-grade-filter'), boletoGroupFilter = getEl('boleto-group-filter'), boletoSubjectFilter = getEl('boleto-subject-filter'), boletosChartContainer = getEl('boletos-chart-container'), boletosNoData = getEl('boletos-no-data'), expedienteGradeFilter = getEl('expediente-grade-filter'), expedienteGroupFilter = getEl('expediente-group-filter'), expedienteStudentFilter = getEl('expediente-student-filter'), expedienteContainer = getEl('expediente-container'), expedientePlaceholder = getEl('expediente-placeholder');
             let matriculaChartInstance, asistenciaChartInstance, calificacionesGradoChart, nivelLogroChartInstance, boletosSalidaChartInstance, expedienteAsistenciaChartInstance, expedienteCalificacionesChartInstance, expedienteRadarChartInstance;
             const datalabelConfig = { anchor: 'end', align: 'top', formatter: (value) => value ? parseFloat(value).toFixed(1) : '', color: '#555', font: { weight: 'bold' } };
+
             function manageVisibility() { const subjects = { matematicas: "Matemáticas", espanol: "Español", ciencias: "Ciencias", ingles: "Inglés" }; Object.entries(subjects).forEach(([key, name]) => { const hasData = data.calificaciones[key] && data.calificaciones[key].length > 0 && data.calificaciones[key].some(v => v > 0); const summaryCard = getEl(`summary-${key}-card`); const chartContainer = getEl(`calificaciones${name.replace('á','a').replace('ñ','n')}-container`); const expPromContainer = getEl(`expediente-prom-${key.substring(0,3)}-container`); if (summaryCard) summaryCard.style.display = hasData ? 'flex' : 'none'; if (chartContainer) chartContainer.style.display = hasData ? 'block' : 'none'; if (expPromContainer) expPromContainer.style.display = hasData ? 'block' : 'none'; }); }
             function populateFilter() { periodFilter.innerHTML = '<option value="General">General</option>'; const a = document.createElement("optgroup"); a.label = "Meses", (data.resumenMensual || []).forEach(b => { const c = document.createElement("option"); c.value = b.periodo, c.textContent = b.periodo, a.appendChild(c) }), periodFilter.appendChild(a); const b = document.createElement("optgroup"); b.label = "Bloques", (data.resumenPorBloque || []).forEach(a => { const c = document.createElement("option"); c.value = a.bloque, c.textContent = a.bloque, b.appendChild(c) }), periodFilter.appendChild(b); }
             function updateSummary(selectedPeriod) { const isGeneral = (!selectedPeriod || selectedPeriod === 'General'); let periodData = isGeneral ? data.resumenGeneral : (data.resumenMensual || []).find(item => item.periodo === selectedPeriod) || (data.resumenPorBloque || []).find(item => item.bloque === selectedPeriod); if (!periodData) { periodData = {}; } const fallbackAsistencia = isGeneral ? (data.resumenGeneral.asistencia || 0) : 0; summaryAsistencia.textContent = `${(periodData.asistencia || fallbackAsistencia).toFixed(1)}%`; summaryMatricula.textContent = periodData.matricula || (isGeneral ? data.resumenGeneral.matricula : 0) || 0; summaryBap.textContent = periodData.alumnosBAP || (isGeneral ? data.resumenGeneral.alumnosBAP : 0) || 0; summaryBajas.textContent = periodData.bajas || (isGeneral ? data.resumenGeneral.bajas : 0) || 0; summaryDocentes.textContent = periodData.docentes || (isGeneral ? data.resumenGeneral.docentes : 0) || 0; summaryPadres.textContent = `${((periodData.prom_asistencia_padres || (isGeneral ? data.resumenGeneral.prom_asistencia_padres : 0)) || 0).toFixed(1)}%`; summaryMatematicas.textContent = (periodData.prom_matematicas || 0).toFixed(1); summaryEspanol.textContent = (periodData.prom_espanol || 0).toFixed(1); summaryCiencias.textContent = (periodData.prom_ciencias || 0).toFixed(1); summaryIngles.textContent = (periodData.prom_ingles || 0).toFixed(1); }
@@ -612,7 +663,7 @@
             function populateGroupFilter(grado) { if (!groupFilter) return; groupFilter.innerHTML = '<option value="Todos">Todos</option>'; const grupos = [...new Set(data.listaEstudiantes.filter(b => b.grado === grado).map(a => a.grupo))].sort(); grupos.forEach(grupo => { groupFilter.innerHTML += `<option value="${grupo}">${grupo}</option>` }); }
             function populateBlockFilter(){if (!blockFilter) return; blockFilter.innerHTML='<option value="General">General</option>',data.calificaciones.bloques.forEach(a=>{const b=document.createElement("option");b.value=a,b.textContent=a,blockFilter.appendChild(b)})}
             function updateCalificacionesGradoCharts(grade, group, block, gender){ if (!getEl("calificacionesGradoChart")) return; updateCalificacionesGradoBarChart(grade, group, block, gender); updateNivelLogroChart(grade, group, block, gender); }
-            function updateNivelLogroChart(grade, group, block, gender) { let filteredStudents; if (grade === 'Todos') { filteredStudents = data.listaEstudiantes.filter(s => s.status === 'activo'); } else { filteredStudents = data.listaEstudiantes.filter(s => s.grado === grade && s.status === 'activo'); } if (group !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.grupo === group); } if (gender !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.genero === gender); } studentCountGrades.textContent = filteredStudents.length; const levelsBySubject = { m: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, e: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, c: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, i: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }}; const subjectNames = { m: "Matemáticas", e: "Español", c: "Ciencias", i: "Inglés" }; filteredStudents.forEach(student => { if (student.calificaciones) { if (block === 'General') { const studentAverages = { m: [], e: [], c: [], i: [] }; for (const blockName in student.calificaciones) { const blockGrades = student.calificaciones[blockName]; Object.keys(blockGrades).forEach(subjectKey => { if (studentAverages[subjectKey]) { studentAverages[subjectKey].push(blockGrades[subjectKey]); } }); } Object.keys(studentAverages).forEach(subjectKey => { if (studentAverages[subjectKey].length > 0) { const avg = studentAverages[subjectKey].reduce((a, b) => a + b, 0) / studentAverages[subjectKey].length; const level = getNivelDeLogro(avg).nivel; if(levelsBySubject[subjectKey]) levelsBySubject[subjectKey][level]++; } }); } else { const blockGrades = student.calificaciones[block]; if (blockGrades) { Object.keys(blockGrades).forEach(subjectKey => { const gradeValue = blockGrades[subjectKey]; if (gradeValue !== undefined && !isNaN(parseFloat(gradeValue)) && levelsBySubject[subjectKey]) { levelsBySubject[subjectKey][getNivelDeLogro(gradeValue).nivel]++; } }); } } } }); 
+            function updateNivelLogroChart(grade, group, block, gender) { let filteredStudents; if (grade === 'Todos') { filteredStudents = data.listaEstudiantes.filter(s => s.status === 'activo'); } else { filteredStudents = data.listaEstudiantes.filter(s => s.grado === grade && s.status === 'activo'); } if (group !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.grupo === group); } if (gender !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.genero === gender); } studentCountGrades.textContent = filteredStudents.length; const levelsBySubject = { m: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, e: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, c: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, i: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }}; const subjectNames = { m: "Matemáticas", e: "Español", c: "Ciencias", i: "Inglés" }; filteredStudents.forEach(student => { if (student.calificaciones) { if (block === 'General') { const studentAverages = { m: [], e: [], c: [], i: [] }; for (const blockName in student.calificaciones) { const blockGrades = student.calificaciones[blockName]; Object.keys(blockGrades).forEach(subjectKey => { if (studentAverages[subjectKey]) { studentAverages[subjectKey].push(blockGrades[subjectKey]); } }); } Object.keys(studentAverages).forEach(subjectKey => { if (studentAverages[subjectKey].length > 0) { const avg = studentAverages[subjectKey].reduce((a, b) => a + b, 0) / studentAverages[subjectKey].length; const level = getNivelDeLogro(avg).nivel; if(levelsBySubject[subjectKey]) levelsBySubject[subjectKey][level]++; } }); } else { const blockGrades = student.calificaciones[block]; if (blockGrades) { Object.keys(blockGrades).forEach(subjectKey => { const gradeValue = blockGrades[subjectKey]; if (gradeValue !== undefined && !isNaN(parseFloat(gradeValue)) && levelsBySubject[subjectKey]) { levelsBySubject[subjectKey][getNivelDeLogro(gradeValue).nivel]++; } }); } } } });
                 const levelOrder = ["Sobresaliente", "Buen desempeño", "Desempeño medio", "Bajo desempeño", "Foco Rojo"];
                 const levelColors = ["#c0e6af", "#ffe599", "#f9cb9c", "#e06666", "#990000"];
                 const chartLabels = Object.keys(subjectNames).filter(key => data.calificaciones[key.replace('m','matematicas').replace('e','espanol').replace('c','ciencias').replace('i','ingles')]).map(key => subjectNames[key]); const datasets = levelOrder.map((level, index) => ({ label: level, data: Object.keys(subjectNames).filter(key => data.calificaciones[key.replace('m','matematicas').replace('e','espanol').replace('c','ciencias').replace('i','ingles')]).map(key => levelsBySubject[key][level]), backgroundColor: levelColors[index] })); if (nivelLogroChartInstance) nivelLogroChartInstance.destroy(); nivelLogroChartInstance = new Chart(getEl("nivelLogroChart"), { type: "bar", data: { labels: chartLabels, datasets: datasets }, options: { responsive: !0, plugins: { legend: { position: "top" }, title: { display: true, text: `Niveles de Logro - ${grade === 'Todos' ? 'General' : grade} ${group !== "Todos" && grade !== 'Todos' ? "Grupo " + group : ""}` } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: "Cantidad de Estudiantes" } } } } }); }
@@ -620,33 +671,26 @@
             function setupBoletosFilters() { if (!boletoBlockFilter) return; boletoBlockFilter.innerHTML = "", data.calificaciones.bloques.forEach(a => { const b = document.createElement("option"); b.value = a, b.textContent = a, boletoBlockFilter.appendChild(b) }); const a = [...new Set(data.listaEstudiantes.map(a => a.grado))].sort((x,y)=>x.localeCompare(y, undefined, {numeric: true})); boletoGradeFilter.innerHTML = '<option value="Todos">Todos</option>', a.forEach(a => { boletoGradeFilter.innerHTML += `<option value="${a}">${a}</option>` }); const b = ["Matemáticas", "Español", "Ciencias", "Inglés"]; boletoSubjectFilter.innerHTML = '<option value="Todas">Todas</option>', b.sort().forEach(a => { boletoSubjectFilter.innerHTML += `<option value="${a}">${a}</option>` }), boletoGradeFilter.addEventListener("change", () => { const a = boletoGradeFilter.value; boletoGroupFilter.innerHTML = '<option value="Todos">Todos</option>', "Todos" !== a ? (boletoGroupFilter.disabled = !1, [...new Set(data.listaEstudiantes.filter(b => b.grado === a).map(a => a.grupo))].sort().forEach(a => { boletoGroupFilter.innerHTML += `<option value="${a}">${a}</option>` })) : boletoGroupFilter.disabled = !0, updateBoletosChart() }), boletoGroupFilter.disabled = !0, [boletoBlockFilter, boletoGroupFilter, boletoSubjectFilter].forEach(a => { a.addEventListener("change", updateBoletosChart) }) }
             function updateBoletosChart(){ if (!getEl('boletosSalidaChart')) return; const a=boletoBlockFilter.value,b=boletoGradeFilter.value,c=boletoGroupFilter.value,d=boletoSubjectFilter.value;let e=data.listaEstudiantes;"Todos"!==b&&(e=e.filter(a=>a.grado===b)),"Todos"!==c&&(e=e.filter(a=>a.grupo===c));const f={};let g=!1;e.forEach(b=>{if(b.boletos&&b.boletos[a]){const c="Todas"===d?Object.keys(b.boletos[a]):[d];c.forEach(c=>{b.boletos[a][c]&&b.boletos[a][c].forEach(b=>{g=!0,f[b.date]||(f[b.date]={1:0,2:0,3:0}),f[b.date][b.score]++})})}});if(!g)return boletosChartContainer.classList.add("hidden"),void boletosNoData.classList.remove("hidden");boletosChartContainer.classList.remove("hidden"),boletosNoData.classList.add("hidden");const h=Object.keys(f).sort((a,b)=>new Date(a)-new Date(b)),i=h.map(a=>f[a][1]),j=h.map(a=>f[a][2]),k=h.map(a=>f[a][3]);boletosSalidaChartInstance&&boletosSalidaChartInstance.destroy(),boletosSalidaChartInstance=new Chart(getEl("boletosSalidaChart"),{type:"bar",data:{labels:h,datasets:[{label:"Calificación 1 (Bajo)",data:i,backgroundColor:"rgba(239, 68, 68, 0.7)"},{label:"Calificación 2 (Medio)",data:j,backgroundColor:"rgba(245, 158, 11, 0.7)"},{label:"Calificación 3 (Alto)",data:k,backgroundColor:"rgba(22, 163, 74, 0.7)"}]},options:{responsive:!0,plugins:{legend:{position:"top"}},scales:{x:{stacked:!0,title:{display:!0,text:"Fecha de Clase"}},y:{stacked:!0,beginAtZero:!0,title:{display:!0,text:"Cantidad de Estudiantes"}}}}})}
             function setupExpedienteFilters(){if (!expedienteGradeFilter) return; const a=[...new Set(data.listaEstudiantes.map(a=>a.grado))].sort((x,y)=>x.localeCompare(y, undefined, {numeric: true}));expedienteGradeFilter.innerHTML='<option value="">Seleccione...</option>',a.forEach(a=>{expedienteGradeFilter.innerHTML+=`<option value="${a}">${a}</option>`}),expedienteGradeFilter.addEventListener("change",()=>{const a=expedienteGradeFilter.value;expedienteGroupFilter.innerHTML='<option value="">Seleccione...</option>',expedienteStudentFilter.innerHTML='<option value="">Seleccione...</option>',expedienteContainer.classList.add("hidden"),expedientePlaceholder.classList.remove("hidden"),a?(expedienteGroupFilter.disabled=!1,[...new Set(data.listaEstudiantes.filter(b=>b.grado===a).map(a=>a.grupo))].sort().forEach(a=>{expedienteGroupFilter.innerHTML+=`<option value="${a}">${a}</option>`})):expedienteGroupFilter.disabled=!0,expedienteStudentFilter.disabled=!0}),expedienteGroupFilter.addEventListener("change",()=>{const a=expedienteGradeFilter.value,b=expedienteGroupFilter.value;expedienteStudentFilter.innerHTML='<option value="">Seleccione...</option>',expedienteContainer.classList.add("hidden"),expedientePlaceholder.classList.remove("hidden"),a&&b?(expedienteStudentFilter.disabled=!1,data.listaEstudiantes.filter(c=>c.grado===a&&c.grupo===b).sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(a=>{expedienteStudentFilter.innerHTML+=`<option value="${a.id}">${a.nombre}</option>`})):expedienteStudentFilter.disabled=!0}),expedienteStudentFilter.addEventListener("change",a=>{a.target.value?(updateExpedienteView(a.target.value),expedienteContainer.classList.remove("hidden"),expedientePlaceholder.classList.add("hidden")):(expedienteContainer.classList.add("hidden"),expedientePlaceholder.classList.remove("hidden"))}),expedienteGroupFilter.disabled=!0,expedienteStudentFilter.disabled=!0}
-            function updateExpedienteView(a){ const b=data.listaEstudiantes.find(b=>b.id==a); if(!b)return; getEl("expediente-nombre").textContent=b.nombre,getEl("expediente-grupo").textContent=`${b.grado} - ${b.grupo}`,getEl("expediente-genero").textContent=b.genero; const c=getEl("expediente-estatus");c.textContent=b.status.charAt(0).toUpperCase()+b.status.slice(1),c.className=`text-lg font-semibold ${"activo"===b.status?"text-green-600":"text-red-600"}`,getEl("expediente-bap").textContent=b.bap||"No", getEl("expediente-clave").textContent = b.clave_escolar || b.id || 'N/A'; let d=0,e=0;if(b.calificaciones&&Object.keys(b.calificaciones).length>0){for(const a in b.calificaciones){const c=b.calificaciones[a];for(const key in c) {d+=c[key]||0,e++}}}const f=e>0?d/e:0;getEl("expediente-promedio").textContent=f.toFixed(2); const g=getNivelDeLogro(f),h=getEl("expediente-nivel-logro");h.textContent=g.nivel,h.className=`text-base font-bold px-2 py-1 rounded-md inline-block align-middle ${g.color}`; const i=getEl("expediente-block-filter");i.innerHTML='<option value="General">General</option>';const j=Object.keys(b.calificaciones||{}).sort();j.forEach(a=>{const b=document.createElement("option");b.value=a,b.textContent=a,i.appendChild(b)}); const initialAverages = updateExpedienteSubjectAverages(b,"General"); updateExpedienteRadarChart(initialAverages, "General"); const studentMonths = Object.keys(b.asistencia).sort((a,b) => a-b).map(num => MESES_MAP[num]); const studentAttendance = Object.keys(b.asistencia).sort((a,b) => a-b).map(key => b.asistencia[key]); if(expedienteAsistenciaChartInstance)expedienteAsistenciaChartInstance.destroy(); expedienteAsistenciaChartInstance=new Chart(getEl("expedienteAsistenciaChart"),{type:"bar",options:{responsive:!0,plugins:{datalabels:{...datalabelConfig, formatter: (v) => v ? `${v}%` : ''}},scales:{y:{beginAtZero:!1,min:70,max:100.5}}}}); expedienteAsistenciaChartInstance.data={labels:studentMonths,datasets:[{label:"% de Asistencia",data:studentAttendance,backgroundColor:"rgba(22, 163, 74, 0.6)",borderColor:"rgba(22, 163, 74, 1)",borderWidth:1}]},expedienteAsistenciaChartInstance.update(); const m=data.calificaciones.bloques,n=m.map(a=>b.calificaciones[a]?.m||null),o=m.map(a=>b.calificaciones[a]?.e||null),p=m.map(a=>b.calificaciones[a]?.c||null),q=m.map(a=>b.calificaciones[a]?.i||null); if(expedienteCalificacionesChartInstance)expedienteCalificacionesChartInstance.destroy(); expedienteCalificacionesChartInstance=new Chart(getEl("expedienteCalificacionesChart"),{type:"bar",data:{labels:m,datasets:[{label:"Matemáticas",data:n,backgroundColor:"rgba(234, 179, 8, 0.7)"},{label:"Español",data:o,backgroundColor:"rgba(139, 92, 246, 0.7)"},{label:"Ciencias",data:p,backgroundColor:"rgba(22, 163, 74, 0.7)"},{label:"Inglés",data:q,backgroundColor:"rgba(37, 99, 235, 0.7)"}]}, options:{responsive:!0,plugins:{datalabels: datalabelConfig},scales:{y:{beginAtZero:!0,min:0,max:10.5}}}}); expedienteCalificacionesChartInstance.update() }
+            function updateExpedienteView(a){ const b=data.listaEstudiantes.find(b=>b.id==a); if(!b)return; getEl("expediente-nombre").textContent=b.nombre,getEl("expediente-grupo").textContent=`${b.grado} - ${b.grupo}`,getEl("expediente-genero").textContent=b.genero; const c=getEl("expediente-estatus");c.textContent=b.status.charAt(0).toUpperCase()+b.status.slice(1),c.className=`text-lg font-semibold ${"activo"===b.status?"text-green-600":"text-red-600"}`,getEl("expediente-bap").textContent=b.bap||"No", getEl("expediente-clave").textContent = b.clave_escolar || b.id || 'N/A'; let d=0,e=0;if(b.calificaciones&&Object.keys(b.calificaciones).length>0){for(const a in b.calificaciones){const c=b.calificaciones[a];for(const key in c) {d+=(c[key]||0),e++}}}const f=e>0?d/e:0;getEl("expediente-promedio").textContent=f.toFixed(2); const g=getNivelDeLogro(f),h=getEl("expediente-nivel-logro");h.textContent=g.nivel,h.className=`text-base font-bold px-2 py-1 rounded-md inline-block align-middle ${g.color}`; const i=getEl("expediente-block-filter");i.innerHTML='<option value="General">General</option>';const j=Object.keys(b.calificaciones||{}).sort();j.forEach(a=>{const b=document.createElement("option");b.value=a,b.textContent=a,i.appendChild(b)}); const initialAverages = updateExpedienteSubjectAverages(b,"General"); updateExpedienteRadarChart(initialAverages, "General"); const studentMonths = Object.keys(b.asistencia).sort((a,b) => parseInt(a)-parseInt(b)).map(num => MESES_MAP[num]); const studentAttendance = Object.keys(b.asistencia).sort((a,b) => parseInt(a)-parseInt(b)).map(key => b.asistencia[key]); if(expedienteAsistenciaChartInstance)expedienteAsistenciaChartInstance.destroy(); expedienteAsistenciaChartInstance=new Chart(getEl("expedienteAsistenciaChart"),{type:"bar",options:{responsive:!0,plugins:{datalabels:{...datalabelConfig, formatter: (v) => v ? `${v}%` : ''}},scales:{y:{beginAtZero:!1,min:70,max:100.5}}}}); expedienteAsistenciaChartInstance.data={labels:studentMonths,datasets:[{label:"% de Asistencia",data:studentAttendance,backgroundColor:"rgba(22, 163, 74, 0.6)",borderColor:"rgba(22, 163, 74, 1)",borderWidth:1}]},expedienteAsistenciaChartInstance.update(); const m=data.calificaciones.bloques,n=m.map(a=>b.calificaciones[a]?.m||null),o=m.map(a=>b.calificaciones[a]?.e||null),p=m.map(a=>b.calificaciones[a]?.c||null),q=m.map(a=>b.calificaciones[a]?.i||null); if(expedienteCalificacionesChartInstance)expedienteCalificacionesChartInstance.destroy(); expedienteCalificacionesChartInstance=new Chart(getEl("expedienteCalificacionesChart"),{type:"bar",data:{labels:m,datasets:[{label:"Matemáticas",data:n,backgroundColor:"rgba(234, 179, 8, 0.7)"},{label:"Español",data:o,backgroundColor:"rgba(139, 92, 246, 0.7)"},{label:"Ciencias",data:p,backgroundColor:"rgba(22, 163, 74, 0.7)"},{label:"Inglés",data:q,backgroundColor:"rgba(37, 99, 235, 0.7)"}]}, options:{responsive:!0,plugins:{datalabels: datalabelConfig},scales:{y:{beginAtZero:!0,min:0,max:10.5}}}}); expedienteCalificacionesChartInstance.update() }
             function updateExpedienteSubjectAverages(a,b){if(!a)return;let c={m:NaN,e:NaN,c:NaN,i:NaN};if(a.calificaciones&&Object.keys(a.calificaciones).length>0)if("General"===b){const b={m:[],e:[],c:[],i:[]};for(const d in a.calificaciones){const e=a.calificaciones[d];Object.keys(e).forEach(a=>{b[a]&&b[a].push(e[a])})} Object.keys(b).forEach(a=>{b[a].length>0&&(c[a]=b[a].reduce((a,b)=>a+b,0)/b[a].length)})}else{const d=a.calificaciones[b]||{};c.m=d.m,c.e=d.e,c.c=d.c,c.i=d.i} const d=c.m,e=getNivelDeLogro(d);getEl("expediente-prom-mat").textContent=isNaN(d)?"N/A":d.toFixed(2),getEl("expediente-nivel-mat").textContent=isNaN(d)?"":e.nivel,getEl("expediente-nivel-mat").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(d)?"":e.color}`;const f=c.e,g=getNivelDeLogro(f);getEl("expediente-prom-esp").textContent=isNaN(f)?"N/A":f.toFixed(2),getEl("expediente-nivel-esp").textContent=isNaN(f)?"":g.nivel,getEl("expediente-nivel-esp").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(f)?"":g.color}`;const h=c.c,i=getNivelDeLogro(h);getEl("expediente-prom-cie").textContent=isNaN(h)?"N/A":h.toFixed(2),getEl("expediente-nivel-cie").textContent=isNaN(h)?"":i.nivel,getEl("expediente-nivel-cie").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(h)?"":i.color}`;const j=c.i,k=getNivelDeLogro(j);getEl("expediente-prom-ing").textContent=isNaN(j)?"N/A":j.toFixed(2),getEl("expediente-nivel-ing").textContent=isNaN(j)?"":k.nivel,getEl("expediente-nivel-ing").className=`text-xs font-bold px-2 py-0.5 rounded-md inline-block mt-1 align-middle ${isNaN(j)?"":k.color}`; return c;}
             function updateExpedienteRadarChart(averages, blockName) { if(!getEl("expedienteRadarChart")) return; if (expedienteRadarChartInstance) expedienteRadarChartInstance.destroy(); const subjectMap = { m: 'Matemáticas', e: 'Español', c: 'Ciencias', i: 'Inglés' }; const labels = [], dataPoints = []; Object.keys(subjectMap).forEach(key => { if (!isNaN(averages[key])) { labels.push(subjectMap[key]); dataPoints.push(averages[key]); } }); expedienteRadarChartInstance = new Chart(getEl("expedienteRadarChart"), { type: 'radar', data: { labels: labels, datasets: [{ label: `Promedio (${blockName})`, data: dataPoints, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 2 }] }, options: { responsive: true, scales: { r: { beginAtZero: true, min: 0, max: 10, ticks: { stepSize: 2 } } }, plugins: { legend: { position: 'top' }, datalabels: { color: '#36A2EB', font: {weight: 'bold'}, formatter: (v) => parseFloat(v).toFixed(1) } } } }); }
-            
-            // --- FUNCIÓN ACTUALIZADA PARA LA SECCIÓN DE PADRES ---
+
             function createAsistenciaPadresSection(data) {
                 const section = getEl('asistencia-padres');
-                if (!section) return; // Si la sección no existe por permisos, no hacer nada.
+                if (!section) return;
                 if (!data.asistenciaPadres || data.asistenciaPadres.length === 0) {
                     section.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Escuela para Padres</h2><p class="text-center text-gray-500 bg-white p-10 rounded-xl shadow-md">No hay datos de asistencia de padres disponibles.</p>';
                     return;
                 }
-            
                 const sesiones = data.asistenciaPadres;
-                
-                // 1. Calcular KPIs
                 const totalAsistencias = sesiones.reduce((sum, s) => sum + s.asistentes, 0);
                 const promedioAsistencia = data.resumenGeneral.prom_asistencia_padres || 0;
-            
                 let mejorSesion = { porcentaje_asistencia: -1, titulo_sesion: 'N/A' };
                 let peorSesion = { porcentaje_asistencia: 101, titulo_sesion: 'N/A' };
                 sesiones.forEach(s => {
                     if (s.porcentaje_asistencia > mejorSesion.porcentaje_asistencia) mejorSesion = s;
                     if (s.porcentaje_asistencia < peorSesion.porcentaje_asistencia) peorSesion = s;
                 });
-            
-                // 2. Poblar las tarjetas de KPIs
                 getEl('padres-promedio-asistencia').textContent = `${promedioAsistencia.toFixed(1)}%`;
                 getEl('padres-total-asistentes').textContent = totalAsistencias;
                 const mejorSesionEl = getEl('padres-mejor-sesion');
@@ -655,83 +699,152 @@
                 const peorSesionEl = getEl('padres-peor-sesion');
                 peorSesionEl.textContent = `${peorSesion.titulo_sesion} (${peorSesion.porcentaje_asistencia.toFixed(1)}%)`;
                 peorSesionEl.title = `${peorSesion.titulo_sesion} (${peorSesion.porcentaje_asistencia.toFixed(1)}%)`;
-            
-                // 3. Crear Gráfica de Barras Principal (Asistencia por Sesión)
                 const barChartCanvas = getEl('asistenciaPadresChart');
-                if (barChartCanvas) {
-                    if (barChartCanvas.chart) barChartCanvas.chart.destroy();
-                    barChartCanvas.chart = new Chart(barChartCanvas, {
-                        type: 'bar',
-                        data: {
-                            labels: sesiones.map(s => `Sesión ${s.sesion}: ${s.titulo_sesion}`),
-                            datasets: [{
-                                label: '% de Asistencia',
-                                data: sesiones.map(s => s.porcentaje_asistencia),
-                                backgroundColor: 'rgba(20, 184, 166, 0.7)',
-                                borderColor: 'rgba(15, 118, 110, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: { y: { beginAtZero: false, min: 50, max: 100, ticks: { callback: (val) => val + '%' } } },
-                            plugins: {
-                                legend: { display: false },
-                                tooltip: {
-                                    callbacks: {
-                                        afterLabel: function(context) {
-                                            const sesionData = sesiones[context.dataIndex];
-                                            return `Fecha: ${sesionData.fecha}\n${sesionData.asistentes} de ${sesionData.esperados} padres asistieron.`;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-                
-                // 4. Crear Gráfica de Barras de Tendencia
+                if (barChartCanvas) { if (barChartCanvas.chart) barChartCanvas.chart.destroy(); barChartCanvas.chart = new Chart(barChartCanvas, { type: 'bar', data: { labels: sesiones.map(s => `Sesión ${s.sesion}: ${s.titulo_sesion}`), datasets: [{ label: '% de Asistencia', data: sesiones.map(s => s.porcentaje_asistencia), backgroundColor: 'rgba(20, 184, 166, 0.7)', borderColor: 'rgba(15, 118, 110, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: false, min: 50, max: 100, ticks: { callback: (val) => val + '%' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { afterLabel: function(context) { const sesionData = sesiones[context.dataIndex]; return `Fecha: ${sesionData.fecha}\n${sesionData.asistentes} de ${sesionData.esperados} padres asistieron.`; } } } } } }); }
                 const trendChartCanvas = getEl('asistenciaPadresTrendChart');
-                if (trendChartCanvas) {
-                    if (trendChartCanvas.chart) trendChartCanvas.chart.destroy();
-                    trendChartCanvas.chart = new Chart(trendChartCanvas, {
-                        type: 'bar', // <-- CAMBIO AQUÍ: de 'line' a 'bar'
-                        data: {
-                            labels: sesiones.map(s => `Sesión ${s.sesion}`),
-                            datasets: [{
-                                label: 'Tendencia de Asistencia (%)',
-                                data: sesiones.map(s => s.porcentaje_asistencia),
-                                backgroundColor: 'rgba(59, 130, 246, 0.7)', // Color de relleno para barras
-                                borderColor: 'rgba(59, 130, 246, 1)',   // Color del borde para barras
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: { y: { beginAtZero: false, min: 50, max: 100, ticks: { callback: (val) => val + '%' } } },
-                            plugins: { legend: { display: false } }
-                        }
-                    });
-                }
-                
-                // 5. Poblar la Tabla Detallada
+                if (trendChartCanvas) { if (trendChartCanvas.chart) trendChartCanvas.chart.destroy(); trendChartCanvas.chart = new Chart(trendChartCanvas, { type: 'bar', data: { labels: sesiones.map(s => `Sesión ${s.sesion}`), datasets: [{ label: 'Tendencia de Asistencia (%)', data: sesiones.map(s => s.porcentaje_asistencia), backgroundColor: 'rgba(59, 130, 246, 0.7)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: false, min: 50, max: 100, ticks: { callback: (val) => val + '%' } } }, plugins: { legend: { display: false } } } }); }
                 const tablaBody = getEl('padres-sesiones-tabla');
-                if(tablaBody) {
-                    tablaBody.innerHTML = ''; // Limpiar datos previos
-                    sesiones.forEach(s => {
-                        const row = `
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${s.sesion}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.titulo_sesion}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.fecha}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.asistentes} / ${s.esperados}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">${s.porcentaje_asistencia.toFixed(1)}%</td>
-                            </tr>
-                        `;
-                        tablaBody.innerHTML += row;
-                    });
-                }
+                if(tablaBody) { tablaBody.innerHTML = ''; sesiones.forEach(s => { const row = `<tr class="hover:bg-gray-50"><td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${s.sesion}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.titulo_sesion}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.fecha}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${s.asistentes} / ${s.esperados}</td><td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">${s.porcentaje_asistencia.toFixed(1)}%</td></tr>`; tablaBody.innerHTML += row; }); }
             }
+
+            // ===== FUNCIÓN ENTREGABLES ACTUALIZADA PARA LEER DD-MM-AAAA =====
+            function createEntregablesSection(data) {
+                const section = getEl('entregables');
+                if (!section) return;
+
+                if (!data.entregables || data.entregables.length === 0) {
+                    section.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Entregables</h2><p class="text-center text-gray-500 bg-white p-10 rounded-xl shadow-md">No hay fechas de entregables configuradas.</p>';
+                    return;
+                }
+
+                const hoy = new Date();
+                hoy.setUTCHours(0, 0, 0, 0); // Usar UTC para comparar con fechas UTC
+
+                const entregables = data.entregables.map(e => {
+                    // --- Bloque Modificado para parsear DD-MM-AAAA ---
+                    const parts = String(e.FechaLimite).split('-'); // Asegurarse que es string
+                    let fechaObj = new Date(Date.UTC(1970, 0, 1)); // Fecha inicial si hay error
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1; // Meses en JS son 0-11
+                        const year = parseInt(parts[2], 10);
+                        // Verificar si los números son válidos
+                        if (!isNaN(day) && !isNaN(month) && !isNaN(year) && month >= 0 && month <= 11 && day > 0 && day <= 31) {
+                             fechaObj = new Date(Date.UTC(year, month, day)); // Crear fecha en UTC
+                        } else {
+                             console.warn(`Fecha inválida encontrada en Entregables: ${e.FechaLimite}`);
+                        }
+                    } else {
+                         console.warn(`Formato de fecha inesperado en Entregables: ${e.FechaLimite}. Se esperaba DD-MM-AAAA.`);
+                    }
+                    // --- Fin del Bloque Modificado ---
+
+                    return {
+                        ...e,
+                        fechaObj: fechaObj // Usa la fecha parseada
+                    };
+                }).filter(e => e.fechaObj && !isNaN(e.fechaObj) && e.fechaObj.getUTCFullYear() > 1970); // Filtrar fechas inválidas o la fecha inicial
+
+                const futuros = entregables
+                    .filter(e => e.fechaObj >= hoy) // Comparar con 'hoy' en UTC
+                    .sort((a, b) => a.fechaObj - b.fechaObj);
+
+                const optionsCompleta = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }; // Mostrar fecha en UTC
+                const optionsCorta = { month: 'short', day: 'numeric', timeZone: 'UTC' }; // Mostrar fecha corta en UTC
+
+                // --- Tarjeta de Estadísticas (simple) ---
+                const proxEst = futuros.find(e => e.Categoria === 'Estadísticas');
+                const proxEstNombreEl = getEl('prox-estadistica-nombre');
+                const proxEstFechaEl = getEl('prox-estadistica-fecha');
+                if (proxEst && proxEstNombreEl) {
+                    proxEstNombreEl.textContent = proxEst.NombreEntregable;
+                    proxEstNombreEl.title = proxEst.NombreEntregable;
+                    proxEstFechaEl.textContent = proxEst.fechaObj.toLocaleDateString('es-ES', optionsCompleta);
+                    proxEstFechaEl.className = "text-lg font-semibold text-blue-600 mt-1";
+                } else if (proxEstNombreEl) {
+                    proxEstNombreEl.textContent = 'N/A';
+                    proxEstNombreEl.title = 'N/A';
+                    proxEstFechaEl.textContent = 'No hay pendientes';
+                    proxEstFechaEl.className = "text-base font-medium text-gray-500 mt-1";
+                }
+
+                // --- Tarjeta de Planeación (simple) ---
+                const proxPlan = futuros.find(e => e.Categoria === 'Planeación');
+                const proxPlanNombreEl = getEl('prox-planeacion-nombre');
+                const proxPlanFechaEl = getEl('prox-planeacion-fecha');
+                if (proxPlan && proxPlanNombreEl) {
+                    proxPlanNombreEl.textContent = proxPlan.NombreEntregable;
+                    proxPlanNombreEl.title = proxPlan.NombreEntregable;
+                    proxPlanFechaEl.textContent = proxPlan.fechaObj.toLocaleDateString('es-ES', optionsCompleta);
+                    proxPlanFechaEl.className = "text-lg font-semibold text-green-600 mt-1";
+                } else if (proxPlanNombreEl) {
+                    proxPlanNombreEl.textContent = 'N/A';
+                    proxPlanNombreEl.title = 'N/A';
+                    proxPlanFechaEl.textContent = 'No hay pendientes';
+                    proxPlanFechaEl.className = "text-base font-medium text-gray-500 mt-1";
+                }
+
+                // --- Tarjeta de Calificaciones (lista) ---
+                const listaCalContainer = getEl('prox-calificacion-lista');
+                const proxCals = futuros.filter(e => e.Categoria === 'Calificaciones').slice(0, 4);
+                if (listaCalContainer) {
+                    if (proxCals.length > 0) {
+                        listaCalContainer.innerHTML = '';
+                        proxCals.forEach(cal => {
+                            const htmlItem = `
+                                <div class="flex justify-between items-baseline text-sm">
+                                    <span class="font-medium text-gray-700 truncate mr-2" title="${cal.NombreEntregable}">${cal.NombreEntregable}</span>
+                                    <span class="font-bold text-purple-600 flex-shrink-0 whitespace-nowrap">${cal.fechaObj.toLocaleDateString('es-ES', optionsCorta)}</span>
+                                </div>`;
+                            listaCalContainer.innerHTML += htmlItem;
+                        });
+                    } else {
+                        listaCalContainer.innerHTML = '<p class="text-gray-500 text-sm">No hay entregas de calificaciones pendientes.</p>';
+                    }
+                }
+
+                // --- Poblar la Tabla Completa ---
+                const tablaBody = getEl('tabla-entregables-body');
+                if (!tablaBody) return;
+                tablaBody.innerHTML = '';
+                if (futuros.length === 0) {
+                    tablaBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">¡Felicidades! No hay entregables pendientes.</td></tr>';
+                    return;
+                }
+                futuros.forEach(e => {
+                    const fechaLimiteMedianoche = new Date(e.fechaObj); // Ya está en UTC
+                    const diffTime = fechaLimiteMedianoche - hoy;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    let diasRestantesStr = `${diffDays} día${diffDays !== 1 ? 's' : ''}`;
+                    let colorFila = 'hover:bg-gray-50';
+                    let colorTextoDias = 'text-gray-800';
+
+                    if (diffDays === 0) {
+                        diasRestantesStr = '¡Hoy!';
+                        colorFila = 'bg-yellow-100 hover:bg-yellow-200';
+                        colorTextoDias = 'text-yellow-800 font-bold';
+                    } else if (diffDays <= 3 && diffDays > 0) {
+                        colorFila = 'bg-red-50 hover:bg-red-100';
+                        colorTextoDias = 'text-red-700 font-semibold';
+                    } else if (diffDays < 0) {
+                         diasRestantesStr = 'Vencido';
+                         colorFila = 'bg-gray-100 opacity-70';
+                         colorTextoDias = 'text-gray-500';
+                    }
+
+                    const row = `
+                        <tr class="${colorFila}">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${e.Categoria}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${e.NombreEntregable}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${e.fechaObj.toLocaleDateString('es-ES', optionsCompleta)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold ${colorTextoDias}">${diasRestantesStr}</td>
+                        </tr>`;
+                    tablaBody.innerHTML += row;
+                });
+                lucide.createIcons();
+            }
+            // =============================================================
 
             periodFilter.addEventListener('change', (e) => updateSummary(e.target.value));
             if(gradeFilter) gradeFilter.addEventListener('change', e => { const selectedGrade = e.target.value; if (selectedGrade === 'Todos') { groupFilter.innerHTML = '<option value="Todos">Todos</option>'; groupFilter.disabled = true; } else { groupFilter.disabled = false; populateGroupFilter(selectedGrade); } updateCalificacionesGradoCharts(selectedGrade, groupFilter.value, blockFilter.value, genderFilterCal.value); });
@@ -739,9 +852,9 @@
             if(blockFilter) blockFilter.addEventListener('change', e => { updateCalificacionesGradoCharts(gradeFilter.value, groupFilter.value, e.target.value, genderFilterCal.value); });
             if(genderFilterCal) genderFilterCal.addEventListener('change', e => { updateCalificacionesGradoCharts(gradeFilter.value, groupFilter.value, blockFilter.value, e.target.value); });
             if(getEl('expediente-block-filter')) getEl('expediente-block-filter').addEventListener('change', () => { const studentId = getEl('expediente-student-filter').value; if(studentId){ const student = data.listaEstudiantes.find(s => s.id == studentId); const selectedBlock = getEl('expediente-block-filter').value; const newAverages = updateExpedienteSubjectAverages(student, selectedBlock); updateExpedienteRadarChart(newAverages, selectedBlock); }});
-            async function generateStudentPDF() { const studentName = getEl('expediente-nombre').textContent || "Estudiante"; const fileName = `Expediente-${studentName.replace(/ /g, '_')}.pdf`; const downloadButton = getEl('download-pdf-button'); const contentToCapture = getEl('expediente-container'); downloadButton.style.visibility = 'hidden'; try { const canvas = await html2canvas(contentToCapture, { scale: 2, backgroundColor: '#ffffff', onclone: (clonedDoc) => { const filterContainer = clonedDoc.getElementById('expediente-filter-container'); if (filterContainer) { const selectedBlock = document.getElementById('expediente-block-filter').value; filterContainer.innerHTML = `<p class="text-right text-sm text-gray-600 font-medium mb-4">Mostrando resultados para: <strong>${selectedBlock}</strong></p>`; } Array.from(clonedDoc.getElementsByTagName('canvas')).forEach(canvasEl => { if (canvasEl.__chartjs__) { canvasEl.__chartjs__.options.animation = false; } }); } }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' }); const pageHeight = pdf.internal.pageSize.getHeight() - 20; const pageWidth = pdf.internal.pageSize.getWidth() - 20; const pageRatio = pageWidth / pageHeight; const imgWidth = canvas.width; const imgHeight = canvas.height; const imgRatio = imgWidth / imgHeight; let finalWidth, finalHeight; if (imgRatio > pageRatio) { finalWidth = pageWidth; finalHeight = finalWidth / imgRatio; } else { finalHeight = pageHeight; finalWidth = finalHeight * imgRatio; } const x = (pdf.internal.pageSize.getWidth() - finalWidth) / 2; const y = 10; pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight); pdf.save(fileName); } catch (error) { console.error("Error al generar el PDF:", error); alert("Hubo un error al generar el PDF. Revisa la consola para más detalles."); } finally { downloadButton.style.visibility = 'visible'; } }
+            async function generateStudentPDF() { const studentName = getEl('expediente-nombre').textContent || "Estudiante"; const fileName = `Expediente-${studentName.replace(/ /g, '_')}.pdf`; const downloadButton = getEl('download-pdf-button'); const contentToCapture = getEl('expediente-container'); downloadButton.style.visibility = 'hidden'; try { const canvas = await html2canvas(contentToCapture, { scale: 2, backgroundColor: '#ffffff', onclone: (clonedDoc) => { const filterContainer = clonedDoc.getElementById('expediente-filter-container'); if (filterContainer) { const selectedBlock = document.getElementById('expediente-block-filter').value; filterContainer.innerHTML = `<p class="text-right text-sm text-gray-600 font-medium mb-4">Mostrando resultados para: <strong>${selectedBlock}</strong></p>`; } Array.from(clonedDoc.getElementsByTagName('canvas')).forEach(canvasEl => { if (canvasEl.__chartjs__) { canvasEl.__chartjs__.options.animation = false; } }); } }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' }); const pageHeight = pdf.internal.pageSize.getHeight() - 20; const pageWidth = pdf.internal.pageSize.getWidth() - 20; const imgRatio = canvas.width / canvas.height; let finalWidth = pageWidth; let finalHeight = finalWidth / imgRatio; if (finalHeight > pageHeight) { finalHeight = pageHeight; finalWidth = finalHeight * imgRatio; } const x = (pdf.internal.pageSize.getWidth() - finalWidth) / 2; const y = 10; pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight); pdf.save(fileName); } catch (error) { console.error("Error al generar el PDF:", error); alert("Hubo un error al generar el PDF. Revisa la consola para más detalles."); } finally { downloadButton.style.visibility = 'visible'; } }
             if(getEl('download-pdf-button')) getEl('download-pdf-button').addEventListener('click', generateStudentPDF);
-            
+
             lucide.createIcons();
             populateFilter();
             updateSummary('General');
@@ -750,23 +863,39 @@
             setupStudentFilters();
             updateStudentCharts();
             populateGradeFilter();
-            if (data.listaEstudiantes.length > 0 && gradeFilter) { const initialGrade = gradeFilter.value; if (initialGrade === 'Todos') { groupFilter.innerHTML = '<option value="Todos">Todos</option>'; groupFilter.disabled = true; } else { populateGroupFilter(initialGrade); } updateCalificacionesGradoCharts(initialGrade, groupFilter.value, 'General', genderFilterCal.value); }
+            if (data.listaEstudiantes.length > 0 && gradeFilter) { const initialGrade = gradeFilter.value; if (initialGrade === 'Todos') { groupFilter.innerHTML = '<option value="Todos">Todos</option>'; groupFilter.disabled = true; } else { populateGroupFilter(initialGrade); groupFilter.disabled=false; } updateCalificacionesGradoCharts(initialGrade, groupFilter.value, 'General', genderFilterCal.value); } else if (groupFilter) { groupFilter.disabled = true;}
             populateBlockFilter();
             setupBoletosFilters();
             updateBoletosChart();
             setupExpedienteFilters();
-            createAsistenciaPadresSection(data); 
+            createAsistenciaPadresSection(data);
+            createEntregablesSection(data); // <-- LLAMADA A LA NUEVA FUNCIÓN
             manageVisibility();
         }
+
         function getDemoData() {
-            return {resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],listaEstudiantes: [ { id: 1, clave_escolar: 'DEMO-001', nombre: "Ana García (Demo)", genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { 9: 98, 10: 95 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }] } } }, { id: 2, clave_escolar: 'DEMO-002', nombre: "Luis Rodríguez (Demo)", genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { 9: 95, 10: 100 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 } }, boletos: {} } ],docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },calificaciones: { matematicas: [8.2, 7.9], espanol: [8.8, 8.5], ciencias: [7.5, 8], ingles: [9, 9.2], bloques: ["Bloque 1", "Bloque 2"] },
-            // --- DATOS DE DEMO PARA PADRES ---
-            asistenciaPadres: [
-                { sesion: 1, porcentaje_asistencia: 85.0, fecha: "2025-09-15", titulo_sesion: "Crianza Positiva (Demo)", esperados: 200, asistentes: 170 },
-                { sesion: 2, porcentaje_asistencia: 92.5, fecha: "2025-10-20", titulo_sesion: "Seguridad en Internet (Demo)", esperados: 200, asistentes: 185 },
-                { sesion: 3, porcentaje_asistencia: 80.0, fecha: "2025-11-18", titulo_sesion: "Apoyo en Tareas (Demo)", esperados: 200, asistentes: 160 }
-            ], 
-            estudiantes: {meses: ["Agosto", "Septiembre"], matricula: [450, 452]}};
+            return {
+                resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },
+                resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
+                resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
+                listaEstudiantes: [ { id: 1, clave_escolar: 'DEMO-001', nombre: "Ana García (Demo)", genero: "Femenino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "Sí", asistencia: { 9: 98, 10: 95 }, calificaciones: { "Bloque 1": { m: 9.6, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9.8, e: 9, c: 8, i: 10 } }, boletos: { "Bloque 1": { Matemáticas: [{ date: "2025-09-18", score: 3 }] } } }, { id: 2, clave_escolar: 'DEMO-002', nombre: "Luis Rodríguez (Demo)", genero: "Masculino", grado: "1ro", grupo: "A", status: "activo", motivoBaja: null, bap: "No", asistencia: { 9: 95, 10: 100 }, calificaciones: { "Bloque 1": { m: 8.5, e: 9, c: 8, i: 9 }, "Bloque 2": { m: 9, e: 9, c: 9, i: 9 } }, boletos: {} } ],
+                docentes: { altas: [2, 1, 3, 1, 0, 1], bajas: [1, 0, 1, 0, 1, 0], meses: ["Mar", "Abr", "May", "Jun", "Jul", "Ago"] },
+                calificaciones: { matematicas: [8.2, 7.9], espanol: [8.8, 8.5], ciencias: [7.5, 8], ingles: [9, 9.2], bloques: ["Bloque 1", "Bloque 2"] },
+                asistenciaPadres: [ { sesion: 1, porcentaje_asistencia: 85.0, fecha: "15-09-2025", titulo_sesion: "Crianza Positiva (Demo)", esperados: 200, asistentes: 170 }, { sesion: 2, porcentaje_asistencia: 92.5, fecha: "20-10-2025", titulo_sesion: "Seguridad en Internet (Demo)", esperados: 200, asistentes: 185 }, { sesion: 3, porcentaje_asistencia: 80.0, fecha: "18-11-2025", titulo_sesion: "Apoyo en Tareas (Demo)", esperados: 200, asistentes: 160 } ], // Fechas de padres también pueden necesitar ajuste
+                estudiantes: {meses: ["Agosto", "Septiembre"], matricula: [450, 452]},
+                // ===== DATOS DEMO PARA ENTREGABLES (ACTUALIZADOS A DD-MM-AAAA) =====
+                entregables: [
+                    { Categoria: "Estadísticas", NombreEntregable: "Reporte Asistencia Sep (Demo)", FechaLimite: "05-10-2025" },
+                    { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B1 (Demo)", FechaLimite: "18-10-2025" }, // ¡Hoy!
+                    { Categoria: "Calificaciones", NombreEntregable: "Carga Esp B1 (Demo)", FechaLimite: "19-10-2025" }, // Mañana
+                    { Categoria: "Calificaciones", NombreEntregable: "Carga Cie B1 (Demo)", FechaLimite: "20-10-2025" },
+                    { Categoria: "Calificaciones", NombreEntregable: "Carga Ing B1 (Demo)", FechaLimite: "21-10-2025" },
+                    { Categoria: "Planeación", NombreEntregable: "Entrega Plan Nov (Demo)", FechaLimite: "28-10-2025" },
+                    { Categoria: "Estadísticas", NombreEntregable: "Reporte Asistencia Oct (Demo)", FechaLimite: "05-11-2025" },
+                     { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B2 (Demo)", FechaLimite: "15-12-2025" }
+                ]
+                // ===================================================================
+            };
         }
     </script>
 </body>
