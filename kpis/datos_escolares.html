@@ -31,6 +31,13 @@
             background-color: #4a5568;
             color: #ffffff;
         }
+
+        /* --- CAMBIO AÑADIDO AQUÍ --- */
+        /* Oculta los enlaces de navegación por defecto */
+        #main-nav .nav-link {
+            display: none;
+        }
+        /* ------------------------- */
     </style>
 </head>
 <body class="bg-gray-100">
@@ -258,7 +265,7 @@
         const CLIENT_ID = '207428727335-bfsgio74gs2irr3o1va1ts1jspti0gsh.apps.googleusercontent.com'; // <-- REEMPLAZA ESTO
         
         const MASTER_SHEET_ID = '1HsjHb-zuhHrblvvLoH3jnIaUn9nTir85GTyL8-A60QA'; // <-- REEMPLAZA ESTO
-        const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8';                     // <-- REEMPLAZA ESTO
+        const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8';                       // <-- REEMPLAZA ESTO
         
         let SELECTED_SPREADSHEET_ID = null;
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/userinfo.email';
