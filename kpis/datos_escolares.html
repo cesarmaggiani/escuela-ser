@@ -11,9 +11,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
+    <script>
+        // Cache buster: añade un timestamp único a las URLs de los scripts de Google
+        const timestamp = new Date().getTime();
+        document.write(`<script async defer src="https://apis.google.com/js/api.js?cb=${timestamp}" onload="gapiLoaded()"><\/script>`);
+        document.write(`<script async defer src="https://accounts.google.com/gsi/client?cb=${timestamp}" onload="gisLoaded()"><\/script>`);
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -333,7 +337,12 @@
         document.getElementById('signout_button').onclick = handleSignoutClick;
 
         function gapiLoaded() { gapi.load('client', initializeGapiClient); }
-        function gisLoaded() { tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: '', }); gisInited = true; maybeEnableButtons(); }
+        function gisLoaded() {
+            console.log("GIS Client Cargado."); // Log
+            tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: '', });
+            gisInited = true;
+            maybeEnableButtons();
+        }
 
         async function initializeGapiClient() {
             await gapi.client.init({
@@ -345,6 +354,7 @@
             maybeEnableButtons();
         }
 
+        // ===== FUNCIÓN loadSchoolList ACTUALIZADA CON VERIFICACIÓN =====
         async function loadSchoolList() {
             console.log("Intentando cargar lista de escuelas..."); // Log
 
@@ -414,7 +424,7 @@
                 alert("No se pudo cargar la lista de escuelas. Revisa que el ID de la Hoja Maestra y la Clave de API sean correctos y que la hoja sea pública o compartida.");
             }
         }
-
+        // =============================================================
 
         function maybeEnableButtons() {
             console.log("Llamando a maybeEnableButtons. gapiInited:", gapiInited, "gisInited:", gisInited); // Log
@@ -423,24 +433,6 @@
                 lucide.createIcons();
             }
         }
-
-        // --- El resto de las funciones (handleAuthClick, handleSignoutClick, sheetsArrayToJson, loadAndProcessData, processRealData, main, etc.) permanecen igual que en la versión anterior ---
-        // ... (Incluye aquí TODO el código JavaScript restante desde handleAuthClick hasta getDemoData, incluyendo las funciones actualizadas createEntregablesSection y getDemoData con formato DD-MM-AAAA) ...
-
-        // ===== Asegúrate de copiar AQUÍ todo el JavaScript restante que ya tenías =====
-        // Incluyendo:
-        // - handleAuthClick()
-        // - handleSignoutClick()
-        // - sheetsArrayToJson()
-        // - loadAndProcessData()
-        // - processRealData()
-        // - main()
-        // - Y todas las funciones auxiliares para gráficos, filtros, expediente, etc.
-        // - La función createEntregablesSection() que te proporcioné anteriormente (la que parsea DD-MM-AAAA)
-        // - La función getDemoData() actualizada con fechas DD-MM-AAAA
-
-
-        // === Inicio del código JavaScript restante (COPIAR Y PEGAR DESDE TU VERSIÓN ANTERIOR) ===
 
         function handleAuthClick() {
             const schoolSelector = document.getElementById('school-selector');
@@ -541,7 +533,7 @@
                 if(schoolSelector) {
                     schoolSelector.selectedIndex = 0;
                 }
-                const loginButton = document.getElementById('login-button');
+                 const loginButton = document.getElementById('login-button');
                 if(loginButton) {
                      loginButton.disabled = true;
                      loginButton.classList.add('opacity-50', 'cursor-not-allowed');
@@ -560,6 +552,18 @@
             unauthorizedMessage.classList.add('hidden');
 
             try {
+                // ===== VERIFICACIÓN API ANTES DE USARLA =====
+                let attempts = 0;
+                while ((typeof gapi === 'undefined' || !gapi?.client?.sheets?.spreadsheets?.values) && attempts < 10) {
+                     console.warn(`gapi.client.sheets.values no está listo en loadAndProcessData (intento ${attempts + 1}). Esperando 500ms...`);
+                     await new Promise(resolve => setTimeout(resolve, 500));
+                     attempts++;
+                }
+                if (!gapi?.client?.sheets?.spreadsheets?.values) {
+                     throw new Error("La API de Google Sheets no se inicializó correctamente para batchGet.");
+                }
+                // ===== FIN VERIFICACIÓN =====
+
                 const response = await gapi.client.sheets.spreadsheets.values.batchGet({
                     spreadsheetId: SELECTED_SPREADSHEET_ID,
                     ranges: Object.values(SHEET_RANGES),
@@ -591,7 +595,7 @@
 
             } catch (error) {
                 console.error("Error al cargar datos o permisos desde la API:", error);
-                loadingIndicator.innerHTML = `<i data-lucide="alert-triangle" class="mx-auto h-12 w-12 text-red-500"></i><h3 class="mt-2 text-sm font-medium text-gray-900">Error al cargar datos</h3><p class="mt-1 text-sm text-gray-500">No se pudo obtener la información. Revisa que la hoja de cálculo de la escuela sea correcta y que tengas permiso para verla.<br>(Más detalles en la consola)</p>`;
+                loadingIndicator.innerHTML = `<i data-lucide="alert-triangle" class="mx-auto h-12 w-12 text-red-500"></i><h3 class="mt-2 text-sm font-medium text-gray-900">Error al cargar datos</h3><p class="mt-1 text-sm text-gray-500">No se pudo obtener la información. Revisa que la hoja de cálculo sea correcta y tengas permiso para verla.<br>(${error.message || 'Error desconocido'})</p>`;
                 lucide.createIcons();
             }
         }
@@ -900,7 +904,7 @@
         }
 
         function getDemoData() {
-            return {
+             return {
                 resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },
                 resumenMensual: [ { periodo: "Enero", matricula: 435, bajas: 2, asistencia: 95.5, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { periodo: "Febrero", matricula: 440, bajas: 1, asistencia: 96, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
                 resumenPorBloque: [ { bloque: "Bloque 1", matricula: 425, bajas: 1, asistencia: 96, prom_matematicas: 8.2, prom_espanol: 8.8, prom_ciencias: 7.5, prom_ingles: 9, prom_asistencia_padres: 85 }, { bloque: "Bloque 2", matricula: 438, bajas: 1, asistencia: 95, prom_matematicas: 7.9, prom_espanol: 8.5, prom_ciencias: 8, prom_ingles: 9.2, prom_asistencia_padres: 90 }],
