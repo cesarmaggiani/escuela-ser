@@ -124,9 +124,20 @@
             </div>
         </div>
     </div>
-
-    <!-- Diapositiva 2: El Gancho (Video) -->
+    
+    <!-- Diapositiva 2: ¿Qué es la F1? -->
     <div id="slide-2" class="slide">
+        <div class="slide-content">
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">Primero, ¿Qué es la Fórmula 1?</h2>
+            <p class="mb-6 text-xl md:text-2xl text-gray-300">No es solo correr rápido. Es un deporte de ingeniería, datos y estrategia milimétrica.</p>
+            <div class="w-full max-w-4xl aspect-video bg-black rounded-lg shadow-2xl overflow-hidden">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/bU1bO5jI0_g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 3: El Gancho (Video) -->
+    <div id="slide-3" class="slide">
         <div class="slide-content">
             <h2 class="text-3xl md:text-5xl font-bold mb-6">La Carrera está en Marcha</h2>
             <div class="w-full max-w-4xl aspect-video bg-black rounded-lg shadow-2xl overflow-hidden">
@@ -136,8 +147,8 @@
         </div>
     </div>
 
-    <!-- Diapositiva 3: El Pit Wall -->
-    <div id="slide-3" class="slide">
+    <!-- Diapositiva 4: El Pit Wall -->
+    <div id="slide-4" class="slide">
         <div class="slide-content">
             <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div class="text-left">
@@ -150,8 +161,8 @@
         </div>
     </div>
 
-    <!-- Diapositiva 4: La Analogía -->
-    <div id="slide-4" class="slide">
+    <!-- Diapositiva 5: La Analogía -->
+    <div id="slide-5" class="slide">
         <div class="slide-content overflow-y-auto">
             <h2 class="text-3xl md:text-4xl font-bold mb-6">La Analogía: F1 vs. Escuela</h2>
             <div class="w-full max-w-6xl text-sm md:text-base">
@@ -179,8 +190,8 @@
         </div>
     </div>
     
-    <!-- Diapositiva 5: La Pregunta Clave -->
-    <div id="slide-5" class="slide">
+    <!-- Diapositiva 6: La Pregunta Clave -->
+    <div id="slide-6" class="slide">
         <div class="slide-content">
             <div class="w-full max-w-5xl flex flex-col items-center gap-8">
                  <div class="bg-gray-900 p-8 rounded-xl max-w-4xl border-2 border-sky-500 shadow-lg">
@@ -192,8 +203,8 @@
         </div>
     </div>
 
-    <!-- Diapositiva 6: Autopsia vs Telemetría -->
-    <div id="slide-6" class="slide">
+    <!-- Diapositiva 7: Autopsia vs Telemetría -->
+    <div id="slide-7" class="slide">
         <div class="slide-content">
             <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div class="border-4 border-red-500 p-6 rounded-lg">
@@ -211,8 +222,8 @@
         </div>
     </div>
     
-    <!-- Diapositiva 7: El Rol del Líder -->
-    <div id="slide-7" class="slide">
+    <!-- Diapositiva 8: El Rol del Líder -->
+    <div id="slide-8" class="slide">
         <div class="slide-content">
             <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div class="text-left order-2 md:order-1">
@@ -225,8 +236,8 @@
         </div>
     </div>
 
-    <!-- Diapositiva 8: Conclusión -->
-    <div id="slide-8" class="slide">
+    <!-- Diapositiva 9: Conclusión -->
+    <div id="slide-9" class="slide">
         <div class="slide-content">
             <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div class="text-left">
@@ -270,14 +281,14 @@
 
             // --- Lógica para la tabla interactiva ---
             let tableStep = 0;
-            const equivalentCells = document.querySelectorAll('#slide-4 .equivalent-cell');
+            const equivalentCells = document.querySelectorAll('#slide-5 .equivalent-cell');
             const tableInstruction = document.getElementById('table-instruction');
             const totalTableSteps = equivalentCells.length;
             // -----------------------------------------
 
             function handleNext() {
-                // Lógica especial para la diapositiva 4
-                if (currentSlide === 4 && tableStep < totalTableSteps) {
+                // Lógica especial para la diapositiva 5 (la tabla)
+                if (currentSlide === 5 && tableStep < totalTableSteps) {
                     equivalentCells[tableStep].classList.add('visible');
                     tableStep++;
                     if(tableStep === totalTableSteps && tableInstruction) {
@@ -290,8 +301,8 @@
             }
 
             function handlePrev() {
-                 // Lógica especial para la diapositiva 4
-                if (currentSlide === 4 && tableStep > 0) {
+                 // Lógica especial para la diapositiva 5 (la tabla)
+                if (currentSlide === 5 && tableStep > 0) {
                     tableStep--;
                     equivalentCells[tableStep].classList.remove('visible');
                      if(tableInstruction) {
@@ -304,8 +315,8 @@
             }
 
             function showSlide(n) {
-                // Reiniciar la animación de la tabla al salir de la diapositiva 4
-                if (currentSlide === 4 && n !== 4) {
+                // Reiniciar la animación de la tabla al salir de la diapositiva 5
+                if (currentSlide === 5 && n !== 5) {
                     tableStep = 0;
                     equivalentCells.forEach(cell => cell.classList.remove('visible'));
                     if(tableInstruction) {
