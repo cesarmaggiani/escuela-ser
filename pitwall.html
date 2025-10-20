@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: El Pit Wall Escolar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Gris oscuro casi negro */
+            color: #F9FAFB; /* Blanco hueso */
+            overflow: hidden;
+        }
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            width: 100%;
+            height: 100%;
+        }
+        .slide-title {
+            font-weight: 900;
+            font-size: 3rem;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @media (min-width: 768px) {
+            .slide-title {
+                font-size: 4.5rem;
+            }
+        }
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            z-index: 10;
+        }
+        .nav-button:hover {
+            background-color: rgba(56, 189, 248, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+        #prev { left: 2rem; }
+        #next { right: 2rem; }
+        #slide-counter {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #d1d5db;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            z-index: 10;
+        }
+        .table-cell {
+            border: 1px solid #4b5563;
+            padding: 1rem;
+        }
+        #fullscreen-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 2rem;
+            top: auto;
+            transform: none;
+        }
+        #fullscreen-btn:hover {
+             transform: scale(1.1);
+        }
+        .equivalent-cell {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+        .equivalent-cell.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="w-screen h-screen">
+
+    <!-- Diapositiva 1: Título -->
+    <div id="slide-1" class="slide active">
+        <div class="slide-content">
+            <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="text-left">
+                    <h1 class="slide-title">El "Pit Wall" de la Escuela</h1>
+                    <p class="mt-4 text-xl md:text-2xl max-w-3xl text-gray-200">Una analogía de la Fórmula 1 para el liderazgo escolar basado en datos.</p>
+                </div>
+                <img src="https://lh3.googleusercontent.com/d/1CIHe37ANnTaoVGLutFDY6fz8BVzocLRH" class="rounded-lg shadow-2xl w-full h-auto object-cover" alt="Equipo de F1 en el pit wall">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 2: El Gancho (Video) -->
+    <div id="slide-2" class="slide">
+        <div class="slide-content">
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">La Carrera está en Marcha</h2>
+            <div class="w-full max-w-4xl aspect-video bg-black rounded-lg shadow-2xl overflow-hidden">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/mM6cHk0w8i8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"></iframe>
+            </div>
+            <p class="mt-6 text-xl md:text-2xl text-gray-300">¿Qué está pasando aquí? ¿Cuál es el objetivo final?</p>
+        </div>
+    </div>
+
+    <!-- Diapositiva 3: El Pit Wall -->
+    <div id="slide-3" class="slide">
+        <div class="slide-content">
+            <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="text-left">
+                    <h2 class="text-4xl md:text-6xl font-black text-sky-400">El "Pit Wall"</h2>
+                    <p class="mt-4 text-lg md:text-xl text-gray-300">Es el cerebro del equipo. Aquí, un flujo constante de datos se convierte en estrategia en tiempo real.</p>
+                    <p class="mt-4 text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-violet-400">El objetivo no es solo observar, es tomar decisiones para GANAR.</p>
+                </div>
+                <img src="https://lh3.googleusercontent.com/d/1WPMPdYsm65vWqBq-SIGGtsVGKGEx8jxv" class="rounded-lg shadow-2xl w-full h-auto object-cover" alt="Estratega de F1 en el pit wall mirando datos">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 4: La Analogía -->
+    <div id="slide-4" class="slide">
+        <div class="slide-content overflow-y-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">La Analogía: F1 vs. Escuela</h2>
+            <div class="w-full max-w-6xl text-sm md:text-base">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-800">
+                            <th class="table-cell text-sky-400 font-bold text-lg w-1/2">EN LA FÓRMULA 1...</th>
+                            <th class="table-cell text-violet-400 font-bold text-lg w-1/2">EN NUESTRA ESCUELA...</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-gray-900 bg-opacity-70 text-left">
+                        <tr><td class="table-cell">El Piloto</td><td class="table-cell equivalent-cell">El/La Docente</td></tr>
+                        <tr><td class="table-cell">El Auto</td><td class="table-cell equivalent-cell">El/La Estudiante (su aprendizaje)</td></tr>
+                        <tr><td class="table-cell">El Director de Escudería / Estratega</td><td class="table-cell equivalent-cell">El/La Líder Escolar (Director/a)</td></tr>
+                        <tr><td class="table-cell">La Carrera</td><td class="table-cell equivalent-cell">El Año Escolar / La Unidad Didáctica</td></tr>
+                        <tr><td class="table-cell">El "Pit Wall"</td><td class="table-cell equivalent-cell">La Oficina del Líder / Junta de Datos</td></tr>
+                        <tr><td class="table-cell font-semibold text-sky-300">La Telemetría (Datos en tiempo real)</td><td class="table-cell equivalent-cell font-semibold text-violet-300">Los Datos Frecuentes (Tickets de salida, Quizzes)</td></tr>
+                        <tr><td class="table-cell">La Instrucción por Radio</td><td class="table-cell equivalent-cell">La Retroalimentación al Docente</td></tr>
+                        <tr><td class="table-cell font-semibold text-sky-300">La Decisión Estratégica: ¿Parar en pits AHORA?</td><td class="table-cell equivalent-cell font-semibold text-violet-300">La Decisión Pedagógica: ¿Re-enseñar MAÑANA?</td></tr>
+                        <tr><td class="table-cell text-lg font-bold">El Objetivo: GANAR LA CARRERA</td><td class="table-cell equivalent-cell text-lg font-bold">El Objetivo: QUE TODOS LOS ESTUDIANTES APRENDAN</td></tr>
+                    </tbody>
+                </table>
+                <p id="table-instruction" class="mt-4 text-gray-400 animate-pulse">Presiona 'Siguiente' para revelar las equivalencias...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 5: La Pregunta Clave -->
+    <div id="slide-5" class="slide">
+        <div class="slide-content">
+            <div class="w-full max-w-5xl flex flex-col items-center gap-8">
+                 <div class="bg-gray-900 p-8 rounded-xl max-w-4xl border-2 border-sky-500 shadow-lg">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white">"No miren ningún dato. Veremos los resultados <span class="text-red-500">al final de la carrera</span>".</h2>
+                    <p class="mt-6 text-2xl md:text-3xl text-gray-200 font-light">¿Qué pasaría si un estratega de F1 dijera esto?</p>
+                </div>
+                <img src="https://lh3.googleusercontent.com/d/1InFWJT1MBV_kCIzZntX5SyCUYW4TEDo-" class="rounded-lg shadow-2xl w-full max-w-3xl h-auto object-cover" alt="Pit stop de F1 visto desde arriba">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 6: Autopsia vs Telemetría -->
+    <div id="slide-6" class="slide">
+        <div class="slide-content">
+            <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="border-4 border-red-500 p-6 rounded-lg">
+                    <h3 class="text-4xl font-black text-red-500">AUTOPSIA</h3>
+                    <p class="mt-4 text-xl">Analizar los datos cuando ya es demasiado tarde para actuar.</p>
+                    <p class="mt-2 text-2xl font-bold">(Ej: La evaluación estandarizada de fin de año).</p>
+                </div>
+                <div class="border-4 border-green-500 p-6 rounded-lg">
+                    <h3 class="text-4xl font-black text-green-500">TELEMETRÍA</h3>
+                    <p class="mt-4 text-xl">Usar datos frecuentes para ajustar la estrategia en tiempo real.</p>
+                     <p class="mt-2 text-2xl font-bold">(Ej: La evaluación formativa de cada semana).</p>
+                </div>
+            </div>
+             <img src="https://lh3.googleusercontent.com/d/1InFWJT1MBV_kCIzZntX5SyCUYW4TEDo-" class="mt-8 rounded-lg shadow-2xl w-full max-w-2xl h-auto object-cover" alt="Equipo de pit stop de Red Bull F1 trabajando en el auto">
+        </div>
+    </div>
+    
+    <!-- Diapositiva 7: El Rol del Líder -->
+    <div id="slide-7" class="slide">
+        <div class="slide-content">
+            <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="text-left order-2 md:order-1">
+                    <h2 class="text-4xl md:text-6xl font-black text-sky-400">El Rol del Líder</h2>
+                    <p class="mt-4 text-lg md:text-xl text-gray-300">El líder escolar efectivo no solo administra el edificio desde una oficina.</p>
+                    <p class="mt-4 text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-violet-400">Lidera la estrategia desde el "Pit Wall", analizando la "telemetría" del aprendizaje junto a sus docentes para tomar decisiones pedagógicas cruciales.</p>
+                </div>
+                <img src="https://lh3.googleusercontent.com/d/1WPMPdYsm65vWqBq-SIGGtsVGKGEx8jxv" class="rounded-lg shadow-2xl w-full h-auto object-cover order-1 md:order-2" alt="Director de equipo de F1 analizando datos">
+            </div>
+        </div>
+    </div>
+
+    <!-- Diapositiva 8: Conclusión -->
+    <div id="slide-8" class="slide">
+        <div class="slide-content">
+            <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="text-left">
+                     <h2 class="text-3xl md:text-5xl max-w-4xl font-bold">La pregunta final no es "¿Tenemos datos?"</h2>
+                     <p class="mt-6 slide-title text-4xl md:text-6xl max-w-5xl">sino... ¿Estamos usando nuestros datos como un Pit Wall para ganar la carrera del aprendizaje?</p>
+                </div>
+                 <img src="https://lh3.googleusercontent.com/d/1ijGH6RhcR3X67CEewCUj4cvh0RHxgUMC" class="rounded-lg shadow-2xl w-full h-auto object-cover" alt="Auto de F1 cruzando la línea de meta">
+            </div>
+        </div>
+    </div>
+
+    <!-- Controles de Navegación -->
+    <button id="prev" class="nav-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+    </button>
+    <button id="next" class="nav-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+    </button>
+    <div id="slide-counter"></div>
+    <button id="fullscreen-btn" class="nav-button">
+        <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" />
+        </svg>
+        <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            let currentSlide = 1;
+
+            const prevButton = document.getElementById('prev');
+            const nextButton = document.getElementById('next');
+            const slideCounter = document.getElementById('slide-counter');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const fullscreenEnterIcon = document.getElementById('fullscreen-enter-icon');
+            const fullscreenExitIcon = document.getElementById('fullscreen-exit-icon');
+
+            // --- Lógica para la tabla interactiva ---
+            let tableStep = 0;
+            const equivalentCells = document.querySelectorAll('#slide-4 .equivalent-cell');
+            const tableInstruction = document.getElementById('table-instruction');
+            const totalTableSteps = equivalentCells.length;
+            // -----------------------------------------
+
+            function handleNext() {
+                // Lógica especial para la diapositiva 4
+                if (currentSlide === 4 && tableStep < totalTableSteps) {
+                    equivalentCells[tableStep].classList.add('visible');
+                    tableStep++;
+                    if(tableStep === totalTableSteps && tableInstruction) {
+                        tableInstruction.style.display = 'none'; // Ocultar instrucción al final
+                    }
+                    return; // Detener aquí, no cambiar de diapositiva
+                }
+                // Comportamiento por defecto
+                showSlide(currentSlide + 1);
+            }
+
+            function handlePrev() {
+                 // Lógica especial para la diapositiva 4
+                if (currentSlide === 4 && tableStep > 0) {
+                    tableStep--;
+                    equivalentCells[tableStep].classList.remove('visible');
+                     if(tableInstruction) {
+                        tableInstruction.style.display = 'block'; // Mostrar instrucción de nuevo
+                    }
+                    return; // Detener aquí, no cambiar de diapositiva
+                }
+                // Comportamiento por defecto
+                showSlide(currentSlide - 1);
+            }
+
+            function showSlide(n) {
+                // Reiniciar la animación de la tabla al salir de la diapositiva 4
+                if (currentSlide === 4 && n !== 4) {
+                    tableStep = 0;
+                    equivalentCells.forEach(cell => cell.classList.remove('visible'));
+                    if(tableInstruction) {
+                       tableInstruction.style.display = 'block';
+                    }
+                }
+
+                const activeSlide = document.querySelector('.slide.active');
+                if (activeSlide) {
+                    activeSlide.classList.remove('active');
+                }
+
+                if (n > totalSlides) currentSlide = 1;
+                else if (n < 1) currentSlide = totalSlides;
+                else currentSlide = n;
+
+                const newSlide = document.getElementById(`slide-${currentSlide}`);
+                if (newSlide) newSlide.classList.add('active');
+                
+                updateCounter();
+            }
+            
+            function updateCounter() {
+                slideCounter.textContent = `${currentSlide} / ${totalSlides}`;
+            }
+
+            function toggleFullScreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.warn(`Fullscreen request was denied: ${err.message}`);
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+
+            function updateFullscreenIcon() {
+                if (document.fullscreenElement) {
+                    fullscreenEnterIcon.classList.add('hidden');
+                    fullscreenExitIcon.classList.remove('hidden');
+                } else {
+                    fullscreenEnterIcon.classList.remove('hidden');
+                    fullscreenExitIcon.classList.add('hidden');
+                }
+            }
+
+            prevButton.addEventListener('click', handlePrev);
+            nextButton.addEventListener('click', handleNext);
+            fullscreenBtn.addEventListener('click', toggleFullScreen);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') handleNext();
+                else if (e.key === 'ArrowLeft') handlePrev();
+            });
+
+            document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
+            showSlide(currentSlide);
+            updateFullscreenIcon();
+        });
+    </script>
+</body>
+</html>
+
