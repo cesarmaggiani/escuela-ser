@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planeador Estratégico Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .draggable {
+            cursor: grab;
+            transition: all 0.2s ease-in-out;
+            user-select: none;
+        }
+        .draggable.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .drop-zone {
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            border: 2px dashed #D1D5DB;
+            min-height: 60px;
+        }
+        .drop-zone.drag-over {
+            background-color: #E0E7FF;
+            border-color: #6366F1;
+        }
+        .drop-zone.correct {
+            border-color: #10B981;
+            background-color: #D1FAE5;
+        }
+        .drop-zone.incorrect {
+            border-color: #EF4444;
+            background-color: #FEE2E2;
+        }
+        .draggable-item {
+            border-left: 4px solid #4F46E5;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 lg:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Planeador Estratégico Interactivo</h1>
+            <p class="text-gray-600 mt-2">Arrastra cada elemento de la caja a su lugar correcto en el planificador.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Columna de Elementos -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 border-b pb-2">Caja de Elementos</h2>
+                <div id="elements-bank" class="space-y-3">
+                    <!-- Estos son los elementos que el usuario podrá arrastrar -->
+                    <div id="item1" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="asignatura">Matemáticas (Pensamiento Algebraico) - 2do de Secundaria</div>
+                    <div id="item2" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="brecha"><b>Brecha:</b> Los estudiantes pueden resolver operaciones aritméticas pero tienen dificultad extrema para traducir problemas verbales a ecuaciones. No ven la "x" como un número desconocido.</div>
+                    <div id="item3" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="exito">Dominan las 4 operaciones básicas. Son buenos siguiendo algoritmos. Responden bien a retos rápidos en la pizarra blanca.</div>
+                    <div id="item4" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="que1"><b>(Semana 1)</b> Traducir lenguaje común a lenguaje algebraico (sin resolver aún). Objetivo: Que "el doble de un número" se escriba como "2x".</div>
+                    <div id="item5" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="como1"><b>(Semana 1)</b> 1. Modelar con tabla "diccionario". 2. Juego de "traducción rápida". 3. "Memorama" de tarjetas Verbal vs. Algebraico. 4. Cierre con creación de frases.</div>
+                    <div id="item6" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="medida1"><b>(Semana 1)</b> Ticket de Salida (Viernes): 5 frases verbales. Meta: 80% de los estudiantes traduce correctamente 4/5 expresiones.</div>
+                    <div id="item7" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="que2"><b>(Semana 2)</b> Dominar el algoritmo para resolver ecuaciones de la forma ax + b = c (despejar la variable).</div>
+                    <div id="item8" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="como2"><b>(Semana 2)</b> 1. Usar analogía de la "balanza" para operaciones inversas. 2. Práctica guiada en el pizarrón. 3. Hoja de 10 ejercicios. 4. Auto-revisión de ejercicios clave.</div>
+                    <div id="item9" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="medida2"><b>(Semana 2)</b> Quiz rápido (Lunes vs. Viernes) de 4 ecuaciones. Meta: El promedio de precisión del grupo sube de 50% a 85%.</div>
+                    <div id="item10" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="que3"><b>(Semana 3)</b> Conectar Semana 1 y 2. Plantear la ecuación completa a partir de un problema verbal simple.</div>
+                    <div id="item11" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="como3"><b>(Semana 3)</b> 1. Modelar método explícito (Identificar, Traducir, Armar). 2. Práctica guiada enfocada solo en plantear. 3. Práctica en parejas de plantear 5 problemas. 4. Puesta en común.</div>
+                    <div id="item12" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="medida3"><b>(Semana 3)</b> Revisión de la práctica en parejas. Meta: 80% de las parejas plantea correctamente al menos 4 de 5 ecuaciones.</div>
+                    <div id="item13" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="que4"><b>(Semana 4)</b> Integrar todo el proceso: leer, plantear, resolver y dar la respuesta en contexto.</div>
+                    <div id="item14" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="como4"><b>(Semana 4)</b> 1. Modelar el proceso de inicio a fin. 2. Práctica en Estaciones (Problemas verbales, Problemas "rotos", Desafío). 3. Revisión colectiva del desafío.</div>
+                    <div id="item15" class="draggable draggable-item bg-indigo-50 p-3 rounded-lg shadow-sm" draggable="true" data-target="medida4"><b>(Semana 4)</b> Evaluación Sumativa (Viernes): Prueba con 5 problemas verbales. Meta: 75% de los estudiantes plantea Y resuelve correctamente al menos 3 de 5.</div>
+                </div>
+                <button id="reset-btn" class="w-full mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">Reiniciar</button>
+            </div>
+
+            <!-- Columna del Planificador -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 border-b pb-2">Formato del Planificador</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="font-bold text-gray-600">Enfoque o asignatura</label>
+                        <div id="asignatura-zone" class="drop-zone p-3 rounded-lg mt-1" data-zone="asignatura"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-600">Brecha o meta</label>
+                        <div id="brecha-zone" class="drop-zone p-3 rounded-lg mt-1" data-zone="brecha"></div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-600">Éxito del que me puedo apalancar</label>
+                        <div id="exito-zone" class="drop-zone p-3 rounded-lg mt-1" data-zone="exito"></div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Planificación Semanal -->
+                <div class="mt-8 overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-3 font-bold text-left text-gray-600 border border-gray-300">Semana</th>
+                                <th class="p-3 font-bold text-left text-gray-600 border border-gray-300">¿Qué?</th>
+                                <th class="p-3 font-bold text-left text-gray-600 border border-gray-300">¿Cómo?</th>
+                                <th class="p-3 font-bold text-left text-gray-600 border border-gray-300">¿Cómo mediré el avance?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Semana 1 -->
+                            <tr>
+                                <td class="p-3 font-bold border border-gray-300 align-top">1</td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="que1"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="como1"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="medida1"></div></td>
+                            </tr>
+                            <!-- Semana 2 -->
+                             <tr>
+                                <td class="p-3 font-bold border border-gray-300 align-top">2</td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="que2"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="como2"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="medida2"></div></td>
+                            </tr>
+                            <!-- Semana 3 -->
+                             <tr>
+                                <td class="p-3 font-bold border border-gray-300 align-top">3</td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="que3"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="como3"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="medida3"></div></td>
+                            </tr>
+                            <!-- Semana 4 -->
+                             <tr>
+                                <td class="p-3 font-bold border border-gray-300 align-top">4</td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="que4"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="como4"></div></td>
+                                <td class="p-2 border border-gray-300"><div class="drop-zone rounded-lg w-full" data-zone="medida4"></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de felicitación -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm transform transition-all scale-95">
+             <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mt-4">¡Excelente trabajo!</h3>
+            <p class="text-gray-600 mt-2">Has completado el planeador estratégico correctamente.</p>
+            <button id="close-modal" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Cerrar</button>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const elementsBank = document.getElementById('elements-bank');
+            const originalElements = {}; // Almacenará los elementos originales para el reinicio
+
+            // Guardar el estado inicial
+            Array.from(elementsBank.children).forEach(child => {
+                 if(child.classList.contains('draggable')) {
+                    originalElements[child.id] = child.cloneNode(true);
+                 }
+            });
+
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('dragging');
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const draggingElement = document.querySelector('.dragging');
+                    
+                    if (draggingElement && zone.children.length === 0) {
+                        const targetZone = draggingElement.dataset.target;
+                        const dropZoneId = zone.dataset.zone;
+
+                        if (targetZone === dropZoneId) {
+                            zone.appendChild(draggingElement);
+                            zone.classList.remove('incorrect');
+                            zone.classList.add('correct');
+                        } else {
+                            zone.classList.add('incorrect');
+                            setTimeout(() => zone.classList.remove('incorrect'), 1000);
+                        }
+                    }
+                    checkCompletion();
+                });
+            });
+            
+            function checkCompletion() {
+                const totalZones = dropZones.length;
+                const filledZones = document.querySelectorAll('.drop-zone .draggable').length;
+                if(totalZones === filledZones) {
+                   const successModal = document.getElementById('success-modal');
+                   successModal.classList.remove('hidden');
+                   setTimeout(()=> successModal.querySelector('div').classList.remove('scale-95'), 10);
+                }
+            }
+
+            // Lógica del botón de reinicio
+            const resetButton = document.getElementById('reset-btn');
+            resetButton.addEventListener('click', () => {
+                // Limpiar zonas
+                dropZones.forEach(zone => {
+                    zone.innerHTML = '';
+                    zone.classList.remove('correct', 'incorrect', 'drag-over');
+                });
+
+                // Devolver elementos al banco
+                elementsBank.innerHTML = '';
+                for (const id in originalElements) {
+                    const originalElement = originalElements[id].cloneNode(true);
+                    originalElement.addEventListener('dragstart', () => {
+                        originalElement.classList.add('dragging');
+                    });
+                    originalElement.addEventListener('dragend', () => {
+                        originalElement.classList.remove('dragging');
+                    });
+                    elementsBank.appendChild(originalElement);
+                }
+            });
+            
+            // Lógica del modal
+            const closeModalButton = document.getElementById('close-modal');
+            const successModal = document.getElementById('success-modal');
+            closeModalButton.addEventListener('click', () => {
+                successModal.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
