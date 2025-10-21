@@ -39,6 +39,11 @@
         #main-nav .nav-link {
             display: none;
         }
+        /* Estilo para resaltar subfase actual */
+        .current-subphase {
+            font-weight: 600; /* semibold */
+            color: #1d4ed8; /* blue-700 */
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -78,6 +83,7 @@
                 <a href="#entregables" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="calendar-check" class="inline-block w-5 h-5 mr-2"></i> Entregables</a>
                 <a href="#estudiantes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="users" class="inline-block w-5 h-5 mr-2"></i> Estudiantes</a>
                 <a href="#docentes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="briefcase" class="inline-block w-5 h-5 mr-2"></i> Docentes</a>
+                <a href="#formacion-docente" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="presentation" class="inline-block w-5 h-5 mr-2"></i> Formación Docente</a>
                 <a href="#calificaciones" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="book-marked" class="inline-block w-5 h-5 mr-2"></i> Calificaciones</a>
                 <a href="#calificaciones-grado" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="graduation-cap" class="inline-block w-5 h-5 mr-2"></i> Calificaciones por Grado</a>
                 <a href="#boletos-salida" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 nav-link"><i data-lucide="ticket" class="inline-block w-5 h-5 mr-2"></i> Boletos de Salida</a>
@@ -183,6 +189,154 @@
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white p-6 rounded-xl shadow-md"><h3 class="font-bold text-lg text-gray-700">Movimiento de Matrícula</h3><canvas id="matriculaChart" class="mt-4"></canvas></div><div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2"><h3 id="asistencia-chart-title" class="font-bold text-lg text-gray-700">Análisis de Asistencia Mensual</h3><canvas id="asistenciaChart" class="mt-4"></canvas></div></div>
                     </section>
                     <section id="docentes" class="content-section hidden fade-in"><h2 class="text-3xl font-bold mb-6 text-gray-800">Estadísticas de Docentes</h2><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white p-6 rounded-xl shadow-md"><h3 class="font-bold text-lg text-gray-700">Altas y Bajas (Último Semestre)</h3><canvas id="docentesChart" class="mt-4"></canvas></div></div></section>
+
+                    <section id="formacion-docente" class="content-section hidden fade-in space-y-6">
+    <h2 class="text-3xl font-bold text-gray-800">Formación Docente</h2>
+
+    <div class="bg-white p-4 rounded-xl shadow-md">
+        <label for="formacion-block-filter" class="text-sm font-medium text-gray-700 mr-2">Seleccionar Bloque para Resumen:</label>
+        <select id="formacion-block-filter" class="rounded-md border-gray-300 shadow-sm"></select>
+    </div>
+
+    <div id="formacion-overview-container" class="space-y-6">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+           <div class="bg-white p-6 rounded-xl shadow-md">
+    <p class="text-sm font-medium text-gray-500">Fase Gestión Más Frecuente</p>
+    <p id="formacion-summary-mmr-gestion" class="text-3xl font-bold text-gray-800">N/A</p> </div>
+
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <p class="text-sm font-medium text-gray-500">Fase Rigor Más Frecuente</p>
+    <p id="formacion-summary-mmr-rigor" class="text-3xl font-bold text-gray-800">N/A</p> </div>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <p class="text-sm font-medium text-gray-500">Total 1:1 (Bloque)</p>
+                <p id="formacion-summary-1a1" class="text-3xl font-bold text-gray-800">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <p class="text-sm font-medium text-gray-500">Total RSD (Bloque)</p>
+                <p id="formacion-summary-rsd" class="text-3xl font-bold text-gray-800">0</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h3 id="nineBoxChartTitle" class="font-bold text-lg text-gray-700 mb-4">Distribución 9 Cajas (Bloque)</h3>
+            <div class="flex items-center space-x-4">
+                <div class="w-10 text-center text-xs font-medium text-gray-500 transform -rotate-90 whitespace-nowrap">Desempeño</div>
+                <div class="flex-1 grid grid-cols-3 gap-1 border border-gray-300 p-1 rounded">
+                    <div class="col-span-1 text-center text-xs font-medium text-gray-500">Bajo Potencial</div>
+                    <div class="col-span-1 text-center text-xs font-medium text-gray-500">Medio Potencial</div>
+                    <div class="col-span-1 text-center text-xs font-medium text-gray-500">Alto Potencial</div>
+
+                    <div class="col-span-3 flex items-center">
+                        <div class="w-10 text-right pr-2 text-xs font-medium text-gray-500">Alto</div>
+                        <div class="flex-1 grid grid-cols-3 gap-1">
+                            <div id="ninebox-high-low" class="h-20 bg-yellow-100 border border-yellow-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-yellow-800 font-semibold">Profesional Alto (1C)</span><span class="text-2xl font-bold text-yellow-900">0</span></div>
+                            <div id="ninebox-high-med" class="h-20 bg-green-100 border border-green-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-green-800 font-semibold">Alto Rendimiento (1B)</span><span class="text-2xl font-bold text-green-900">0</span></div>
+                            <div id="ninebox-high-high" class="h-20 bg-blue-100 border border-blue-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-blue-800 font-semibold">Estrella (1A)</span><span class="text-2xl font-bold text-blue-900">0</span></div>
+                        </div>
+                    </div>
+
+                     <div class="col-span-3 flex items-center">
+                        <div class="w-10 text-right pr-2 text-xs font-medium text-gray-500">Medio</div>
+                        <div class="flex-1 grid grid-cols-3 gap-1">
+                            <div id="ninebox-med-low" class="h-20 bg-orange-100 border border-orange-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-orange-800 font-semibold">Inconsistente (2C)</span><span class="text-2xl font-bold text-orange-900">0</span></div>
+                            <div id="ninebox-med-med" class="h-20 bg-lime-100 border border-lime-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-lime-800 font-semibold">Jugador Clave (2B)</span><span class="text-2xl font-bold text-lime-900">0</span></div>
+                            <div id="ninebox-med-high" class="h-20 bg-teal-100 border border-teal-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-teal-800 font-semibold">Alto Potencial (2A)</span><span class="text-2xl font-bold text-teal-900">0</span></div>
+                        </div>
+                    </div>
+
+                     <div class="col-span-3 flex items-center">
+                        <div class="w-10 text-right pr-2 text-xs font-medium text-gray-500">Bajo</div>
+                        <div class="flex-1 grid grid-cols-3 gap-1">
+                            <div id="ninebox-low-low" class="h-20 bg-red-100 border border-red-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-red-800 font-semibold">Riesgo / Dilema (3C)</span><span class="text-2xl font-bold text-red-900">0</span></div>
+                            <div id="ninebox-low-med" class="h-20 bg-rose-100 border border-rose-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-rose-800 font-semibold">Enigma (3B)</span><span class="text-2xl font-bold text-rose-900">0</span></div>
+                            <div id="ninebox-low-high" class="h-20 bg-purple-100 border border-purple-300 rounded flex flex-col items-center justify-center text-center p-1"><span class="text-xs text-purple-800 font-semibold">Diamante en Bruto (3A)</span><span class="text-2xl font-bold text-purple-900">0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center text-xs font-medium text-gray-500 mt-2 ml-10">Potencial</div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <div>
+                    <h3 id="mmrGestionChartTitle" class="font-bold text-lg text-gray-700">Distribución Fases - Gestión</h3>
+                    <canvas id="mmrGestionChart" class="mt-4" style="max-height: 400px;"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <div>
+                    <h3 id="mmrRigorChartTitle" class="font-bold text-lg text-gray-700">Distribución Fases - Rigor</h3>
+                    <canvas id="mmrRigorChart" class="mt-4" style="max-height: 400px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div> <hr class="my-6">
+
+    <h3 class="text-2xl font-bold text-gray-800">Detalle por Docente</h3>
+    <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+        <div class="flex flex-wrap gap-4 items-center">
+            <h3 class="font-bold text-lg text-gray-700">Buscar Docente:</h3>
+            <div>
+                <label for="formacion-teacher-filter" class="text-sm font-medium text-gray-700 mr-2">Docente:</label>
+                <select id="formacion-teacher-filter" class="rounded-md border-gray-300 shadow-sm"></select>
+            </div>
+            <div>
+                <label for="formacion-block-filter-detail" class="text-sm font-medium text-gray-700 mr-2">Bloque:</label>
+                <select id="formacion-block-filter-detail" class="rounded-md border-gray-300 shadow-sm"></select>
+            </div>
+        </div>
+    </div>
+
+    <div id="formacion-placeholder" class="text-center p-10 bg-white rounded-xl shadow-md">
+        <i data-lucide="search" class="mx-auto h-12 w-12 text-gray-400"></i>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">Seleccione un docente</h3>
+        <p class="mt-1 text-sm text-gray-500">Elija un docente y un bloque para ver sus datos de formación.</p>
+    </div>
+
+    <div id="formacion-detail-container" class="hidden space-y-6">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h3 id="formacion-docente-nombre" class="text-2xl font-bold text-gray-800 mb-4"></h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+                <div class="bg-indigo-50 p-6 rounded-xl shadow-sm border border-indigo-200 lg:col-span-2">
+                    <p class="text-sm font-medium text-indigo-700">Última Clasificación 9 Cajas</p>
+                    <p id="formacion-docente-9cajas" class="text-3xl font-bold text-indigo-900 mt-1">N/A</p>
+                    <p class="text-xs text-gray-500 mt-1">*Último bloque registrado.</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-xl">
+                    <p class="text-sm font-medium text-blue-700">Fase MMR Gestión</p>
+                    <p id="formacion-docente-mmr-gestion" class="text-2xl font-bold text-blue-900">N/A</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-xl">
+                    <p class="text-sm font-medium text-green-700">Fase MMR Rigor</p>
+                    <p id="formacion-docente-mmr-rigor" class="text-2xl font-bold text-green-900">N/A</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-xl">
+                    <p class="text-sm font-medium text-yellow-700">Sesiones 1:1</p>
+                    <p id="formacion-docente-1a1" class="text-2xl font-bold text-yellow-900">0</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-xl">
+                    <p class="text-sm font-medium text-purple-700">Sesiones RSD</p>
+                    <p id="formacion-docente-rsd" class="text-2xl font-bold text-purple-900">0</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-4 rounded-lg border">
+                    <h4 class="font-semibold text-gray-700 mb-2">Detalle Fase Gestión Aula</h4>
+                    <div id="formacion-docente-gestion-details" class="text-sm text-gray-600 space-y-2 prose prose-sm max-w-none">
+                        <p>Seleccione un docente y bloque.</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg border">
+                    <h4 class="font-semibold text-gray-700 mb-2">Detalle Fase Rigor Académico</h4>
+                    <div id="formacion-docente-rigor-details" class="text-sm text-gray-600 space-y-2 prose prose-sm max-w-none">
+                        <p>Seleccione un docente y bloque.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> </section>
                     <section id="calificaciones" class="content-section hidden fade-in">
                         <h2 class="text-3xl font-bold mb-6 text-gray-800">Rendimiento Académico General</h2>
                         <div class="grid grid-cols-1 gap-6">
@@ -303,18 +457,18 @@
                             </div>
                         </div>
                     </section>
-                    
+
                     <section id="desarrollo-profesional" class="content-section hidden fade-in space-y-6">
                         <h2 class="text-3xl font-bold text-gray-800">Desarrollo Profesional</h2>
                         <div class="bg-white p-6 rounded-xl shadow-md">
                             <h3 class="font-bold text-lg text-gray-700 mb-4">Sesiones Impartidas</h3>
-                            
+
                             <div id="desarrollo-profesional-placeholder" class="text-center p-10 hidden">
                                 <i data-lucide="info" class="mx-auto h-12 w-12 text-gray-400"></i>
                                 <h3 class="mt-2 text-sm font-medium text-gray-900">Sin datos</h3>
                                 <p class="mt-1 text-sm text-gray-500">No se encontraron sesiones de desarrollo profesional con fecha.</p>
                             </div>
-                            
+
                             <div id="desarrollo-profesional-tabla-container" class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
@@ -327,7 +481,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="desarrollo-profesional-tabla-body" class="bg-white divide-y divide-gray-200">
-                                        </tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -340,7 +494,6 @@
 
     <script>
         const CLIENT_ID = '207428727335-bfsgio74gs2irr3o1va1ts1jspti0gsh.apps.googleusercontent.com'; // <-- REEMPLAZA ESTO
-
         const MASTER_SHEET_ID = '1HsjHb-zuhHrblvvLoH3jnIaUn9nTir85GTyL8-A60QA'; // <-- REEMPLAZA ESTO
         const API_KEY = 'AIzaSyAXZJv4EUDUgppHvWvtkuFGtz95ogAXkF8'; // <-- REEMPLAZA ESTO
 
@@ -357,7 +510,8 @@
             asistenciaPadres: 'AsistenciaPadres!A:Z',
             matricula: 'Matricula!A:Z',
             entregables: 'Entregables!A:Z',
-            desarrolloProfesional: 'DesarrolloProfesional!A:Z'
+            desarrolloProfesional: 'DesarrolloProfesional!A:Z',
+            palancas: 'Palancas!A:Z' // <-- RANGO AÑADIDO
         };
         const MESES_MAP = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         const SCHOOL_YEAR_MONTH_ORDER = ["Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio"];
@@ -602,7 +756,8 @@
                 docentes: {},
                 asistenciaPadres: [],
                 entregables: [],
-                desarrolloProfesional: []
+                desarrolloProfesional: [],
+                formacionDocente: { docentes: [], bloques: [] } // <-- OBJETO INICIALIZADO
             };
             const validAlumnos = jsonData.alumnos.filter(a => a.id && a.clave_escolar && a.nombre && a.nombre.trim() !== '');
             const validStudentKeys = new Set(validAlumnos.map(a => a.clave_escolar));
@@ -675,8 +830,7 @@
 
             if (jsonData.desarrolloProfesional && jsonData.desarrolloProfesional.length > 0) {
                 data.desarrolloProfesional = jsonData.desarrolloProfesional
-                    // Filtrar solo filas con fecha
-                    .filter(sesion => sesion.fecha && String(sesion.fecha).trim() !== '') // <-- LÍNEA MODIFICADA
+                    .filter(sesion => sesion.fecha && String(sesion.fecha).trim() !== '')
                     .map(sesion => {
                         const parts = String(sesion.fecha).split('/');
                         let fechaObj = null;
@@ -694,7 +848,7 @@
                             fecha: sesion.fecha,
                             fechaObj: fechaObj,
                             brecha: sesion.brecha || 'N/A',
-                            tema: sesion.tema || 'N/A', // Aceptar tema vacío
+                            tema: sesion.tema || 'N/A',
                             objetivo: sesion.objetivo || 'N/A'
                         };
                     })
@@ -710,6 +864,69 @@
                 data.desarrolloProfesional = [];
             }
 
+            // ======================================================
+            // =========== INICIO: PROCESAR DATOS PALANCAS ==========
+            // ======================================================
+            if (jsonData.palancas && jsonData.palancas.length > 0) {
+                const bloquesDisponibles = new Set();
+                const docentesData = jsonData.palancas
+                    .filter(row => row['Nombre del Docente'] && row['Nombre del Docente'].trim() !== '') // Filtrar docentes sin nombre
+                    .map(row => {
+                        const docente = {
+                            nombre: row['Nombre del Docente'],
+                            bloques: {},
+                            latest9Cajas: 'N/A'
+                        };
+
+                        let latest9CajasVal = 'N/A';
+
+                        // Iterar por los 6 bloques
+                        for (let i = 1; i <= 6; i++) {
+                            const bloqueKey = `Bloque ${i}`;
+                            const gestionKey = `Bloque ${i} - MMR Gestión`;
+                            const rigorKey = `Bloque ${i} - MMR Rigor`;
+                            const rsdKey = `Bloque ${i} - RSD`;
+                            const oaoKey = `Bloque ${i} - 1:1`; // 1:1
+                            const cajasKey = `Bloque ${i} - 9 Cajas`;
+
+                            // Solo añadir el bloque si tiene al menos un dato
+                            if (row[gestionKey] || row[rigorKey] || row[rsdKey] || row[oaoKey] || row[cajasKey]) {
+                                bloquesDisponibles.add(bloqueKey);
+                                docente.bloques[bloqueKey] = {
+                                    gestion: row[gestionKey] || 'N/A',
+                                    rigor: row[rigorKey] || 'N/A',
+                                    rsd: parseInt(row[rsdKey]) || 0,
+                                    oao: parseInt(row[oaoKey]) || 0, // 1:1
+                                    cajas: row[cajasKey] || 'N/A'
+                                };
+
+                                // Actualizar el último valor de 9 Cajas encontrado
+                                if (row[cajasKey] && row[cajasKey].trim() !== '') {
+                                    latest9CajasVal = row[cajasKey];
+                                }
+                            }
+                        }
+                        docente.latest9Cajas = latest9CajasVal;
+                        return docente;
+                    });
+
+                data.formacionDocente = {
+                    docentes: docentesData.sort((a, b) => a.nombre.localeCompare(b.nombre)),
+                    bloques: [...bloquesDisponibles].sort((a, b) => { // Ordenar bloques numéricamente
+                         const numA = parseInt(a.replace('Bloque ', ''));
+                         const numB = parseInt(b.replace('Bloque ', ''));
+                         return numA - numB;
+                     })
+                };
+
+            } else {
+                data.formacionDocente = { docentes: [], bloques: [] };
+            }
+            // ======================================================
+            // ============= FIN: PROCESAR DATOS PALANCAS ===========
+            // ======================================================
+
+
             return data;
         }
 
@@ -722,6 +939,7 @@
                 'entregables': 'Entregables',
                 'estudiantes': 'Estudiantes',
                 'docentes': 'Docentes',
+                'formacion-docente': 'Formación Docente', // <-- PERMISO AÑADIDO
                 'calificaciones': 'Calificaciones',
                 'calificaciones-grado': 'Calificaciones por Grado',
                 'boletos-salida': 'Boletos de Salida',
@@ -740,8 +958,100 @@
             function getNivelDeLogro(promedio) { if (promedio > 9.5) return { nivel: 'Sobresaliente', color: 'bg-[#c0e6af] text-green-900' }; if (promedio >= 8.0) return { nivel: 'Buen desempeño', color: 'bg-[#ffe599] text-amber-800' }; if (promedio >= 7.0) return { nivel: 'Desempeño medio', color: 'bg-[#f9cb9c] text-orange-900' }; if (promedio >= 6.0) return { nivel: 'Bajo desempeño', color: 'bg-[#e06666] text-white' }; return { nivel: 'Foco Rojo', color: 'bg-[#990000] text-white' }; }
             const getEl = (id) => document.getElementById(id);
             const summaryMatricula = getEl('summary-matricula'), summaryBap = getEl('summary-bap'), summaryAsistencia = getEl('summary-asistencia'), summaryBajas = getEl('summary-bajas'), summaryDocentes = getEl('summary-docentes'), summaryMatematicas = getEl('summary-matematicas'), summaryEspanol = getEl('summary-espanol'), summaryCiencias = getEl('summary-ciencias'), summaryIngles = getEl('summary-ingles'), summaryPadres = getEl('summary-padres'), periodFilter = getEl('period-filter'), gradeFilter = getEl('grade-filter'), groupFilter = getEl('group-filter'), blockFilter = getEl('block-filter'), genderFilterCal = getEl('gender-filter-cal'), studentCountGrades = getEl('student-count-grades'), studentGradeFilter = getEl('student-grade-filter'), studentGroupFilter = getEl('student-group-filter'), studentGenderFilter = getEl('student-gender-filter'), studentBapFilter = getEl('student-bap-filter'), studentCountStats = getEl('student-count-stats'), asistenciaChartTitle = getEl('asistencia-chart-title'), boletoBlockFilter = getEl('boleto-block-filter'), boletoGradeFilter = getEl('boleto-grade-filter'), boletoGroupFilter = getEl('boleto-group-filter'), boletoSubjectFilter = getEl('boleto-subject-filter'), boletosChartContainer = getEl('boletos-chart-container'), boletosNoData = getEl('boletos-no-data'), expedienteGradeFilter = getEl('expediente-grade-filter'), expedienteGroupFilter = getEl('expediente-group-filter'), expedienteStudentFilter = getEl('expediente-student-filter'), expedienteContainer = getEl('expediente-container'), expedientePlaceholder = getEl('expediente-placeholder');
+
             let matriculaChartInstance, asistenciaChartInstance, calificacionesGradoChart, nivelLogroChartInstance, boletosSalidaChartInstance, expedienteAsistenciaChartInstance, expedienteCalificacionesChartInstance, expedienteRadarChartInstance;
+            let mmrGestionChartInstance, mmrRigorChartInstance;
+
             const datalabelConfig = { anchor: 'end', align: 'top', formatter: (value) => value ? parseFloat(value).toFixed(1) : '', color: '#555', font: { weight: 'bold' } };
+
+            // ================================================================
+            // ===== INICIO: ESTRUCTURA DE DATOS PARA DESCRIPCIÓN DE FASES ====
+            // ================================================================
+             const phaseDescriptions = {
+                 gestion: {
+                     1: {
+                         title: "Fase 1: Desarrollar rutinas y procedimientos esenciales",
+                         subphases: {
+                             1: "Rutinas y procedimientos 101: diseñar y dar a conocer.",
+                             2: "Voz firme: postura y hablar con propósito."
+                         }
+                     },
+                     2: {
+                         title: "Fase 2: Poner en marcha y monitorear rutinas",
+                         subphases: {
+                             3: "Qué hacer.",
+                             4: "Rutinas y procedimientos 201: corregirlas y perfeccionarlas.",
+                             5: "Radar del profesor: detectar cuándo los estudiantes no están trabajando.",
+                             6: "Restablecimiento de toda la clase."
+                         }
+                     },
+                     3: {
+                         title: "Fase 3: Involucrar a todos los estudiantes",
+                         subphases: {
+                             7: "Construir momentum.",
+                             8: "Ritmo: crear la ilusión de velocidad.",
+                             9: "Mantener a todos los estudiantes interesados.",
+                             10: "Narrar lo positivo.",
+                             11: "Correcciones individuales a los estudiantes."
+                         }
+                     },
+                     4: {
+                         title: "Fase 4: Preparar rutinas para el discurso",
+                         subphases: {
+                             12: "Trabajo comprometido en grupos pequeños."
+                         }
+                     },
+                     5: { // Asumiendo que "Extiéndelo" es Fase 5
+                         title: "Fase Extiéndelo: Gestión Aula",
+                         subphases: {
+                             0: "¡Ninguna! Enfocarse en rigor académico." // Usar 0 o un número no usado
+                         }
+                     }
+                 },
+                 rigor: {
+                      1: {
+                         title: "Fase 1: Planificar las clases",
+                         subphases: {
+                             1: "Planificar las clases de manera efectiva 101.",
+                             2: "Internalizar las planificaciones de clases ya existentes."
+                         }
+                     },
+                     2: {
+                         title: "Fase 2: Práctica independiente",
+                         subphases: {
+                              3: "Escribir la respuesta ejemplar.",
+                              4: "Práctica independiente: establecer rutinas diarias.",
+                              5: "Monitoreo intensivo."
+                         }
+                     },
+                     3: {
+                         title: "Fase 3: Responder a las necesidades de aprendizaje",
+                         subphases: {
+                              6: "Hábitos de evidencia.",
+                              7: "Verificar la comprensión a nivel de grupo.",
+                              8: "Reenseñanza 101 – Modelar."
+                         }
+                     },
+                     4: {
+                         title: "Fase 4: Guiar el discurso de los estudiantes 101",
+                         subphases: {
+                              9: "Reenseñanza 201 – Discurso guiado.",
+                              10: "Indicaciones universales.",
+                              11: "Hábitos de discusión."
+                         }
+                     },
+                     5: { // Asumiendo que "Extiéndelo" es Fase 5
+                         title: "Fase Extiéndelo: Guiar el discurso de los estudiantes 201",
+                         subphases: {
+                             12: "Indicaciones estratégicas.",
+                             13: "Volverse conceptual."
+                         }
+                     }
+                 }
+             };
+            // ================================================================
+            // ===== FIN: ESTRUCTURA DE DATOS PARA DESCRIPCIÓN DE FASES =======
+            // ================================================================
 
             function manageVisibility() { const subjects = { matematicas: "Matemáticas", espanol: "Español", ciencias: "Ciencias", ingles: "Inglés" }; Object.entries(subjects).forEach(([key, name]) => { const hasData = data.calificaciones[key] && data.calificaciones[key].length > 0 && data.calificaciones[key].some(v => v > 0); const summaryCard = getEl(`summary-${key}-card`); const chartContainer = getEl(`calificaciones${name.replace('á','a').replace('ñ','n')}-container`); const expPromContainer = getEl(`expediente-prom-${key.substring(0,3)}-container`); if (summaryCard) summaryCard.style.display = hasData ? 'flex' : 'none'; if (chartContainer) chartContainer.style.display = hasData ? 'block' : 'none'; if (expPromContainer) expPromContainer.style.display = hasData ? 'block' : 'none'; }); }
             function populateFilter() { periodFilter.innerHTML = '<option value="General">General</option>'; const a = document.createElement("optgroup"); a.label = "Meses", (data.resumenMensual || []).forEach(b => { const c = document.createElement("option"); c.value = b.periodo, c.textContent = b.periodo, a.appendChild(c) }), periodFilter.appendChild(a); const b = document.createElement("optgroup"); b.label = "Bloques", (data.resumenPorBloque || []).forEach(a => { const c = document.createElement("option"); c.value = a.bloque, c.textContent = a.bloque, b.appendChild(c) }), periodFilter.appendChild(b); }
@@ -756,9 +1066,9 @@
             function populateBlockFilter(){if (!blockFilter) return; blockFilter.innerHTML='<option value="General">General</option>',data.calificaciones.bloques.forEach(a=>{const b=document.createElement("option");b.value=a,b.textContent=a,blockFilter.appendChild(b)})}
             function updateCalificacionesGradoCharts(grade, group, block, gender){ if (!getEl("calificacionesGradoChart")) return; updateCalificacionesGradoBarChart(grade, group, block, gender); updateNivelLogroChart(grade, group, block, gender); }
             function updateNivelLogroChart(grade, group, block, gender) { let filteredStudents; if (grade === 'Todos') { filteredStudents = data.listaEstudiantes.filter(s => s.status === 'activo'); } else { filteredStudents = data.listaEstudiantes.filter(s => s.grado === grade && s.status === 'activo'); } if (group !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.grupo === group); } if (gender !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.genero === gender); } studentCountGrades.textContent = filteredStudents.length; const levelsBySubject = { m: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, e: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, c: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }, i: { "Sobresaliente": 0, "Buen desempeño": 0, "Desempeño medio": 0, "Bajo desempeño": 0, "Foco Rojo": 0 }}; const subjectNames = { m: "Matemáticas", e: "Español", c: "Ciencias", i: "Inglés" }; filteredStudents.forEach(student => { if (student.calificaciones) { if (block === 'General') { const studentAverages = { m: [], e: [], c: [], i: [] }; for (const blockName in student.calificaciones) { const blockGrades = student.calificaciones[blockName]; Object.keys(blockGrades).forEach(subjectKey => { if (studentAverages[subjectKey]) { studentAverages[subjectKey].push(blockGrades[subjectKey]); } }); } Object.keys(studentAverages).forEach(subjectKey => { if (studentAverages[subjectKey].length > 0) { const avg = studentAverages[subjectKey].reduce((a, b) => a + b, 0) / studentAverages[subjectKey].length; const level = getNivelDeLogro(avg).nivel; if(levelsBySubject[subjectKey]) levelsBySubject[subjectKey][level]++; } }); } else { const blockGrades = student.calificaciones[block]; if (blockGrades) { Object.keys(blockGrades).forEach(subjectKey => { const gradeValue = blockGrades[subjectKey]; if (gradeValue !== undefined && !isNaN(parseFloat(gradeValue)) && levelsBySubject[subjectKey]) { levelsBySubject[subjectKey][getNivelDeLogro(gradeValue).nivel]++; } }); } } } });
-                const levelOrder = ["Sobresaliente", "Buen desempeño", "Desempeño medio", "Bajo desempeño", "Foco Rojo"];
-                const levelColors = ["#c0e6af", "#ffe599", "#f9cb9c", "#e06666", "#990000"];
-                const chartLabels = Object.keys(subjectNames).filter(key => data.calificaciones[key.replace('m','matematicas').replace('e','espanol').replace('c','ciencias').replace('i','ingles')]).map(key => subjectNames[key]); const datasets = levelOrder.map((level, index) => ({ label: level, data: Object.keys(subjectNames).filter(key => data.calificaciones[key.replace('m','matematicas').replace('e','espanol').replace('c','ciencias').replace('i','ingles')]).map(key => levelsBySubject[key][level]), backgroundColor: levelColors[index] })); if (nivelLogroChartInstance) nivelLogroChartInstance.destroy(); nivelLogroChartInstance = new Chart(getEl("nivelLogroChart"), { type: "bar", data: { labels: chartLabels, datasets: datasets }, options: { responsive: !0, plugins: { legend: { position: "top" }, title: { display: true, text: `Niveles de Logro - ${grade === 'Todos' ? 'General' : grade} ${group !== "Todos" && grade !== 'Todos' ? "Grupo " + group : ""}` } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: "Cantidad de Estudiantes" } } } } }); }
+                 const levelOrder = ["Sobresaliente", "Buen desempeño", "Desempeño medio", "Bajo desempeño", "Foco Rojo"];
+                 const levelColors = ["#c0e6af", "#ffe599", "#f9cb9c", "#e06666", "#990000"];
+                 const chartLabels = Object.keys(subjectNames).filter(key => data.calificaciones[key.replace('m','matematicas').replace('e','espanol').replace('c','ciencias').replace('i','ingles')]).map(key => subjectNames[key]); const datasets = levelOrder.map((level, index) => ({ label: level, data: Object.keys(subjectNames).filter(key => data.calificaciones[key.replace('m','matematicas').replace('e','espanol').replace('c','ciencias').replace('i','ingles')]).map(key => levelsBySubject[key][level]), backgroundColor: levelColors[index] })); if (nivelLogroChartInstance) nivelLogroChartInstance.destroy(); nivelLogroChartInstance = new Chart(getEl("nivelLogroChart"), { type: "bar", data: { labels: chartLabels, datasets: datasets }, options: { responsive: !0, plugins: { legend: { position: "top" }, title: { display: true, text: `Niveles de Logro - ${grade === 'Todos' ? 'General' : grade} ${group !== "Todos" && grade !== 'Todos' ? "Grupo " + group : ""}` } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: "Cantidad de Estudiantes" } } } } }); }
             function updateCalificacionesGradoBarChart(grade, group, block, gender) { let filteredStudents; if (grade === 'Todos') { filteredStudents = data.listaEstudiantes.filter(s => s.status === 'activo'); } else { filteredStudents = data.listaEstudiantes.filter(s => s.grado === grade && s.status === 'activo'); } if (group !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.grupo === group); } if (gender !== 'Todos') { filteredStudents = filteredStudents.filter(s => s.genero === gender); } const subjectKeyMap = { "matematicas": "m", "espanol": "e", "ciencias": "c", "ingles": "i" }; const subjectNames = { "matematicas": "Matemáticas", "espanol": "Español", "ciencias": "Ciencias", "ingles": "Inglés" }; const colorMap = {matematicas: ['rgba(255, 206, 86, 0.6)', 'rgba(255, 206, 86, 1)'],espanol: ['rgba(153, 102, 255, 0.6)', 'rgba(153, 102, 255, 1)'],ciencias: ['rgba(75, 192, 192, 0.6)', 'rgba(75, 192, 192, 1)'],ingles: ['rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)']}; let chartLabels = [], chartDataValues = [], backgroundColors = [], borderColors = []; Object.keys(subjectKeyMap).forEach(subjectKey => { if (!data.calificaciones[subjectKey] || data.calificaciones[subjectKey].length === 0) return; const shortKey = subjectKeyMap[subjectKey]; let totalSum = 0, totalCount = 0; filteredStudents.forEach(student => { if (student.calificaciones) { if (block === 'General') { Object.values(student.calificaciones).forEach(blockGrades => { if (blockGrades[shortKey] !== undefined && !isNaN(parseFloat(blockGrades[shortKey]))) { totalSum += parseFloat(blockGrades[shortKey]); totalCount++; } }); } else { if (student.calificaciones[block] && student.calificaciones[block][shortKey] !== undefined && !isNaN(parseFloat(student.calificaciones[block][shortKey]))) { totalSum += parseFloat(student.calificaciones[block][shortKey]); totalCount++; } } } }); const avg = totalCount > 0 ? (totalSum / totalCount) : 0; chartLabels.push(subjectNames[subjectKey]); chartDataValues.push(avg.toFixed(2)); backgroundColors.push(colorMap[subjectKey][0]); borderColors.push(colorMap[subjectKey][1]); }); if (!calificacionesGradoChart) { calificacionesGradoChart = new Chart(getEl("calificacionesGradoChart"), { type: "bar", data: { labels: chartLabels, datasets: [{ label: "Promedio de Calificaciones", data: chartDataValues, backgroundColor: backgroundColors, borderColor: borderColors, borderWidth: 1 }] }, options: { responsive: !0, plugins: { legend: { display: !1 }, datalabels: datalabelConfig }, scales: { y: { beginAtZero: !1, min: 5, max: 10.5 } } } }); } else { calificacionesGradoChart.data.labels = chartLabels; calificacionesGradoChart.data.datasets[0].data = chartDataValues; calificacionesGradoChart.data.datasets[0].backgroundColor = backgroundColors; calificacionesGradoChart.data.datasets[0].borderColor = borderColors; calificacionesGradoChart.update(); } const titleText = `Promedio - ${grade === 'Todos' ? 'General' : grade} ${group === 'Todos' || grade === 'Todos' ? '' : 'Grupo ' + group} (${block})`; calificacionesGradoChart.options.plugins.title = { display: true, text: titleText }; calificacionesGradoChart.update(); }
             function setupBoletosFilters() { if (!boletoBlockFilter) return; boletoBlockFilter.innerHTML = "", data.calificaciones.bloques.forEach(a => { const b = document.createElement("option"); b.value = a, b.textContent = a, boletoBlockFilter.appendChild(b) }); const a = [...new Set(data.listaEstudiantes.map(a => a.grado))].sort((x,y)=>x.localeCompare(y, undefined, {numeric: true})); boletoGradeFilter.innerHTML = '<option value="Todos">Todos</option>', a.forEach(a => { boletoGradeFilter.innerHTML += `<option value="${a}">${a}</option>` }); const b = ["Matemáticas", "Español", "Ciencias", "Inglés"]; boletoSubjectFilter.innerHTML = '<option value="Todas">Todas</option>', b.sort().forEach(a => { boletoSubjectFilter.innerHTML += `<option value="${a}">${a}</option>` }), boletoGradeFilter.addEventListener("change", () => { const a = boletoGradeFilter.value; boletoGroupFilter.innerHTML = '<option value="Todos">Todos</option>', "Todos" !== a ? (boletoGroupFilter.disabled = !1, [...new Set(data.listaEstudiantes.filter(b => b.grado === a).map(a => a.grupo))].sort().forEach(a => { boletoGroupFilter.innerHTML += `<option value="${a}">${a}</option>` })) : boletoGroupFilter.disabled = !0, updateBoletosChart() }), boletoGroupFilter.disabled = !0, [boletoBlockFilter, boletoGroupFilter, boletoSubjectFilter].forEach(a => { a.addEventListener("change", updateBoletosChart) }) }
             function updateBoletosChart(){ if (!getEl('boletosSalidaChart')) return; const a=boletoBlockFilter.value,b=boletoGradeFilter.value,c=boletoGroupFilter.value,d=boletoSubjectFilter.value;let e=data.listaEstudiantes;"Todos"!==b&&(e=e.filter(a=>a.grado===b)),"Todos"!==c&&(e=e.filter(a=>a.grupo===c));const f={};let g=!1;e.forEach(b=>{if(b.boletos&&b.boletos[a]){const c="Todas"===d?Object.keys(b.boletos[a]):[d];c.forEach(c=>{b.boletos[a][c]&&b.boletos[a][c].forEach(b=>{g=!0,f[b.date]||(f[b.date]={1:0,2:0,3:0}),f[b.date][b.score]++})})}});if(!g)return boletosChartContainer.classList.add("hidden"),void boletosNoData.classList.remove("hidden");boletosChartContainer.classList.remove("hidden"),boletosNoData.classList.add("hidden");const h=Object.keys(f).sort((a,b)=>new Date(a)-new Date(b)),i=h.map(a=>f[a][1]),j=h.map(a=>f[a][2]),k=h.map(a=>f[a][3]);boletosSalidaChartInstance&&boletosSalidaChartInstance.destroy(),boletosSalidaChartInstance=new Chart(getEl("boletosSalidaChart"),{type:"bar",data:{labels:h,datasets:[{label:"Calificación 1 (Bajo)",data:i,backgroundColor:"rgba(239, 68, 68, 0.7)"},{label:"Calificación 2 (Medio)",data:j,backgroundColor:"rgba(245, 158, 11, 0.7)"},{label:"Calificación 3 (Alto)",data:k,backgroundColor:"rgba(22, 163, 74, 0.7)"}]},options:{responsive:!0,plugins:{legend:{position:"top"}},scales:{x:{stacked:!0,title:{display:!0,text:"Fecha de Clase"}},y:{stacked:!0,beginAtZero:!0,title:{display:!0,text:"Cantidad de Estudiantes"}}}}})}
@@ -946,6 +1256,456 @@
                 lucide.createIcons();
             }
 
+            // ======================================================
+// ======== INICIO: FUNCIÓN FORMACIÓN DOCENTE (CORREGIDA)
+// ======================================================
+function createFormacionDocenteSection(data) {
+    const section = getEl('formacion-docente');
+    if (!section || !data.formacionDocente || !data.formacionDocente.docentes || data.formacionDocente.docentes.length === 0) {
+        if (section) {
+            section.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Formación Docente</h2><p class="text-center text-gray-500 bg-white p-10 rounded-xl shadow-md">No hay datos de formación docente (Pestaña "Palancas") disponibles.</p>';
+        }
+        console.warn("No hay datos de formación docente o falta el elemento HTML.");
+        return;
+    }
+
+    const { docentes, bloques } = data.formacionDocente;
+
+    // --- Obtener referencias a elementos HTML ---
+    // NOTA: Solo obtenemos los filtros, los contenedores dinámicos se obtendrán dentro de las funciones
+    const overviewBlockFilter = getEl('formacion-block-filter');
+    const detailBlockFilter = getEl('formacion-block-filter-detail');
+    const teacherFilter = getEl('formacion-teacher-filter');
+
+    // Verificar si los elementos DE FILTRO existen
+    if (!overviewBlockFilter || !detailBlockFilter || !teacherFilter) {
+        console.error("Faltan elementos HTML esenciales (filtros) para la sección Formación Docente.");
+        section.innerHTML = '<h2 class="text-3xl font-bold mb-6 text-gray-800">Formación Docente</h2><p class="text-center text-red-500 bg-white p-10 rounded-xl shadow-md">Error interno: Faltan elementos de la interfaz. Contacta al administrador.</p>';
+        return;
+    }
+
+
+    // --- Helper para parsear fases ---
+    const parsePhase = (phaseStr) => {
+        const num = parseFloat(phaseStr);
+        return isNaN(num) ? null : num;
+    };
+
+    // --- Función para actualizar Resumen General (Overview) ---
+    // --- Función para actualizar Resumen General (Overview) (CORREGIDA PARA TEXTO) ---
+function updateFormacionOverview(selectedBlock) {
+    // Arrays para guardar las fases COMO TEXTO
+    let phasesGestionText = [];
+    let phasesRigorText = [];
+    let total1a1 = 0;
+    let totalRSD = 0;
+
+    let nineBoxGridData = {
+        'high-high': 0, 'high-med': 0, 'high-low': 0,
+        'med-high': 0, 'med-med': 0, 'med-low': 0,
+        'low-high': 0, 'low-med': 0, 'low-low': 0,
+        'unknown': 0
+    };
+
+    docentes.forEach(docente => {
+        const blockData = docente.bloques[selectedBlock];
+        if (blockData) {
+            // Guardamos el texto original, o 'N/A' si está vacío/nulo
+            const phaseGText = (blockData.gestion && String(blockData.gestion).trim()) ? String(blockData.gestion).trim() : 'N/A';
+            const phaseRText = (blockData.rigor && String(blockData.rigor).trim()) ? String(blockData.rigor).trim() : 'N/A';
+            phasesGestionText.push(phaseGText);
+            phasesRigorText.push(phaseRText);
+
+            // Cálculos de 1a1, RSD y 9 Cajas (sin cambios)
+            total1a1 += blockData.oao || 0;
+            totalRSD += blockData.rsd || 0;
+            const caja = (blockData.cajas || 'N/A').trim().toLowerCase();
+            if (caja === '1a') { nineBoxGridData['high-high']++; }
+            else if (caja === '1b') { nineBoxGridData['high-med']++; }
+            else if (caja === '1c') { nineBoxGridData['high-low']++; }
+            else if (caja === '2a') { nineBoxGridData['med-high']++; }
+            else if (caja === '2b') { nineBoxGridData['med-med']++; }
+            else if (caja === '2c') { nineBoxGridData['med-low']++; }
+            else if (caja === '3a') { nineBoxGridData['low-high']++; }
+            else if (caja === '3b') { nineBoxGridData['low-med']++; }
+            else if (caja === '3c') { nineBoxGridData['low-low']++; }
+            else if (caja !== 'n/a' && caja !== '') { nineBoxGridData['unknown']++; }
+        } else {
+             // Si no hay datos del bloque para el docente, añadir N/A
+             phasesGestionText.push('N/A');
+             phasesRigorText.push('N/A');
+        }
+    });
+
+    // --- INICIO: Nuevo código para calcular y mostrar la MODA (adaptado para texto) ---
+
+    // Función para calcular la moda (fase más frecuente como texto)
+    const calculateModeText = (phaseTexts) => {
+        // Filtramos valores no útiles como 'N/A' o vacíos ANTES de contar
+        const validPhases = phaseTexts.filter(phase => phase && phase !== 'N/A' && phase.trim() !== '');
+
+        if (validPhases.length === 0) return 'N/A'; // Si no hay fases válidas
+
+        const frequency = {};
+        let maxFreq = 0;
+        let modes = [];
+
+        // Contar la frecuencia de cada fase (texto)
+        validPhases.forEach(phase => {
+            frequency[phase] = (frequency[phase] || 0) + 1;
+            if (frequency[phase] > maxFreq) {
+                maxFreq = frequency[phase];
+            }
+        });
+
+        // Encontrar todas las fases con la frecuencia máxima
+        for (const phase in frequency) {
+            if (frequency[phase] === maxFreq) {
+                modes.push(phase);
+            }
+        }
+
+        // Si hay una moda, devolverla. Si hay empate, podrías unir las fases empatadas.
+        // Aquí mostramos solo la primera encontrada (puedes ajustar si prefieres mostrar empates)
+        // Ej: modes.join(', ') para mostrar "Fase 2.1, Fase 2.3" si empatan.
+        return modes.length > 0 ? modes[0] : 'N/A';
+    };
+
+    // Calcular la moda para Gestión y Rigor usando los textos
+    const modeGestionText = calculateModeText(phasesGestionText);
+    const modeRigorText = calculateModeText(phasesRigorText);
+
+    // Actualizar las tarjetas con la moda (texto)
+    getEl('formacion-summary-mmr-gestion').textContent = modeGestionText;
+    getEl('formacion-summary-mmr-rigor').textContent = modeRigorText;
+
+    // --- FIN: Nuevo código para calcular y mostrar la MODA ---
+
+    // Mantenemos las líneas para 1a1 y RSD como estaban
+    getEl('formacion-summary-1a1').textContent = total1a1;
+    getEl('formacion-summary-rsd').textContent = totalRSD;
+
+    // Actualizar Matriz 9 Cajas (sin cambios)
+    const nineBoxTitle = getEl('nineBoxChartTitle');
+    if (nineBoxTitle) { nineBoxTitle.textContent = `Distribución 9 Cajas (${selectedBlock})`; }
+    for (const key in nineBoxGridData) {
+        if (key !== 'unknown') {
+            const cellElement = getEl(`ninebox-${key}`);
+            if (cellElement) { const countSpan = cellElement.querySelector('span:last-child'); if (countSpan) { countSpan.textContent = nineBoxGridData[key]; } }
+        }
+    }
+}
+
+
+    // --- Gráficas de Barras Horizontales por Fase ---
+    function updateMMRDistributionCharts(selectedBlock) {
+        const { docentes } = data.formacionDocente;
+        const gestionCounts = {};
+        const rigorCounts = {};
+
+        docentes.forEach(docente => {
+            const blockData = docente.bloques[selectedBlock];
+            let faseG = 'N/A';
+            let faseR = 'N/A';
+
+            if (blockData) {
+                faseG = String(blockData.gestion).trim() || 'N/A';
+                faseR = String(blockData.rigor).trim() || 'N/A';
+            }
+            
+            if (!isNaN(faseG) && faseG !== 'N/A' && !faseG.includes('.')) faseG = parseFloat(faseG).toFixed(1);
+            if (!isNaN(faseR) && faseR !== 'N/A' && !faseR.includes('.')) faseR = parseFloat(faseR).toFixed(1);
+
+            gestionCounts[faseG] = (gestionCounts[faseG] || 0) + 1;
+            rigorCounts[faseR] = (rigorCounts[faseR] || 0) + 1;
+        });
+
+        const createOrUpdateChart = (canvasId, titleId, chartInstance, counts, title) => {
+            const canvas = getEl(canvasId);
+            if (!canvas) {
+                console.warn(`Canvas no encontrado: ${canvasId}`);
+                return null;
+            }
+
+            const titleEl = getEl(titleId);
+            if(titleEl) titleEl.textContent = `${title} (${selectedBlock})`;
+
+            const sortedLabels = Object.keys(counts).sort((a, b) => {
+                if (a === 'N/A') return 1;
+                if (b === 'N/A') return -1;
+                const numA = parseFloat(a) || 0;
+                const numB = parseFloat(b) || 0;
+                if (numA === 0 && numB === 0) return a.localeCompare(b);
+                return numA - numB;
+            });
+            
+            const dataValues = sortedLabels.map(label => counts[label]);
+
+            const chartOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'right',
+                        padding: { right: 6 },
+                        color: '#1F2937',
+                        font: { weight: 'bold' },
+                        formatter: (value) => value
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Docentes'
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Fase MMR'
+                        }
+                    }
+                }
+            };
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: sortedLabels,
+                    datasets: [{
+                        label: 'Cantidad de Docentes',
+                        data: dataValues,
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+        };
+
+        window.mmrGestionChartInstance = createOrUpdateChart(
+            'mmrGestionChart', 
+            'mmrGestionChartTitle', 
+            window.mmrGestionChartInstance, 
+            gestionCounts, 
+            'Distribución Fases - Gestión'
+        );
+        
+        window.mmrRigorChartInstance = createOrUpdateChart(
+            'mmrRigorChart', 
+            'mmrRigorChartTitle', 
+            window.mmrRigorChartInstance, 
+            rigorCounts, 
+            'Distribución Fases - Rigor'
+        );
+    }
+
+
+    // --- Función para actualizar Vista de Detalle por Docente (MODIFICADA) ---
+    function updateFormacionDetailView(docenteNombre, selectedBlock) {
+        const docente = docentes.find(d => d.nombre === docenteNombre);
+        
+        // --- INICIO DE LA CORRECCIÓN ---
+        // Volvemos a buscar los elementos del DOM CADA VEZ que se ejecuta la función
+        const placeholder = getEl('formacion-placeholder');
+        const detailContainer = getEl('formacion-detail-container');
+        const nombreEl = getEl('formacion-docente-nombre');
+        const cajasEl = getEl('formacion-docente-9cajas');
+        const gestionEl = getEl('formacion-docente-mmr-gestion');
+        const rigorEl = getEl('formacion-docente-mmr-rigor');
+        const oaoEl = getEl('formacion-docente-1a1');
+        const rsdEl = getEl('formacion-docente-rsd');
+        const gestionDetailsEl = getEl('formacion-docente-gestion-details');
+        const rigorDetailsEl = getEl('formacion-docente-rigor-details');
+        // --- FIN DE LA CORRECCIÓN ---
+
+        if (!placeholder || !detailContainer || !nombreEl || !cajasEl || !gestionEl || !rigorEl || !oaoEl || !rsdEl || !gestionDetailsEl || !rigorDetailsEl) {
+            console.error("Faltan elementos HTML para el detalle del docente (fueron buscados en updateFormacionDetailView).");
+            return;
+        }
+
+        if (!docente) {
+            placeholder.classList.remove('hidden');
+            detailContainer.classList.add('hidden');
+            return;
+        }
+
+        placeholder.classList.add('hidden');
+        detailContainer.classList.remove('hidden');
+
+        const blockData = docente.bloques[selectedBlock];
+
+        nombreEl.textContent = docente.nombre;
+        cajasEl.textContent = docente.latest9Cajas || 'N/A';
+
+        if (blockData) {
+            gestionEl.textContent = blockData.gestion || 'N/A';
+            rigorEl.textContent = blockData.rigor || 'N/A';
+            oaoEl.textContent = blockData.oao || 0;
+            rsdEl.textContent = blockData.rsd || 0;
+        } else {
+            gestionEl.textContent = 'N/A';
+            rigorEl.textContent = 'N/A';
+            oaoEl.textContent = 0;
+            rsdEl.textContent = 0;
+        }
+
+        const displayPhaseDetails = (phaseString, type, element) => {
+            element.innerHTML = '';
+            if (!phaseString || phaseString === 'N/A') {
+                element.innerHTML = '<p>No hay datos de fase disponibles para este bloque.</p>';
+                return;
+            }
+
+            const match = phaseString.toString().match(/(\d+(\.\d+)?)/);
+            if (!match) {
+                element.innerHTML = `<p>Valor de fase no reconocido: "${phaseString}"</p>`;
+                return;
+            }
+
+            const numberString = match[0];
+            const parts = numberString.split('.');
+            const mainPhaseNum = parseInt(parts[0]);
+            const subPhaseNum = parts.length > 1 ? parseInt(parts[1]) : null;
+            const phaseData = phaseDescriptions[type]?.[mainPhaseNum];
+
+            if (phaseData) {
+                const titleEl = document.createElement('p');
+                titleEl.className = 'font-semibold mb-1';
+                titleEl.textContent = phaseData.title;
+                element.appendChild(titleEl);
+
+                const ul = document.createElement('ul');
+                ul.className = 'list-disc pl-5 space-y-1';
+                for (const num in phaseData.subphases) {
+                    const li = document.createElement('li');
+                    li.textContent = `${num}. ${phaseData.subphases[num]}`;
+                    if (subPhaseNum !== null && parseInt(num) === subPhaseNum) {
+                        li.classList.add('current-subphase');
+                    }
+                    ul.appendChild(li);
+                }
+                element.appendChild(ul);
+            } else {
+                element.innerHTML = `<p>Descripción no encontrada para la fase ${phaseString}.</p>`;
+            }
+        };
+
+        displayPhaseDetails(blockData?.gestion, 'gestion', gestionDetailsEl);
+        displayPhaseDetails(blockData?.rigor, 'rigor', rigorDetailsEl);
+    }
+
+    // --- Inicialización y Event Listeners ---
+    const allBlocks = data.formacionDocente.bloques;
+    if (allBlocks.length === 0) {
+        console.warn("No se encontraron bloques en los datos de formación docente.");
+        overviewBlockFilter.innerHTML = '<option value="">Sin Bloques</option>';
+        detailBlockFilter.innerHTML = '<option value="">Sin Bloques</option>';
+        teacherFilter.innerHTML = '<option value="">Sin Docentes</option>';
+        overviewBlockFilter.disabled = true;
+        detailBlockFilter.disabled = true;
+        teacherFilter.disabled = true;
+        
+        const placeholder = getEl('formacion-placeholder');
+        const detailContainer = getEl('formacion-detail-container');
+        if(placeholder) placeholder.classList.remove('hidden');
+        if(detailContainer) detailContainer.classList.add('hidden');
+        
+        getEl('formacion-overview-container').classList.add('hidden');
+        return;
+    }
+
+    overviewBlockFilter.innerHTML = '';
+    detailBlockFilter.innerHTML = '';
+    allBlocks.forEach(b => {
+        overviewBlockFilter.innerHTML += `<option value="${b}">${b}</option>`;
+        detailBlockFilter.innerHTML += `<option value="${b}">${b}</option>`;
+    });
+
+    let defaultBlock = "Bloque 1";
+    if (!allBlocks.includes(defaultBlock)) {
+        defaultBlock = allBlocks.length > 0 ? allBlocks[0] : "";
+    }
+
+    if (defaultBlock) {
+        overviewBlockFilter.value = defaultBlock;
+        detailBlockFilter.value = defaultBlock;
+    } else {
+        console.warn("No se pudo establecer un bloque por defecto para Formación Docente.");
+    }
+
+    teacherFilter.innerHTML = '<option value="">Seleccione un docente...</option>';
+    docentes.forEach(d => {
+        teacherFilter.innerHTML += `<option value="${d.nombre}">${d.nombre}</option>`;
+    });
+
+    // Listeners
+    overviewBlockFilter.addEventListener('change', (e) => {
+        const selectedBlock = e.target.value;
+        updateFormacionOverview(selectedBlock);
+        updateMMRDistributionCharts(selectedBlock);
+    });
+
+    teacherFilter.addEventListener('change', (e) => {
+        const teacher = e.target.value;
+        const block = detailBlockFilter.value;
+        if (teacher) {
+            updateFormacionDetailView(teacher, block);
+        } else {
+            // --- INICIO DE LA CORRECCIÓN ---
+            // Volvemos a buscar los elementos para ocultarlos
+            const placeholder = getEl('formacion-placeholder');
+            const detailContainer = getEl('formacion-detail-container');
+            const gestionDetailsEl = getEl('formacion-docente-gestion-details');
+            const rigorDetailsEl = getEl('formacion-docente-rigor-details');
+
+            if(placeholder) placeholder.classList.remove('hidden');
+            if(detailContainer) detailContainer.classList.add('hidden');
+            if(gestionDetailsEl) gestionDetailsEl.innerHTML = '<p>Seleccione un docente y bloque.</p>';
+            if(rigorDetailsEl) rigorDetailsEl.innerHTML = '<p>Seleccione un docente y bloque.</p>';
+            // --- FIN DE LA CORRECCIÓN ---
+        }
+    });
+
+    detailBlockFilter.addEventListener('change', (e) => {
+        const teacher = teacherFilter.value;
+        const block = e.target.value;
+        if (teacher) {
+            updateFormacionDetailView(teacher, block);
+        }
+    });
+
+    // Carga inicial
+    const initialBlock = overviewBlockFilter.value;
+    updateFormacionOverview(initialBlock);
+    updateMMRDistributionCharts(initialBlock);
+
+    // Asegurarse de que el placeholder esté visible al inicio
+    const placeholder = getEl('formacion-placeholder');
+    const detailContainer = getEl('formacion-detail-container');
+    if (!teacherFilter.value) {
+        if(placeholder) placeholder.classList.remove('hidden');
+        if(detailContainer) detailContainer.classList.add('hidden');
+    }
+}
+// ======================================================
+// =========== FIN: FUNCIÓN FORMACIÓN DOCENTE ===========
+// ======================================================
+
             periodFilter.addEventListener('change', (e) => updateSummary(e.target.value));
             if(gradeFilter) gradeFilter.addEventListener('change', e => { const selectedGrade = e.target.value; if (selectedGrade === 'Todos') { groupFilter.innerHTML = '<option value="Todos">Todos</option>'; groupFilter.disabled = true; } else { groupFilter.disabled = false; populateGroupFilter(selectedGrade); } updateCalificacionesGradoCharts(selectedGrade, groupFilter.value, blockFilter.value, genderFilterCal.value); });
             if(groupFilter) groupFilter.addEventListener('change', e => { updateCalificacionesGradoCharts(gradeFilter.value, e.target.value, blockFilter.value, genderFilterCal.value); });
@@ -971,9 +1731,11 @@
             createAsistenciaPadresSection(data);
             createEntregablesSection(data);
             createDesarrolloProfesionalSection(data);
+            createFormacionDocenteSection(data); // <-- LLAMADA AÑADIDA
             manageVisibility();
         }
 
+        // --- Demo Data ---
         function getDemoData() {
              return {
                  resumenGeneral: { matricula: 452, asistencia: 92.1, bajas: 15, docentes: 28, prom_matematicas: 8.4, prom_espanol: 8.9, prom_ciencias: 8.1, prom_ingles: 9.3, alumnosBAP: 2, prom_asistencia_padres: 86.3 },
@@ -995,35 +1757,44 @@
                       { Categoria: "Calificaciones", NombreEntregable: "Carga Mat B2 (Demo)", FechaLimite: "15-12-2025" }
                  ],
                  desarrolloProfesional: [
-                    {
-                        bloque: "Bloque 1 (Demo)",
-                        fecha: "15/09/2025",
-                        fechaObj: new Date(2025, 8, 15),
-                        brecha: "Uso de IA",
-                        tema: "IA en el Aula (Demo)",
-                        objetivo: "Implementar ChatGPT para planeación"
-                    },
-                    {
-                        bloque: "Bloque 1 (Demo)",
-                        fecha: "22/09/2025",
-                        fechaObj: new Date(2025, 8, 22),
-                        brecha: "Evaluación",
-                        tema: "Nuevas Herramientas de Evaluación (Demo)",
-                        objetivo: "Probar 2 nuevas herramientas"
-                    },
-                    { // Ejemplo sin tema
-                        bloque: "Bloque 2 (Demo)",
-                        fecha: "10/10/2025",
-                        fechaObj: new Date(2025, 9, 10),
-                        brecha: "Planificación",
-                        tema: "", // Tema vacío
-                        objetivo: "Revisar planes anuales"
-                    }
-                 ]
+                     {
+                         bloque: "Bloque 1 (Demo)",
+                         fecha: "15/09/2025",
+                         fechaObj: new Date(2025, 8, 15),
+                         brecha: "Uso de IA",
+                         tema: "IA en el Aula (Demo)",
+                         objetivo: "Implementar ChatGPT para planeación"
+                     },
+                     {
+                         bloque: "Bloque 1 (Demo)",
+                         fecha: "22/09/2025",
+                         fechaObj: new Date(2025, 8, 22),
+                         brecha: "Evaluación",
+                         tema: "Nuevas Herramientas de Evaluación (Demo)",
+                         objetivo: "Probar 2 nuevas herramientas"
+                     },
+                     { // Ejemplo sin tema
+                         bloque: "Bloque 2 (Demo)",
+                         fecha: "10/10/2025",
+                         fechaObj: new Date(2025, 9, 10),
+                         brecha: "Planificación",
+                         tema: "", // Tema vacío
+                         objetivo: "Revisar planes anuales"
+                     }
+                 ],
+                 // DATOS DEMO PARA FORMACIÓN DOCENTE
+                 formacionDocente: {
+                    bloques: ["Bloque 1", "Bloque 2"],
+                    docentes: [
+                        { nombre: "Docente Alfa (Demo)", bloques: { "Bloque 1": { gestion: "2.1", rigor: "2.0", oao: 4, rsd: 3, cajas: "2A" }, "Bloque 2": { gestion: "2.3", rigor: "2.2", oao: 3, rsd: 4, cajas: "1A" } }, latest9Cajas: "1A" },
+                        { nombre: "Docente Beta (Demo)", bloques: { "Bloque 1": { gestion: "1.5", rigor: "1.8", oao: 2, rsd: 2, cajas: "3C" }, "Bloque 2": { gestion: "1.8", rigor: "2.0", oao: 4, rsd: 3, cajas: "2A" } }, latest9Cajas: "2A" },
+                        { nombre: "Docente Gamma (Demo)", bloques: { "Bloque 1": { gestion: "3.0", rigor: "2.8", oao: 5, rsd: 4, cajas: "1A"} }, latest9Cajas: "1A" } // Solo tiene datos B1
+                    ]
+                 }
              };
-        }
+         }
 
-    // === Fin del código JavaScript ===
+        // === Fin del código JavaScript ===
 
     </script>
 </body>
