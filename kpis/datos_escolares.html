@@ -819,6 +819,14 @@
                 desarrolloProfesional: [],
                 formacionDocente: { docentes: [], bloques: [] } // <-- OBJETO INICIALIZADO
             };
+            // --- FUNCIÓN PARA CONVERTIR A TIPO TÍTULO ---
+            function toTitleCase(str) {
+                if (!str || typeof str !== 'string') return "";
+                return str.toLowerCase().split(' ').map(word => {
+                    return (word.charAt(0).toUpperCase() + word.slice(1));
+                }).join(' ');
+            }
+            // --------------------------------------------
             const validAlumnos = jsonData.alumnos.filter(a => a.id && a.clave_escolar && a.nombre && a.nombre.trim() !== '');
             const validStudentKeys = new Set(validAlumnos.map(a => a.clave_escolar));
             const validCalificaciones = jsonData.calificaciones.filter(c => validStudentKeys.has(c.clave_escolar));
@@ -846,7 +854,7 @@
         }
     }
 });
-                return { id, clave_escolar: clave, nombre: alumno.nombre, genero: alumno.genero, grado: alumno.grado, grupo: alumno.grupo, status: (String(alumno.status).toLowerCase() === 'baja') ? 'baja' : 'activo', motivoBaja: alumno.motivoBaja, bap: (String(alumno.bap).toLowerCase() === 'true') ? 'Sí' : 'No', calificaciones, asistencia, boletos, diagnostico };
+                return { id, clave_escolar: clave, nombre: toTitleCase(alumno.nombre), genero: alumno.genero, grado: alumno.grado, grupo: alumno.grupo, status: (String(alumno.status).toLowerCase() === 'baja') ? 'baja' : 'activo', motivoBaja: alumno.motivoBaja, bap: (String(alumno.bap).toLowerCase() === 'true') ? 'Sí' : 'No', calificaciones, asistencia, boletos, diagnostico };
             });
 
             const subjects = [...new Set(validCalificaciones.map(c => c.materia))], blocks = [...new Set(validCalificaciones.map(c => c.bloque))].sort(), subjectKeyMap = { "Matemáticas": "matematicas", "Español": "espanol", "Ciencias": "ciencias", "Inglés": "ingles" };
@@ -948,8 +956,8 @@
                     .filter(row => row['Nombre del Docente'] && row['Nombre del Docente'].trim() !== '') // Filtrar docentes sin nombre
                     .map(row => {
                         const docente = {
-                            nombre: row['Nombre del Docente'],
-                            bloques: {},
+                            nombre: toTitleCase(row['Nombre del Docente']),
+                            bloques: {},
                             latest9Cajas: 'N/A'
                         };
 
