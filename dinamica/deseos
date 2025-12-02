@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Deseos Navideños y de Año Nuevo</title>
+    <!-- Carga de Tailwind CSS para estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define la fuente Inter y algunos estilos base */
+        :root {
+            --color-primary: #D90429; /* Rojo Navidad */
+            --color-secondary: #008000; /* Verde Pino */
+            --color-accent: #FFC300; /* Dorado/Amarillo */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Fondo muy claro */
+            background-image: linear-gradient(135deg, #f0f4f8 0%, #e0e7f0 100%);
+            min-height: 100vh;
+        }
+
+        /* Estilo para las cartas flip */
+        .card-container {
+            perspective: 1000px;
+            height: 150px; /* Altura fija para la carta */
+            width: 100%;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Transición para desaparecer */
+        }
+
+        /* Nuevo estilo para desvanecer la carta (mantiene el espacio) */
+        .card-container.disappear {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        
+        /* Clase para hacer el contenedor invisible y no interactuable, manteniendo su espacio */
+        .card-container.invisible-placeholder {
+            opacity: 0;
+            pointer-events: none; /* Deshabilita clics en el espacio */
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .card-front {
+            background-color: var(--color-primary);
+            color: white;
+            border: 4px solid var(--color-accent);
+        }
+
+        .card-back {
+            background-color: white;
+            color: #333;
+            transform: rotateY(180deg);
+            border: 4px solid var(--color-secondary);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilo para el deseo trascendental */
+        .trascendental-back {
+            background-color: var(--color-accent);
+            color: #333;
+            border: 4px solid var(--color-primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* Media query para pantallas más grandes (desktop) */
+        @media (min-width: 640px) {
+            .card-container {
+                height: 200px; /* Más grande en desktop */
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-2xl shadow-xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-2">
+                🎉 Mis 9 Deseos de Fin de Año ✨
+            </h1>
+            <p class="text-xl text-gray-500">
+                Presiona cada carta para revelar un deseo. ¡Vuelve a presionarla para marcarla como vista y desaparecer!
+            </p>
+        </header>
+
+        <!-- Contenedor del Tablero 3x3 -->
+        <div id="board" class="grid grid-cols-3 gap-4">
+            <!-- Las cartas se inyectarán aquí con JavaScript -->
+        </div>
+
+        <!-- Mensaje de felicitación (oculto hasta que se voltean todas las cartas) -->
+        <div id="completion-message" class="hidden mt-8 p-6 bg-green-100 border-l-4 border-green-500 rounded-lg text-center shadow-md">
+            <p class="text-2xl font-bold text-green-700">
+                ¡Todos los deseos revelados! Que el más trascendental se cumpla.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Configuración de los 9 deseos
+        const deseos = [
+            {
+                id: 1,
+                texto: "Paz Interior y Claridad de Propósito. Dedicar mi energía a lo que realmente importa.",
+                icono: "🧘‍♀️",
+                esTrascendental: true
+            },
+            {
+                id: 2,
+                texto: "Viaje Inesperado. Planear un viaje espontáneo a un lugar nuevo.",
+                icono: "✈️"
+            },
+            {
+                id: 3,
+                texto: "Más Tiempo de Lectura. Leer un libro completo cada mes por puro placer.",
+                icono: "📚"
+            },
+            {
+                id: 4,
+                texto: "Pequeño Golpe de Suerte. Encontrar un ingreso inesperado para un buen gusto.",
+                icono: "💰"
+            },
+            {
+                id: 5,
+                texto: "Renovación de Guardarropa. Nuevas prendas para sentirme más cómodo(a) y seguro(a).",
+                icono: "👚"
+            },
+            {
+                id: 6,
+                texto: "Nueva Habilidad Culinaria. Dominar una receta compleja o exótica.",
+                icono: "🧑‍🍳"
+            },
+            {
+                id: 7,
+                texto: "Mejorar mis Dispositivos. Obtener un gadget que me haga más eficiente.",
+                icono: "📱"
+            },
+            {
+                id: 8,
+                texto: "Rincón de Hogar Ideal. Decorar mi casa para tener un santuario personal.",
+                icono: "🛋️"
+            },
+            {
+                id: 9,
+                texto: "Más Ocasiones Sociales. Reunirme y crear nuevos recuerdos con viejos amigos.",
+                icono: "🥂"
+            },
+        ];
+
+        // Se usa una lista de 9 iconos y se reserva la 🌟 para el deseo trascendental.
+        const iconosNavidad = [
+            "🎄", "🎁", "🔔", "🌟", "🕯️", "🍪", "🦌", "☃️", "🎅"
+        ];
+
+        const board = document.getElementById('board');
+        let flippedCount = 0;
+
+        /**
+         * Inicializa el tablero creando los elementos de las cartas, asegurando
+         * que el deseo trascendental esté en la posición (0, 3) - primer espacio de la segunda fila.
+         */
+        function initializeBoard() {
+            // 1. Separar el deseo trascendental
+            const transcendentalDeseo = deseos.find(d => d.esTrascendental);
+            const superficialDesires = deseos.filter(d => !d.esTrascendental);
+
+            // 2. Preparar los iconos
+            const starIcon = "🌟";
+            // Tomar los otros 8 iconos (si la estrella estaba en la lista, se asegura de que no se use dos veces)
+            const otherIcons = iconosNavidad.filter(icon => icon !== starIcon); 
+            const shuffledOtherIcons = shuffleArray(otherIcons.slice());
+
+            // 3. Mezclar los 8 deseos superficiales
+            const shuffledSuperficial = shuffleArray(superficialDesires.slice());
+
+            // 4. Crear el array final de 9 deseos, insertando el trascendental en el índice 3 (inicio de la fila 2)
+            const finalDesires = [
+                ...shuffledSuperficial.slice(0, 3), // 3 deseos al inicio (fila 1)
+                transcendentalDeseo,                 // El deseo trascendental en el índice 3
+                ...shuffledSuperficial.slice(3)      // Los 5 deseos restantes
+            ];
+
+            // 5. Crear el array final de 9 iconos, insertando la estrella en el índice 3
+            const finalIcons = [
+                ...shuffledOtherIcons.slice(0, 3), 
+                starIcon,                 
+                ...shuffledOtherIcons.slice(3)      
+            ];
+
+
+            finalDesires.forEach((deseo, index) => {
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'card-container';
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.deseoId = deseo.id;
+
+                // ------------------ Cara Frontal (Icono) ------------------
+                const cardFront = document.createElement('div');
+                cardFront.className = 'card-face card-front';
+                // Usamos el icono de la lista final, que garantiza la estrella en el índice 3
+                cardFront.innerHTML = `
+                    <div class="text-7xl">${finalIcons[index]}</div>
+                `;
+
+                // ------------------ Cara Posterior (Deseo) ------------------
+                const cardBack = document.createElement('div');
+                cardBack.className = 'card-face card-back';
+                cardBack.innerHTML = `
+                    <div class="text-lg font-medium">${deseo.texto}</div>
+                `;
+
+                // Si es el deseo trascendental, añadimos una clase especial para el fondo dorado
+                if (deseo.esTrascendental) {
+                    cardBack.classList.add('trascendental-back');
+                    cardBack.innerHTML = `
+                        <div class="text-xl font-extrabold text-center">
+                            🌟 El Deseo Trascendental 🌟
+                            <p class="mt-2 text-base font-normal">${deseo.texto}</p>
+                        </div>
+                    `;
+                }
+
+                card.appendChild(cardFront);
+                card.appendChild(cardBack);
+                cardContainer.appendChild(card);
+                board.appendChild(cardContainer);
+
+                // Añadir el evento de click
+                card.addEventListener('click', flipCard);
+            });
+        }
+
+        /**
+         * Función para mezclar un array (Algoritmo Fisher-Yates).
+         * @param {Array} array - El array a mezclar.
+         * @returns {Array} - El array mezclado.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        /**
+         * Maneja el evento de click para voltear la carta o hacerla desaparecer.
+         * @param {Event} event - El objeto evento.
+         */
+        function flipCard(event) {
+            const card = event.currentTarget;
+            const cardContainer = card.parentElement;
+
+            if (card.classList.contains('flipped')) {
+                // Segundo clic: Desvanecer la carta (aplicar el efecto de desaparecer y la clase de placeholder)
+                cardContainer.classList.add('disappear');
+                
+                // Quitar el listener para evitar clics mientras se desvanece
+                card.removeEventListener('click', flipCard); 
+                
+                // Después de la transición de 0.6s, asegurar que se queda como placeholder invisible y sin interacciones.
+                setTimeout(() => {
+                    cardContainer.classList.add('invisible-placeholder');
+                    cardContainer.classList.remove('disappear'); // Se mantiene la opacidad a 0, pero se quita el transform para no animarse dos veces
+                }, 600); 
+
+            } else {
+                // Primer clic: Voltear la carta
+                card.classList.add('flipped');
+                flippedCount++;
+
+                // Revisa si todas las cartas han sido volteadas
+                if (flippedCount === deseos.length) {
+                    setTimeout(() => {
+                        document.getElementById('completion-message').classList.remove('hidden');
+                    }, 800);
+                }
+            }
+        }
+
+        // Iniciar la aplicación al cargar la página
+        window.onload = initializeBoard;
+    </script>
+</body>
+</html>
