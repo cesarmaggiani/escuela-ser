@@ -1,0 +1,150 @@
+import React, { useState, useEffect } from 'react';
+
+const App = () => {
+  const [revealed, setRevealed] = useState({});
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  // Colores extraídos del Manual de Identidad SER (se mantienen para la estética)
+  const colors = {
+    pink: '#E11B7E',   // R225 G27 B126
+    yellow: '#FCCC32', // R252 G204 B50
+    blue: '#009BD1',   // R0 G155 B209
+    dark: '#333333'
+  };
+
+  const items = [
+    { id: 1, type: 'question', color: colors.pink, content: '¿Qué "truco" de organización te está salvando la vida este mes?' },
+    { id: 2, type: 'question', color: colors.yellow, content: '¿Cuál es el "tema del momento" en los pasillos de tu escuela?' },
+    { id: 3, type: 'wildcard', color: colors.blue, content: '🃏 COMODÍN: Comparte un logro o anécdota libremente con el grupo.' },
+    { id: 4, type: 'question', color: colors.blue, content: '¿Qué pequeño ritual te ayuda a mantener la calma antes de empezar tu jornada?' },
+    { id: 5, type: 'question', color: colors.pink, content: 'Comparte una "pequeña victoria" de esta semana que merezca ser celebrada.' },
+    { id: 6, type: 'question', color: colors.yellow, content: 'Si pudieras resolver un pendiente con un chasquido de dedos, ¿cuál sería?' },
+    { id: 7, type: 'wildcard', color: colors.pink, content: '🃏 COMODÍN: Hazle una pregunta curiosa a otro líder del grupo.' },
+    { id: 8, type: 'question', color: colors.blue, content: '¿Qué consejo le darías a un director que recién empieza su carrera hoy?' },
+    { id: 9, type: 'question', color: colors.yellow, content: '¿Qué es lo que más te ilusiona de tu escuela para este semestre?' },
+  ];
+
+  const toggleReveal = (id) => {
+    setRevealed(prev => ({ ...prev, [id]: true }));
+    const item = items.find(i => i.id === id);
+    setSelectedItem(item);
+  };
+
+  const closeModal = () => setSelectedItem(null);
+
+  const resetBoard = () => {
+    setRevealed({});
+    setSelectedItem(null);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800" style={{ fontFamily: "'Cabin', sans-serif" }}>
+      {/* Carga de fuentes oficiales */}
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+          .font-title { font-family: 'Bebas Neue', sans-serif; }
+          .font-body { font-family: 'Cabin', sans-serif; }
+        `}
+      </style>
+
+      <div className="max-w-4xl mx-auto">
+        {/* Header - Sin logotipos institucionales y sin fecha */}
+        <header className="text-center mb-10 pt-4">
+          <h1 className="font-title text-5xl md:text-6xl text-slate-800 mb-2 tracking-tight">
+            CAFÉ CON LÍDERES
+          </h1>
+          <p className="text-slate-500 font-body text-lg">
+            Dinámica de Reflexión y Experiencias
+          </p>
+          <div className="h-1 w-16 bg-pink-500 mx-auto mt-4 rounded-full"></div>
+        </header>
+
+        {/* Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {items.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => toggleReveal(item.id)}
+              style={{ 
+                backgroundColor: revealed[item.id] ? '#ffffff' : item.color,
+                borderColor: revealed[item.id] ? '#f1f5f9' : 'transparent'
+              }}
+              className={`
+                relative h-32 md:h-40 rounded-xl transition-all duration-500 transform 
+                flex items-center justify-center text-3xl font-title shadow-md border-2
+                ${revealed[item.id] 
+                  ? 'text-slate-200 scale-95' 
+                  : 'text-white hover:brightness-110 hover:-translate-y-1 shadow-lg'
+                }
+              `}
+            >
+              <span className={revealed[item.id] ? 'opacity-20' : 'opacity-100'}>
+                {item.id}
+              </span>
+              {revealed[item.id] && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <svg className="w-8 h-8 opacity-20" fill="currentColor" viewBox="0 0 20 20" style={{ color: item.color }}>
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Reset Button */}
+        <div className="mt-12 text-center">
+          <button 
+            onClick={resetBoard}
+            className="text-xs uppercase tracking-widest text-slate-400 hover:text-pink-600 transition-colors font-body"
+          >
+            Reiniciar tablero
+          </button>
+        </div>
+
+        {/* Modal / Overlay */}
+        {selectedItem && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+            <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl transform animate-in zoom-in slide-in-from-bottom-4 duration-300 border-t-8" style={{ borderTopColor: selectedItem.color }}>
+              <div className="flex justify-between items-start mb-6">
+                <span 
+                  className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider font-body"
+                  style={{ backgroundColor: `${selectedItem.color}20`, color: selectedItem.color }}
+                >
+                  {selectedItem.type === 'wildcard' ? 'Comodín' : 'Pregunta de Reflexión'}
+                </span>
+                <button onClick={closeModal} className="text-slate-400 hover:text-slate-600 transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <p className="text-2xl md:text-3xl font-body font-medium text-slate-800 leading-tight mb-10">
+                {selectedItem.content}
+              </p>
+              
+              <button 
+                onClick={closeModal}
+                style={{ backgroundColor: selectedItem.color }}
+                className="w-full text-white py-4 rounded-lg font-title text-xl tracking-wider hover:brightness-110 transition-all shadow-lg"
+              >
+                CONTINUAR
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Footer genérico sin fecha */}
+        <footer className="mt-16 text-center border-t border-slate-200 pt-8 pb-4">
+          <p className="font-body text-[10px] text-slate-400 uppercase tracking-widest">
+            Reunión de Líderes Escolares
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default App;
