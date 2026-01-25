@@ -44,6 +44,16 @@
 <body class="min-h-screen text-slate-800 p-4 md:p-8">
 
     <div class="max-w-4xl mx-auto">
+        <!-- Botón de Instrucciones Superior -->
+        <div class="flex justify-end mb-4">
+            <button onclick="openInstructions()" class="flex items-center gap-2 text-slate-400 hover:text-[var(--ser-blue)] transition-colors text-xs font-bold uppercase tracking-widest">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Instrucciones
+            </button>
+        </div>
+
         <!-- Encabezado -->
         <header class="text-center mb-10 pt-4">
             <h1 class="font-title text-5xl md:text-7xl text-slate-800 mb-2 tracking-tight">
@@ -62,7 +72,7 @@
 
         <!-- Botón de reinicio -->
         <div class="mt-16 text-center">
-            <button onclick="resetBoard()" class="text-xs uppercase tracking-[0.2em] text-slate-400 hover:text-[var(--ser-pink)] transition-colors font-bold">
+            <button onclick="resetBoard()" class="text-xs uppercase tracking-[0.2em] text-slate-300 hover:text-[var(--ser-pink)] transition-colors font-bold">
                 Reiniciar tablero
             </button>
         </div>
@@ -93,6 +103,43 @@
             
             <button id="modal-btn" onclick="closeModal()" class="w-full text-white py-4 rounded-lg font-title text-2xl tracking-widest hover:brightness-110 transition-all shadow-lg uppercase">
                 Continuar
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Instrucciones -->
+    <div id="modal-instructions" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-[60]">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl animate-pop border-t-8 border-[var(--ser-blue)]">
+            <div class="flex justify-between items-start mb-4">
+                <h2 class="font-title text-3xl text-slate-800">Guía de la actividad</h2>
+                <button onclick="closeInstructions()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4 text-slate-600 text-sm leading-relaxed mb-8">
+                <div class="flex gap-3">
+                    <span class="bg-[var(--ser-blue)] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</span>
+                    <p>Un líder elige un número del tablero para descubrir la pregunta oculta.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="bg-[var(--ser-blue)] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</span>
+                    <p>El líder comparte su experiencia o reflexión con el grupo basándose en la pregunta.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="bg-[var(--ser-blue)] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</span>
+                    <p>Al terminar, el líder elige a un colega para que seleccione el siguiente número.</p>
+                </div>
+                <div class="mt-4 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <p class="font-bold text-slate-800 mb-1 italic">🃏 Comodines:</p>
+                    <p>Son espacios de participación libre donde pueden compartir anécdotas o hacer preguntas cruzadas.</p>
+                </div>
+            </div>
+            
+            <button onclick="closeInstructions()" class="w-full bg-[var(--ser-blue)] text-white py-3 rounded-lg font-title text-xl tracking-widest hover:brightness-110 transition-all uppercase">
+                ¡Entendido!
             </button>
         </div>
     </div>
@@ -151,7 +198,6 @@
             revealed.add(item.id);
             renderGrid();
             
-            // Configurar modal
             const modal = document.getElementById('modal');
             const modalContent = document.getElementById('modal-content');
             const modalTag = document.getElementById('modal-tag');
@@ -172,12 +218,19 @@
             document.getElementById('modal').classList.remove('modal-active');
         }
 
+        function openInstructions() {
+            document.getElementById('modal-instructions').classList.add('modal-active');
+        }
+
+        function closeInstructions() {
+            document.getElementById('modal-instructions').classList.remove('modal-active');
+        }
+
         function resetBoard() {
             revealed.clear();
             renderGrid();
         }
 
-        // Inicializar
         renderGrid();
     </script>
 </body>
