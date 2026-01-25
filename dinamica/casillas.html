@@ -44,8 +44,17 @@
 <body class="min-h-screen text-slate-800 p-4 md:p-8">
 
     <div class="max-w-4xl mx-auto">
-        <!-- Botón de Instrucciones Superior -->
-        <div class="flex justify-end mb-4">
+        <!-- Barra de Herramientas Superior -->
+        <div class="flex justify-end mb-4 gap-6">
+            <!-- Botón de Pantalla Completa -->
+            <button onclick="toggleFullScreen()" class="flex items-center gap-2 text-slate-400 hover:text-[var(--ser-pink)] transition-colors text-xs font-bold uppercase tracking-widest">
+                <svg id="fullscreen-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                <span id="fullscreen-text">Pantalla Completa</span>
+            </button>
+            
+            <!-- Botón de Instrucciones -->
             <button onclick="openInstructions()" class="flex items-center gap-2 text-slate-400 hover:text-[var(--ser-blue)] transition-colors text-xs font-bold uppercase tracking-widest">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -224,6 +233,19 @@
 
         function closeInstructions() {
             document.getElementById('modal-instructions').classList.remove('modal-active');
+        }
+
+        function toggleFullScreen() {
+            const text = document.getElementById('fullscreen-text');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                text.innerText = "Salir de Pantalla Completa";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    text.innerText = "Pantalla Completa";
+                }
+            }
         }
 
         function resetBoard() {
