@@ -110,7 +110,7 @@
             </div>
         </section>
 
-        <!-- Análisis e Inspector -->
+        <!-- Paneles de Análisis e Inspector -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[420px] mb-10">
             <!-- Terminal Debugger -->
             <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-7 shadow-xl flex flex-col overflow-hidden relative">
@@ -210,6 +210,17 @@
                 bugs: 'Mostrar videos largos que pierden el punto técnico.',
                 impact: 'Validación visual.' 
             },
+            MODELO_LIDER: { 
+                id: 'MODELO_LIDER', 
+                category: 'VER', 
+                label: 'Líder Modela', 
+                icon: 'user-check', 
+                description: 'El facilitador muestra la técnica (o el error común para identificarlo).', 
+                examples: ['El líder modela el Umbral para el grupo', 'Modelaje del error típico en la pausa dramática'],
+                reflection: '¿Soy exagerado en mi modelaje para que sea claro?', 
+                bugs: 'Modelar algo diferente a lo que dice el guion.',
+                impact: 'Referente directo.' 
+            },
             GIRA_DISCUTE: { 
                 id: 'GIRA_DISCUTE', 
                 category: 'NOMBRAR', 
@@ -239,8 +250,8 @@
                 icon: 'type', 
                 description: 'Asignar lenguaje formal a la conclusión. Fija la "Idea Central".', 
                 examples: ['"A esto le llamamos: Pausa Dramática"', '"Esta técnica es: Lo Correcto es lo Correcto"'],
-                reflection: '¿Esperé hasta el final para dar el nombre?', 
-                bugs: 'Nombrar la técnica al inicio de la diapositiva.',
+                reflection: '¿Esperé hasta el final del descubrimiento para dar el nombre oficial?', 
+                bugs: 'Presentar el nombre de la técnica en la primera diapositiva.',
                 impact: 'Estandarización.' 
             },
             GUION: { 
@@ -251,15 +262,15 @@
                 description: 'Escribir palabras y señales exactas antes de practicar físicamente.', 
                 examples: ['Escribir el guion de corrección de 5 palabras', 'Planear la pregunta de chequeo de comprensión'],
                 reflection: '¿Dí tiempo de silencio total para escribir?', 
-                bugs: 'Practicar sin tener las palabras escritas (genera bloqueos).',
+                bugs: 'Pasar a la práctica física sin tener nada escrito (causa bloqueos).',
                 impact: 'Práctica segura.' 
             },
             PRACTICA_BRECHA: { 
                 id: 'PRACTICA_BRECHA', 
                 category: 'HACER', 
-                label: 'Práctica Brecha', 
+                label: 'Práctica Física', 
                 icon: 'user-round', 
-                description: 'Juego de roles enfocado en lo que más cuesta lograr.', 
+                description: 'Juego de roles enfocado en la brecha: lo que más cuesta lograr.', 
                 examples: ['Simular una clase difícil para practicar el tono', 'Practicar la modulación de voz frente a un par'],
                 reflection: '¿Monitoreo con el ejemplar en mano?', 
                 bugs: 'Hacer una práctica "light" donde no hay errores que corregir.',
@@ -302,11 +313,9 @@
 
         function renderLibrary() {
             libContainer.innerHTML = '';
-            const keysToRender = isShuffled ? libraryKeys.sort(() => Math.random() - 0.5) : libraryKeys;
-            
             if (isShuffled) {
                 libContainer.className = 'flex flex-wrap gap-2 animate-pop';
-                keysToRender.forEach(k => libContainer.appendChild(createBrickButton(k)));
+                libraryKeys.forEach(k => libContainer.appendChild(createBrickButton(k)));
             } else {
                 libContainer.className = 'grid grid-cols-2 md:grid-cols-5 gap-3';
                 Object.keys(CATEGORIES).forEach(catKey => {
@@ -327,7 +336,6 @@
             const brick = BRICK_DEFS[key];
             const wrap = document.createElement('div');
             wrap.className = 'relative group';
-            
             const btn = document.createElement('button');
             const cat = CATEGORIES[brick.category];
             btn.className = `${cat.brickClass} ${cat.hoverClass} w-full py-2.5 px-3 pr-8 rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-95 text-white border border-white/10 text-left`;
@@ -338,12 +346,10 @@
                 renderTimeline();
                 updateAnalysis();
             };
-            
             const info = document.createElement('button');
             info.className = 'absolute right-1.5 top-1/2 -translate-y-1/2 p-1 text-white/30 hover:text-white transition-opacity bg-black/10 rounded-full';
             info.innerHTML = '<i data-lucide="info" class="w-3.5 h-3.5"></i>';
             info.onclick = (e) => { e.stopPropagation(); previewItem = brick; selectedIdx = null; updateInspector(); };
-            
             wrap.appendChild(btn); wrap.appendChild(info);
             return wrap;
         }
@@ -354,17 +360,14 @@
                 timelineContainer.innerHTML = '<div class="w-full text-center opacity-20 py-10 font-bold uppercase text-sm tracking-widest italic font-bebas">Suelte Bricks para iniciar la arquitectura</div>';
                 return;
             }
-
             const wrapper = document.createElement('div');
             wrapper.className = 'flex items-center';
-            
             sequence.forEach((brick, idx) => {
                 const piece = document.createElement('div');
                 const cat = CATEGORIES[brick.category];
                 piece.className = `relative flex-shrink-0 w-[145px] h-[95px] p-5 transition-all cursor-pointer flex flex-col justify-center puzzle-piece brick-transition ${cat.brickClass} ${selectedIdx === idx ? 'active-brick' : 'z-10 opacity-90 hover:opacity-100 hover:z-20'}`;
                 piece.style.marginLeft = idx === 0 ? '0' : '-18px';
                 piece.onclick = () => { selectedIdx = idx; previewItem = null; renderTimeline(); updateInspector(); };
-
                 piece.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
                         <div class="bg-black/20 p-1 rounded text-white/80"><i data-lucide="${brick.icon}" class="w-4 h-4"></i></div>
@@ -376,7 +379,6 @@
                 `;
                 wrapper.appendChild(piece);
             });
-            
             timelineContainer.appendChild(wrapper);
             lucide.createIcons();
         }
@@ -392,20 +394,51 @@
             const bugs = [];
             if (sequence.length === 0) return;
 
-            if (!['OBJETIVO', 'HISTORIA'].includes(sequence[0]?.id)) {
-                bugs.push({ title: "Falta Cimiento", msg: "La sesión no tiene un marco estratégico.", fix: "Añade [Objetivo] o [Historia] al inicio." });
+            // REGLA 1: INICIO
+            if (sequence[0].id !== 'OBJETIVO' && sequence[0].id !== 'HISTORIA') {
+                bugs.push({ 
+                    title: "Falta Cimiento", 
+                    msg: "La sesión no tiene un marco estratégico.", 
+                    fix: "Añade [Objetivo] o [Historia] al inicio." 
+                });
             }
 
+            // RECORRIDO DE REGLAS POR BRICK
             sequence.forEach((brick, i) => {
-                const prev = sequence[i-1];
-                if (['MODELO_VIDEO', 'MODELO_LIDER'].includes(brick.id) && (!prev || prev.id !== 'ENFOQUE')) {
-                    bugs.push({ title: "Observación Ciega", msg: `"${brick.label}" carece de dirección visual.`, fix: "Añade [P. de Enfoque] antes." });
+                const prev = i > 0 ? sequence[i-1] : null;
+
+                // REGLA: VER requiere ENFOQUE
+                if (['MODELO_VIDEO', 'MODELO_LIDER'].includes(brick.id)) {
+                    if (!prev || prev.id !== 'ENFOQUE') {
+                        bugs.push({ 
+                            title: "Observación Ciega", 
+                            msg: `"${brick.label}" carece de dirección visual previa.`, 
+                            fix: "Añade [P. de Enfoque] antes." 
+                        });
+                    }
                 }
-                if (brick.id === 'NOMBRAR_TECNICO' && (!prev || (prev.id !== 'GIRA_DISCUTE' && prev.id !== 'PREGUNTAR_PORQUE'))) {
-                    bugs.push({ title: "Salto Lógico", msg: "Nombrando antes de permitir el descubrimiento.", fix: "Añade [Gira y Discute] antes." });
+
+                // REGLA: NOMBRAR requiere Gira/Discute o ¿Por qué?
+                if (brick.id === 'NOMBRAR_TECNICO') {
+                    const hasDiscovery = sequence.slice(0, i).some(b => b.id === 'GIRA_DISCUTE' || b.id === 'PREGUNTAR_PORQUE');
+                    if (!hasDiscovery) {
+                        bugs.push({ 
+                            title: "Salto Lógico", 
+                            msg: "Nombrando técnica antes de permitir el descubrimiento.", 
+                            fix: "Añade [Gira y Discute] antes." 
+                        });
+                    }
                 }
-                if (brick.id === 'PRACTICA_BRECHA' && (!prev || prev.id !== 'GUION')) {
-                    bugs.push({ title: "Falta de Guion", msg: "Práctica física sin planeación previa.", fix: "Añade [Hacer Guion] antes." });
+
+                // REGLA: PRÁCTICA requiere GUION
+                if (brick.id === 'PRACTICA_BRECHA') {
+                    if (!prev || prev.id !== 'GUION') {
+                        bugs.push({ 
+                            title: "Falta de Guion", 
+                            msg: "Práctica física sin planeación previa.", 
+                            fix: "Añade [Hacer Guion] justo antes." 
+                        });
+                    }
                 }
             });
 
@@ -414,7 +447,7 @@
             } else {
                 bugs.forEach(bug => {
                     const d = document.createElement('div');
-                    d.className = 'p-4 bg-red-500/5 border border-red-500/20 rounded-2xl space-y-2';
+                    d.className = 'p-4 bg-red-500/5 border border-red-500/20 rounded-2xl space-y-2 animate-pop';
                     d.innerHTML = `
                         <div class="flex gap-2 text-red-400 font-bold uppercase text-[10px] items-center"><i data-lucide="alert-triangle" class="w-4 h-4"></i> ${bug.title}</div>
                         <p class="text-xs text-neutral-400">${bug.msg}</p>
