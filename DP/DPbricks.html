@@ -15,63 +15,72 @@
             --ser-yellow: #FCCC32;
             --ser-cyan: #009BD1;
             --ser-dark: #1A1A1A;
-            --ser-bg: #F5F5F5;
-            --ser-white: #FFFFFF;
+            --ser-bg: #F0F2F5;
         }
 
         body {
             font-family: 'Cabin', sans-serif;
             background-color: var(--ser-bg);
             color: var(--ser-dark);
+            font-size: 18px;
         }
 
         .font-bebas { font-family: 'Bebas Neue', sans-serif; }
 
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #999; }
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #e0e0e0; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--ser-cyan); border-radius: 10px; }
 
-        /* Estilo Rompecabezas SER */
+        /* Pieza de Rompecabezas SER */
         .puzzle-piece {
-            clip-path: path('M 0 0 L 120 0 Q 135 0 135 15 L 135 30 Q 145 40 135 50 L 135 75 Q 135 90 120 90 L 0 90 Q 10 75 10 50 Q 0 40 10 30 Q 10 15 0 0 Z');
-            transition: all 0.2s ease-in-out;
+            clip-path: path('M 0 0 L 160 0 Q 180 0 180 15 L 180 40 Q 195 55 180 70 L 180 95 Q 180 115 160 115 L 0 115 Q 20 100 20 70 Q 5 55 20 40 Q 20 15 0 0 Z');
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .active-brick {
             filter: brightness(1.1);
-            transform: scale(1.05);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: scale(1.05) translateY(-8px);
+            z-index: 50 !important;
         }
 
-        /* Colores Específicos de Bricks */
         .bg-ser-pink { background-color: var(--ser-pink); }
         .bg-ser-yellow { background-color: var(--ser-yellow); }
         .bg-ser-cyan { background-color: var(--ser-cyan); }
         .bg-ser-dark { background-color: var(--ser-dark); }
-        .bg-ser-gray { background-color: #71717a; }
+        
+        .btn-delete {
+            background-color: rgba(225, 27, 126, 0.9);
+            transition: all 0.2s;
+        }
+        
+        .btn-delete:hover {
+            background-color: #ff0000;
+            transform: scale(1.1);
+        }
+
+        .brick-shadow {
+            filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.1));
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <!-- Header Institucional -->
-    <header class="p-4 md:p-6 bg-white border-b border-neutral-200 shadow-sm sticky top-0 z-50">
+    <header class="p-4 md:p-6 bg-white border-b-4 border-neutral-100 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-6">
-                <div class="font-bebas text-5xl tracking-tighter leading-none">
+                <div class="font-bebas text-6xl tracking-tighter leading-none select-none flex">
                     <span style="color: var(--ser-pink)">s</span><span style="color: var(--ser-yellow)">e</span><span style="color: var(--ser-cyan)">r</span>
                 </div>
-                <div class="hidden md:block h-10 w-px bg-neutral-200"></div>
+                <div class="hidden lg:block h-14 w-px bg-neutral-200"></div>
                 <div class="hidden md:block">
-                    <h1 class="font-bebas text-2xl tracking-wide text-neutral-800">Arquitectura de Desarrollo Profesional</h1>
-                    <p class="text-[9px] uppercase tracking-[0.4em] font-bold text-neutral-400">Superación | Excelencia | Resultados</p>
+                    <h1 class="font-bebas text-3xl tracking-wide text-neutral-800 leading-none">ARQUITECTURA DE DESARROLLO PROFESIONAL</h1>
+                    <p class="text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-400 mt-1 italic">Superación | Excelencia | Resultados</p>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button id="shuffle-btn" class="flex items-center gap-2 px-5 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all border border-neutral-200">
-                    <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> <span id="shuffle-text">Revolver Librería</span>
-                </button>
-            </div>
+            <button id="shuffle-btn" class="flex items-center gap-2 px-6 py-3 bg-ser-dark hover:bg-neutral-800 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-lg active:scale-95">
+                <i data-lucide="shuffle" class="w-4 h-4"></i> <span id="shuffle-text">Revolver Librería</span>
+            </button>
         </div>
     </header>
 
@@ -79,95 +88,91 @@
         
         <!-- Toolbox Superior -->
         <section class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-neutral-200">
-            <div class="mb-6 flex justify-between items-center px-2">
-                <h2 class="text-[10px] font-black text-neutral-400 uppercase tracking-widest flex items-center gap-2">
-                    <i data-lucide="layout-grid" class="w-3 h-3"></i> Componentes de Capacitación
+            <div class="mb-6 flex justify-between items-center px-4">
+                <h2 class="text-xs font-black text-neutral-400 uppercase tracking-widest flex items-center gap-2 leading-none">
+                    <i data-lucide="layout-grid" class="w-4 h-4 text-ser-pink"></i> Librería de Técnicas
                 </h2>
-                <div id="shuffle-indicator" class="hidden text-[10px] text-ser-pink font-bold italic animate-pulse">Modo Desafío Activo</div>
+                <div id="challenge-label" class="hidden text-[11px] text-ser-pink font-black uppercase tracking-tighter animate-pulse">
+                    Modo Desafío
+                </div>
             </div>
 
-            <div id="library-container" class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <!-- Dinámico -->
+            <div id="library-container" class="grid grid-cols-2 md:grid-cols-5 gap-5">
+                <!-- JS Fill -->
             </div>
         </section>
 
-        <!-- Pipeline de la Sesión -->
-        <section class="flex-1 bg-neutral-100/50 border-2 border-dashed border-neutral-200 rounded-[3rem] p-10 flex flex-col min-h-[250px] overflow-hidden relative">
-            <div class="flex items-center justify-between mb-6 px-6">
-                <h2 class="font-bebas text-2xl tracking-widest text-neutral-400">Línea de Tiempo del Taller</h2>
-                <button id="clear-btn" class="text-[10px] text-neutral-400 hover:text-ser-pink font-bold uppercase tracking-widest flex items-center gap-1 transition-colors">
-                    <i data-lucide="eraser" class="w-3.5 h-3.5"></i> Limpiar Canvas
+        <!-- Timeline (Rompecabezas) -->
+        <section class="flex-1 bg-white border-2 border-dashed border-neutral-300 rounded-[3rem] p-10 flex flex-col min-h-[300px] overflow-hidden relative shadow-inner">
+            <div class="flex items-center justify-between mb-8 px-6">
+                <h2 class="font-bebas text-3xl tracking-widest text-neutral-300 uppercase">Secuencia del Taller</h2>
+                <button id="clear-btn" class="text-xs text-neutral-400 hover:text-ser-pink font-black uppercase tracking-widest flex items-center gap-2 transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar Todo
                 </button>
             </div>
             
-            <div id="timeline-container" class="flex-1 overflow-x-auto flex items-center custom-scrollbar px-10">
-                <!-- Dinámico -->
+            <div id="timeline-container" class="flex-1 overflow-x-auto flex items-center custom-scrollbar px-10 min-h-[160px]">
+                <!-- JS Fill -->
             </div>
         </section>
 
-        <!-- Paneles Inferiores -->
+        <!-- Debugger e Inspector -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-            <!-- Debugger -->
-            <div class="bg-ser-dark rounded-[2.5rem] p-8 shadow-2xl flex flex-col h-[350px] text-white">
-                <h3 class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
-                    <i data-lucide="terminal" class="text-ser-cyan w-4 h-4"></i> Pedagogical Debugger
+            <!-- Terminal Debugger -->
+            <div class="bg-ser-dark rounded-[2.5rem] p-8 shadow-2xl flex flex-col h-[400px] text-white border-t-4 border-ser-pink">
+                <h3 class="text-[11px] font-black text-neutral-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-3">
+                    <i data-lucide="terminal" class="text-ser-cyan w-5 h-5"></i> Pedagogical Debugger
                 </h3>
-                <div id="debugger-console" class="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                <div id="debugger-console" class="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
                     <!-- Dinámico -->
                 </div>
             </div>
 
-            <!-- Inspector -->
-            <div id="inspector-panel" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-neutral-200 h-[350px] overflow-hidden">
+            <!-- Inspector de Técnicas -->
+            <div id="inspector-panel" class="bg-white rounded-[2.5rem] p-8 shadow-xl border-t-4 border-ser-yellow h-[400px] overflow-hidden flex flex-col">
                 <!-- Dinámico -->
             </div>
         </section>
     </main>
 
-    <footer class="p-6 bg-white border-t border-neutral-200 text-center">
-        <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-[0.5em]">SER Network • Red de Escuelas • © 2024</p>
-    </footer>
-
     <script>
-        // --- CONFIGURACIÓN BASADA EN EL MANUAL ---
-        const BRICK_DEFS = {
-            OBJETIVO: { id: 'OBJETIVO', category: 'EJECUCION', label: 'Objetivo', icon: 'target', description: 'Meta de la sesión.', reflection: '¿Es este objetivo un "Hacer" claro y medible?', impact: 'Alineación.' },
-            HISTORIA: { id: 'HISTORIA', category: 'EJECUCION', label: 'Historia', icon: 'book-open', description: 'Conexión humana.', reflection: '¿Tejo la historia entre actividades? ¿Uso el "nosotros"?', impact: 'Fe en la técnica.' },
-            BOCADO: { id: 'BOCADO', category: 'EJECUCION', label: 'Instrucción', icon: 'layers', description: 'Bocado a bocado.', reflection: '¿Dividí la instrucción en pasos secuenciales?', impact: 'Claridad.' },
-            PAUSA: { id: 'PAUSA', category: 'EJECUCION', label: 'Pausa', icon: 'timer', description: 'Fijar ideas.', reflection: '¿Hice el silencio tras la línea maestra?', impact: 'Énfasis.' },
-            
-            ENFOQUE: { id: 'ENFOQUE', category: 'VER', label: 'Enfoque', icon: 'help-circle', description: 'Preparar mirada.', reflection: '¿La pregunta enfoca las acciones positivas?', impact: 'Observación.' },
-            MODELO_VIDEO: { id: 'MODELO_VIDEO', category: 'VER', label: 'Video', icon: 'video', description: 'Modelo externo.', reflection: '¿El video dura menos de 5 min?', impact: 'Validación.' },
-            MODELO_LIDER: { id: 'MODELO_LIDER', category: 'VER', label: 'Líder Modela', icon: 'user-check', description: 'En vivo.', reflection: '¿Muestro el error común para identificarlo?', impact: 'Referente.' },
-
-            GIRA_DISCUTE: { id: 'GIRA_DISCUTE', category: 'NOMBRAR', label: 'Gira/Discute', icon: 'message-square', description: 'Procesamiento.', reflection: '¿Dí instrucciones de quién empieza?', impact: 'Ratio alto.' },
-            PREGUNTAR_VALOR: { id: 'PREGUNTAR_VALOR', category: 'NOMBRAR', label: '¿Valor?', icon: 'zap', description: 'Apropiación.', reflection: '¿Pregunté "¿Qué hubiera pasado si no...?"?', impact: 'Lógica.' },
-            NOMBRAR_TECNICO: { id: 'NOMBRAR_TECNICO', category: 'NOMBRAR', label: 'Nombre Técnico', icon: 'type', description: 'Estandarizar.', reflection: '¿Esperé hasta el final?', impact: 'Lenguaje común.' },
-
-            GUION: { id: 'GUION', category: 'HACER', label: 'Hacer Guion', icon: 'pen-tool', description: 'Planeación práctica.', reflection: '¿Escribieron señales antes de actuar?', impact: 'Seguridad.' },
-            PRACTICA_BRECHA: { id: 'PRACTICA_BRECHA', category: 'HACER', label: 'Práctica', icon: 'user-round', description: 'Juego de roles.', reflection: '¿Monitoreo con ejemplar en mano?', impact: 'Transferencia.' },
-            DE_NUEVO: { id: 'DE_NUEVO', category: 'HACER', label: 'Hacerlo de Nuevo', icon: 'refresh-ccw', description: 'Pulir.', reflection: '¿Nombre el error común antes de repetir?', impact: 'Maestría.' },
-
-            REFLEXIONAR: { id: 'REFLEXIONAR', category: 'REFLEXIONAR', label: 'Reflexión', icon: 'pen-tool', description: 'Escritura breve.', reflection: '¿Dí 1-2 min de silencio?', impact: 'Sello.' },
-            PLAN_ACCION: { id: 'PLAN_ACCION', category: 'REFLEXIONAR', label: 'Plan Mañana', icon: 'file-text', description: 'Seguimiento.', reflection: '¿Anotamos cuándo observaré esto?', impact: 'Compromiso.' }
-        };
-
-        const CATEGORY_MAP = {
+        const CATEGORY_DATA = {
             EJECUCION: { label: 'Ejecución', color: 'text-indigo-400', brickClass: 'bg-ser-dark' },
             VER: { label: 'Ver', color: 'text-ser-cyan', brickClass: 'bg-ser-cyan' },
             NOMBRAR: { label: 'Nombrar', color: 'text-ser-yellow', brickClass: 'bg-ser-yellow' },
             HACER: { label: 'Hacer', color: 'text-ser-pink', brickClass: 'bg-ser-pink' },
-            REFLEXIONAR: { label: 'Reflexionar', color: 'text-zinc-500', brickClass: 'bg-ser-gray' }
+            REFLEXIONAR: { label: 'Reflexionar', color: 'text-zinc-400', brickClass: 'bg-ser-gray' }
         };
 
-        // --- STATE ---
+        const BRICK_DEFS = {
+            OBJETIVO: { id: 'OBJETIVO', category: 'EJECUCION', label: 'Objetivo', icon: 'target', description: 'Meta de la sesión.', reflection: '¿Es este objetivo claro, medible y realizable en el tiempo?', impact: 'Alineación estratégica.' },
+            HISTORIA: { id: 'HISTORIA', category: 'EJECUCION', label: 'Historia', icon: 'book-open', description: 'Conexión humana inicial.', reflection: '¿Uso el "nosotros" colectivo? ¿Honro la experiencia del equipo?', impact: 'Apertura emocional.' },
+            PRESENCIA: { id: 'PRESENCIA', category: 'EJECUCION', label: 'Cara Abierta', icon: 'smile', description: 'Lenguaje corporal del líder.', reflection: '¿Mantengo las cejas levantadas y una sonrisa tranquila?', impact: 'Seguridad psicológica.' },
+            BOCADO: { id: 'BOCADO', category: 'EJECUCION', label: 'Bocado', icon: 'layers', description: 'Instrucciones cortas.', reflection: '¿Dividí la instrucción? ¿Tienen claro qué hacer ahora mismo?', impact: 'Claridad ejecutiva.' },
+            PAUSA: { id: 'PAUSA', category: 'EJECUCION', label: 'Pausa', icon: 'timer', description: 'Silencio estratégico.', reflection: '¿Hice el silencio justo después de la línea maestra?', impact: 'Fijación cognitiva.' },
+            
+            ENFOQUE: { id: 'ENFOQUE', category: 'VER', label: 'Enfoque', icon: 'help-circle', description: 'Pregunta previa al modelo.', reflection: '¿La pregunta enfoca las acciones positivas que deben observar?', impact: 'Observación útil.' },
+            MODELO_VIDEO: { id: 'MODELO_VIDEO', category: 'VER', label: 'Video', icon: 'video', description: 'Modelo externo de éxito.', reflection: '¿El video dura menos de 5 min? ¿Está listo para proyectar?', impact: 'Validación visual.' },
+            MODELO_LIDER: { id: 'MODELO_LIDER', category: 'VER', label: 'Líder Modela', icon: 'user-check', description: 'El facilitador actúa.', reflection: '¿Muestro el error común para que el equipo lo detecte?', impact: 'Referente directo.' },
+
+            GIRA_DISCUTE: { id: 'GIRA_DISCUTE', category: 'NOMBRAR', label: 'Gira/Discute', icon: 'message-square', description: 'Procesamiento activo.', reflection: '¿Dí instrucciones claras de quién empieza la charla?', impact: 'Ratio de pensamiento.' },
+            PREGUNTAR_VALOR: { id: 'PREGUNTAR_VALOR', category: 'NOMBRAR', label: '¿Valor?', icon: 'zap', description: 'Lógica del propósito.', reflection: '¿Pregunté "¿Qué hubiera pasado si no hiciéramos eso?"?', impact: 'Apropiación lógica.' },
+            NOMBRAR_TECNICO: { id: 'NOMBRAR_TECNICO', category: 'NOMBRAR', label: 'Nombre Técnico', icon: 'type', description: 'Asignar lenguaje formal.', reflection: '¿Esperé a que ellos descubrieran la idea antes del nombre?', impact: 'Estandarización.' },
+
+            GUION: { id: 'GUION', category: 'HACER', label: 'Hacer Guion', icon: 'pen-tool', description: 'Planear señales y palabras.', reflection: '¿Dí tiempo para escribir el guion antes de pedirles actuar?', impact: 'Práctica segura.' },
+            PRACTICA_BRECHA: { id: 'PRACTICA_BRECHA', category: 'HACER', label: 'Práctica', icon: 'user-round', description: 'Juego de roles activo.', reflection: '¿Estoy circulando con el ejemplar en mano para dar feedback?', impact: 'Transferencia real.' },
+            DE_NUEVO: { id: 'DE_NUEVO', category: 'HACER', label: 'De Nuevo', icon: 'refresh-ccw', description: 'Pulir hasta la maestría.', reflection: '¿Nombre el error común antes de pedir repetir la ronda?', impact: 'Cultura de excelencia.' },
+
+            REFLEXIONAR: { id: 'REFLEXIONAR', category: 'REFLEXIONAR', label: 'Reflexión', icon: 'pen-tool', description: 'Sellar el aprendizaje.', reflection: '¿Limite la escritura a 1 o 2 minutos para sellar la idea?', impact: 'Anclaje cognitivo.' },
+            PLAN_ACCION: { id: 'PLAN_ACCION', category: 'REFLEXIONAR', label: 'Plan Mañana', icon: 'file-text', description: 'Compromiso de aula.', reflection: '¿Anotamos cuándo observaré esta técnica en el aula real?', impact: 'Responsabilidad.' }
+        };
+
         let sequence = [];
         let selectedIdx = null;
         let previewItem = null;
         let isShuffled = false;
         let libraryKeys = Object.keys(BRICK_DEFS);
 
-        // --- DOM ---
         const libContainer = document.getElementById('library-container');
         const timelineContainer = document.getElementById('timeline-container');
         const debuggerConsole = document.getElementById('debugger-console');
@@ -176,16 +181,16 @@
         function renderLibrary() {
             libContainer.innerHTML = '';
             if (isShuffled) {
-                libContainer.className = 'flex flex-wrap gap-2 animate-in fade-in duration-300';
+                libContainer.className = 'flex flex-wrap gap-4 animate-in fade-in duration-300';
                 libraryKeys.forEach(k => libContainer.appendChild(createBrickBtn(k)));
             } else {
-                libContainer.className = 'grid grid-cols-2 md:grid-cols-5 gap-4';
-                Object.keys(CATEGORY_MAP).forEach(catKey => {
+                libContainer.className = 'grid grid-cols-2 md:grid-cols-5 gap-6';
+                Object.keys(CATEGORY_DATA).forEach(catKey => {
                     const col = document.createElement('div');
-                    col.className = 'space-y-2';
-                    col.innerHTML = `<h3 class="text-[8px] font-black uppercase tracking-widest ${CATEGORY_MAP[catKey].color} border-b border-neutral-100 pb-1.5">${CATEGORY_MAP[catKey].label}</h3>`;
+                    col.className = 'space-y-3';
+                    col.innerHTML = `<h3 class="text-[10px] font-black uppercase tracking-widest ${CATEGORY_DATA[catKey].color} border-b-2 border-neutral-50 pb-2">${CATEGORY_DATA[catKey].label}</h3>`;
                     const list = document.createElement('div');
-                    list.className = 'flex flex-col gap-1.5';
+                    list.className = 'flex flex-col gap-2.5';
                     Object.keys(BRICK_DEFS).filter(k => BRICK_DEFS[k].category === catKey).forEach(k => list.appendChild(createBrickBtn(k)));
                     col.appendChild(list);
                     libContainer.appendChild(col);
@@ -199,13 +204,13 @@
             const wrap = document.createElement('div');
             wrap.className = 'relative group';
             const btn = document.createElement('button');
-            btn.className = `${CATEGORY_MAP[brick.category].brickClass} w-full py-2 px-3 rounded-xl flex items-center gap-2 shadow-sm hover:brightness-110 active:scale-95 transition-all text-white border border-white/10`;
-            btn.innerHTML = `<i data-lucide="${brick.icon}" class="w-3.5 h-3.5 opacity-80"></i><span class="font-bold text-[9px] uppercase tracking-tighter truncate">${brick.label}</span>`;
+            btn.className = `${CATEGORY_DATA[brick.category].brickClass} w-full py-3.5 px-5 rounded-2xl flex items-center gap-3 shadow-md hover:brightness-110 active:scale-95 transition-all text-white border border-white/10`;
+            btn.innerHTML = `<i data-lucide="${brick.icon}" class="w-5 h-5 opacity-90"></i><span class="font-bold text-[13px] uppercase tracking-tighter truncate">${brick.label}</span>`;
             btn.onclick = () => addBrick(key);
             
             const info = document.createElement('button');
-            info.className = 'absolute right-1 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity';
-            info.innerHTML = '<i data-lucide="info" class="w-3 h-3"></i>';
+            info.className = 'absolute -right-2 -top-2 p-2 bg-white text-ser-dark shadow-lg rounded-full opacity-0 group-hover:opacity-100 transition-all z-10 border border-neutral-200';
+            info.innerHTML = '<i data-lucide="info" class="w-4 h-4"></i>';
             info.onclick = (e) => { e.stopPropagation(); previewItem = brick; selectedIdx = null; updateInspector(); };
             
             wrap.appendChild(btn); wrap.appendChild(info);
@@ -220,25 +225,29 @@
         function renderTimeline() {
             timelineContainer.innerHTML = '';
             if (sequence.length === 0) {
-                timelineContainer.innerHTML = '<div class="w-full text-center opacity-30 py-10 font-bold uppercase text-[10px] tracking-widest text-neutral-400 italic">Construye tu secuencia SER aquí</div>';
+                timelineContainer.innerHTML = '<div class="w-full text-center opacity-30 py-10 font-bold uppercase text-sm tracking-[0.4em] text-neutral-400 italic">Diseña tu flujo de excelencia aquí</div>';
                 return;
             }
             const wrapper = document.createElement('div');
             wrapper.className = 'flex items-center';
             sequence.forEach((brick, idx) => {
                 const piece = document.createElement('div');
-                piece.className = `relative flex-shrink-0 w-[140px] h-[90px] p-4 transition-all cursor-pointer flex flex-col justify-center puzzle-piece ${CATEGORY_MAP[brick.category].brickClass} ${selectedIdx === idx ? 'active-brick z-30' : 'z-10 opacity-90 hover:opacity-100 hover:z-20'}`;
-                piece.style.marginLeft = idx === 0 ? '0' : '-16px';
+                piece.className = `relative flex-shrink-0 w-[190px] h-[115px] p-6 transition-all cursor-pointer flex flex-col justify-center puzzle-piece brick-shadow ${CATEGORY_DATA[brick.category].brickClass} ${selectedIdx === idx ? 'active-brick z-40' : 'z-10 opacity-90 hover:opacity-100'}`;
+                piece.style.marginLeft = idx === 0 ? '0' : '-28px';
                 piece.onclick = () => { selectedIdx = idx; previewItem = null; renderTimeline(); updateInspector(); };
+                
                 piece.innerHTML = `
-                    <div class="flex justify-between items-start mb-1">
-                        <div class="bg-black/20 p-1 rounded text-white/80"><i data-lucide="${brick.icon}" class="w-3.5 h-3.5"></i></div>
-                        <button onclick="event.stopPropagation(); removeBrick(${idx})" class="text-white/20 hover:text-white opacity-0 group-hover:opacity-100"><i data-lucide="x" class="w-3 h-3"></i></button>
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="bg-black/20 p-2 rounded-xl text-white"><i data-lucide="${brick.icon}" class="w-6 h-6"></i></div>
+                        <button onclick="event.stopPropagation(); removeBrick(${idx})" class="p-2.5 bg-red-600 hover:bg-red-700 rounded-full text-white shadow-xl transition-all btn-action-overlay border border-white/20">
+                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
                     </div>
-                    <h4 class="font-bebas text-[11px] uppercase tracking-wider text-white leading-tight">${brick.label}</h4>
-                    <div class="absolute -bottom-6 left-0 right-0 flex justify-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onclick="event.stopPropagation(); moveBrick(${idx}, 'left')" class="p-1 bg-white/20 rounded-lg text-white"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
-                        <button onclick="event.stopPropagation(); moveBrick(${idx}, 'right')" class="p-1 bg-white/20 rounded-lg text-white"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+                    <h4 class="font-bebas text-2xl tracking-wider text-white leading-none truncate">${brick.label}</h4>
+                    
+                    <div class="absolute -bottom-12 left-0 right-0 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all z-50">
+                        <button onclick="event.stopPropagation(); moveBrick(${idx}, 'left')" class="p-3 bg-ser-dark rounded-2xl text-white border border-white/10 hover:bg-black transition-all shadow-xl"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                        <button onclick="event.stopPropagation(); moveBrick(${idx}, 'right')" class="p-3 bg-ser-dark rounded-2xl text-white border border-white/10 hover:bg-black transition-all shadow-xl"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
                     </div>
                 `;
                 wrapper.appendChild(piece);
@@ -247,7 +256,11 @@
             lucide.createIcons();
         }
 
-        function removeBrick(idx) { sequence.splice(idx, 1); selectedIdx = null; renderTimeline(); updateAnalysis(); updateInspector(); }
+        function removeBrick(idx) { 
+            sequence.splice(idx, 1); 
+            selectedIdx = null; 
+            renderTimeline(); updateAnalysis(); updateInspector(); 
+        }
 
         function moveBrick(idx, dir) {
             if (dir === 'left' && idx > 0) [sequence[idx], sequence[idx-1]] = [sequence[idx-1], sequence[idx]];
@@ -257,33 +270,32 @@
 
         function updateAnalysis() {
             debuggerConsole.innerHTML = '';
-            const bugs = []; const outputs = [];
+            const bugs = [];
             if (sequence.length === 0) return;
 
             sequence.forEach((brick, i) => {
-                outputs.push(brick.impact);
                 const prev = sequence[i-1];
                 if (['MODELO_VIDEO', 'MODELO_LIDER'].includes(brick.id) && (!prev || prev.id !== 'ENFOQUE')) {
-                    bugs.push({ title: "Observación Pasiva", msg: `"${brick.label}" sin dirección.`, fix: "Añade [Enfoque] antes.", hint: "Categoría [VER]: Preparar la mirada evita la pasividad." });
+                    bugs.push({ title: "Observación Pasiva", msg: `"${brick.label}" necesita una Pregunta de Enfoque previa.`, fix: "Añade [Enfoque] antes del modelo." });
                 }
                 if (brick.id === 'NOMBRAR_TECNICO' && (!prev || (prev.id !== 'GIRA_DISCUTE' && prev.id !== 'PREGUNTAR_VALOR'))) {
-                    bugs.push({ title: "Suministro de Respuestas", msg: "Estás nombrando antes de procesar.", fix: "Añade [Gira/Discute] antes.", hint: "Categoría [NOMBRAR]: El descubrimiento grupal es vital." });
+                    bugs.push({ title: "Suministro de Respuestas", msg: "Estás nombrando antes del descubrimiento grupal.", fix: "Añade [Gira/Discute] antes del nombre técnico." });
                 }
             });
 
             if (!['OBJETIVO', 'HISTORIA'].includes(sequence[0]?.id)) {
-                bugs.push({ title: "Inicio sin Base", msg: "La sesión flota.", fix: "Inicia con [Objetivo] o [Historia].", hint: "Toda sesión SER robusta comienza con [EJECUCIÓN]." });
+                bugs.push({ title: "Sin Raíz", msg: "Toda sesión SER debe iniciar con un Objetivo o Historia.", fix: "Inicia con una pieza de Ejecución." });
             }
 
             if (bugs.length === 0) {
-                debuggerConsole.innerHTML = `<div class="flex gap-3 text-emerald-400 bg-emerald-400/10 p-4 rounded-2xl border border-emerald-400/20"><i data-lucide="check-circle"></i><p class="text-[11px] font-bold uppercase tracking-widest">Arquitectura SER validada. Sesión de alto impacto.</p></div>`;
+                debuggerConsole.innerHTML = `<div class="flex gap-5 text-emerald-400 bg-emerald-500/10 p-6 rounded-[2.5rem] border border-emerald-500/20 items-center"><i data-lucide="check-square" class="w-12 h-12 shrink-0"></i><p class="text-base font-bold uppercase tracking-widest leading-snug">Pipeline Validado. La sesión tiene una estructura de alto impacto académico.</p></div>`;
             }
 
             bugs.forEach(bug => {
-                const d = document.createElement('div'); d.className = 'p-4 rounded-2xl border border-red-500/30 bg-red-500/5 space-y-2';
-                d.innerHTML = `<div class="flex gap-3 text-red-400"><i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><div><p class="text-[9px] font-black uppercase tracking-widest">${bug.title}</p><p class="text-xs font-medium opacity-80">${bug.msg}</p></div></div>
-                               <div class="flex gap-2 text-ser-cyan bg-ser-cyan/10 p-2 rounded-xl border border-ser-cyan/20 items-center"><i data-lucide="wrench" class="w-3 h-3"></i><p class="text-[9px] font-black uppercase">${bug.fix}</p></div>
-                               <div class="text-[9px] text-ser-yellow italic px-2">Pista: ${bug.hint}</div>`;
+                const d = document.createElement('div'); d.className = 'p-6 rounded-[2.5rem] border border-red-500/30 bg-red-500/5 space-y-3 animate-in slide-in-from-top';
+                d.innerHTML = `<div class="flex gap-4 text-red-400"><i data-lucide="shield-alert" class="w-7 h-7 shrink-0"></i><p class="text-sm font-black uppercase tracking-widest">${bug.title}</p></div>
+                               <p class="text-base font-medium opacity-80 pl-11">${bug.msg}</p>
+                               <div class="flex gap-3 text-ser-cyan bg-ser-cyan/10 p-4 rounded-2xl border border-ser-cyan/20 items-center ml-11"><i data-lucide="wrench" class="w-5 h-5"></i><p class="text-[13px] font-black uppercase leading-tight">Solución SER: ${bug.fix}</p></div>`;
                 debuggerConsole.appendChild(d);
             });
             lucide.createIcons();
@@ -293,47 +305,47 @@
             const item = selectedIdx !== null ? sequence[selectedIdx] : previewItem;
             inspectorPanel.innerHTML = '';
             if (!item) {
-                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center text-neutral-300 text-center px-8 opacity-40"><i data-lucide="info" class="w-10 h-10 mb-4 text-neutral-200"></i><p class="font-bebas text-2xl tracking-widest uppercase">Modo Inspector</p><p class="text-xs font-medium mt-2 leading-relaxed">Selecciona una pieza encastrada para ver la pauta de retroalimentación oficial de SER.</p></div>';
+                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center text-neutral-300 text-center px-10 opacity-40"><i data-lucide="info" class="w-20 h-20 mb-6 text-neutral-200"></i><p class="font-bebas text-5xl tracking-widest uppercase leading-none">MODO INSPECTOR</p><p class="text-lg font-medium mt-4 leading-relaxed">Selecciona una pieza encastrada para ver la pauta oficial de la red SER.</p></div>';
                 lucide.createIcons(); return;
             }
-            const cat = CATEGORY_MAP[item.category];
+            const cat = CATEGORY_DATA[item.category];
             inspectorPanel.innerHTML = `
-                <div class="h-full flex flex-col animate-in fade-in duration-300">
-                    <div class="flex items-center justify-between mb-6 pb-6 border-b border-neutral-100">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 rounded-2xl ${cat.brickClass} text-white shadow-md"><i data-lucide="${item.icon}"></i></div>
-                            <div><h3 class="font-bebas text-2xl tracking-wide text-neutral-800">${item.label}</h3><p class="text-[9px] font-black uppercase tracking-[0.2em] ${cat.color}">${cat.label}</p></div>
+                <div class="h-full flex flex-col animate-in fade-in zoom-in-95 duration-300 overflow-hidden">
+                    <div class="flex items-center justify-between mb-8 pb-8 border-b border-neutral-100">
+                        <div class="flex items-center gap-6">
+                            <div class="p-5 rounded-3xl ${cat.brickClass} text-white shadow-2xl"><i data-lucide="${item.icon}" class="w-8 h-8"></i></div>
+                            <div><h3 class="font-bebas text-5xl tracking-wide text-neutral-800 leading-none">${item.label}</h3><p class="text-sm font-black uppercase tracking-[0.4em] ${cat.color} mt-1">${cat.label}</p></div>
                         </div>
-                        ${previewItem ? `<div class="bg-ser-cyan/10 text-ser-cyan px-3 py-1 rounded-full text-[8px] font-black uppercase border border-ser-cyan/20 tracking-widest">Previsualización</div>` : ''}
+                        ${previewItem ? `<div class="bg-ser-pink/10 text-ser-pink px-6 py-2 rounded-full text-xs font-black uppercase border-2 border-ser-pink/30 tracking-widest">Previsualización</div>` : ''}
                     </div>
-                    <div class="flex-1 space-y-5 overflow-y-auto custom-scrollbar">
-                        <div class="p-5 bg-neutral-50 rounded-2xl border border-neutral-100 relative shadow-inner">
-                            <p class="text-[9px] text-neutral-400 uppercase font-black mb-1 tracking-widest">Definición de Técnica</p>
-                            <p class="text-sm font-bold text-neutral-700 italic">"${item.description}"</p>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-[9px] text-neutral-400 uppercase font-black mb-2 tracking-widest">Pauta de Retroalimentación</p>
-                                <p class="text-sm text-neutral-600 leading-relaxed italic">"${item.reflection}"</p>
+                    <div class="flex-1 space-y-8 overflow-y-auto custom-scrollbar pr-4">
+                        <div class="p-8 bg-neutral-50 rounded-[3rem] border border-neutral-100 relative shadow-inner">
+                            <p class="text-[11px] text-neutral-400 uppercase font-black mb-3 tracking-[0.4em]">¿De qué se trata?</p>
+                            <p class="text-2xl font-bold text-neutral-700 italic leading-relaxed">"${item.description}"</p>
+                            
+                            <div class="mt-8 pt-8 border-t border-neutral-200">
+                                <p class="text-[11px] text-neutral-400 uppercase font-black mb-4 tracking-[0.4em]">Pauta de Retroalimentación de la red:</p>
+                                <p class="text-xl text-neutral-600 leading-relaxed italic">"${item.reflection}"</p>
                             </div>
                         </div>
-                        <div class="px-2 flex items-center gap-2">
-                            <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                            <p class="text-[9px] text-neutral-500 uppercase font-black tracking-widest">Impacto SER: <span class="text-neutral-800 font-bold">${item.impact}</span></p>
+                        <div class="px-6 py-5 flex items-center gap-5 bg-emerald-500/5 rounded-3xl border border-emerald-500/10">
+                            <div class="w-4 h-4 rounded-full bg-emerald-500 animate-ping"></div>
+                            <p class="text-sm text-neutral-500 uppercase font-black tracking-widest leading-none">Resultado esperado: <span class="text-emerald-700 font-bold ml-2 text-xl italic underline">${item.impact}</span></p>
                         </div>
                     </div>
                 </div>`;
             lucide.createIcons();
         }
 
-        // --- HANDLERS ---
         document.getElementById('shuffle-btn').onclick = () => {
             if (!isShuffled) {
                 libraryKeys = libraryKeys.sort(() => Math.random() - 0.5);
                 isShuffled = true; document.getElementById('shuffle-text').innerText = 'Ordenar Categorías';
-                document.getElementById('shuffle-indicator').classList.remove('hidden');
+                document.getElementById('challenge-mode').classList.remove('hidden');
             } else {
                 libraryKeys = Object.keys(BRICK_DEFS);
                 isShuffled = false; document.getElementById('shuffle-text').innerText = 'Revolver Librería';
-                document.getElementById('shuffle-indicator').classList.add('hidden');
+                document.getElementById('challenge-mode').classList.add('hidden');
             }
             renderLibrary();
         };
