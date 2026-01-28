@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DP Bricks v3.5 - Identidad Institucional SER</title>
+    <title>DP Bricks v3.5 - Identidad Institucional SER (Light)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -15,12 +15,14 @@
             --ser-yellow: #FCCC32;
             --ser-cyan: #009BD1;
             --ser-dark: #1a1a1a;
+            --bg-light: #f8fafc;
+            --border-light: #e2e8f0;
         }
 
         body {
             font-family: 'Cabin', sans-serif;
-            background-color: #0a0a0a;
-            color: #f5f5f5;
+            background-color: var(--bg-light);
+            color: #1e293b;
             overflow-x: hidden;
         }
 
@@ -29,11 +31,11 @@
             letter-spacing: 0.05em;
         }
 
-        /* Scrollbar Personalizada */
+        /* Scrollbar Personalizada modo claro */
         .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #121212; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #444; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         /* Estilo de Rompecabezas (Puzzle Clip-Path) */
         .puzzle-piece {
@@ -42,9 +44,9 @@
         }
 
         .active-brick {
-            filter: brightness(1.2) contrast(1.1);
+            filter: brightness(1.1) contrast(1.05);
             transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 0 40px rgba(225, 27, 126, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
             z-index: 50 !important;
         }
 
@@ -61,20 +63,20 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Header con Identidad SER -->
-    <header class="p-4 md:p-6 border-b border-neutral-800 bg-neutral-900/80 backdrop-blur-xl sticky top-0 z-50">
+    <!-- Header con Identidad SER (Modo Claro) -->
+    <header class="p-4 md:p-6 border-b border-slate-200 bg-white/90 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="bg-[#E11B7E] p-2.5 rounded-lg shadow-lg shadow-magenta-500/20">
                     <i data-lucide="zap" class="text-white fill-current w-6 h-6"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl text-white leading-none">SER <span class="text-[#009BD1] ml-1">DP BRICKS</span></h1>
-                    <p class="text-[10px] text-neutral-500 uppercase tracking-[0.4em] font-bold">Superación | Excelencia | Resultados</p>
+                    <h1 class="text-2xl text-slate-800 leading-none">SER <span class="text-[#009BD1] ml-1">DP BRICKS</span></h1>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.4em] font-bold">Superación | Excelencia | Resultados</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <button id="shuffle-btn" class="flex items-center gap-2 px-5 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all border border-neutral-700">
+                <button id="shuffle-btn" class="flex items-center gap-2 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-xs font-bold uppercase tracking-widest transition-all border border-slate-200 shadow-sm">
                     <i data-lucide="shuffle" class="w-4 h-4"></i> <span>Revolver</span>
                 </button>
             </div>
@@ -84,9 +86,9 @@
     <main class="flex-1 flex flex-col p-4 md:p-6 gap-6 max-w-7xl mx-auto w-full">
         
         <!-- Toolbox -->
-        <section id="toolbox-section" class="bg-neutral-900/40 p-5 rounded-[2rem] border border-neutral-800 shadow-inner">
+        <section id="toolbox-section" class="bg-white p-5 rounded-[2rem] border border-slate-200 shadow-sm">
             <div class="mb-5 px-2">
-                <h2 class="text-lg text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                <h2 class="text-lg text-slate-500 uppercase tracking-widest flex items-center gap-2">
                     <i data-lucide="package" class="text-[#FCCC32] w-5 h-5"></i> Librería de Facilitación
                 </h2>
             </div>
@@ -97,9 +99,9 @@
         </section>
 
         <!-- Pipeline (Lienzo) -->
-        <section class="flex-1 bg-neutral-900/20 border-2 border-dashed border-neutral-800 rounded-[3rem] p-10 flex flex-col shadow-inner min-h-[260px] overflow-hidden relative">
+        <section class="flex-1 bg-slate-50 border-2 border-dashed border-slate-300 rounded-[3rem] p-10 flex flex-col min-h-[260px] overflow-hidden relative shadow-inner">
             <div class="flex items-center justify-between mb-6 px-6">
-                <h2 class="text-sm font-bold text-neutral-500 uppercase tracking-[0.3em]">Pipeline de la Sesión</h2>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-[0.3em]">Pipeline de la Sesión</h2>
                 <button id="clear-canvas" class="text-xs text-red-500/70 hover:text-red-500 font-bold uppercase tracking-widest flex items-center gap-1 transition-colors">
                     <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar Todo
                 </button>
@@ -113,8 +115,8 @@
         <!-- Paneles de Análisis e Inspector -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[420px] mb-10">
             <!-- Terminal Debugger -->
-            <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-7 shadow-xl flex flex-col overflow-hidden relative">
-                <h3 class="text-xs font-bold text-neutral-500 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 relative z-10">
+            <div class="bg-white border border-slate-200 rounded-[2rem] p-7 shadow-lg flex flex-col overflow-hidden relative">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 relative z-10">
                     <i data-lucide="binary" class="text-[#E11B7E] w-4 h-4"></i> Pedagogical Debugger
                 </h3>
                 <div id="debugger-console" class="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar relative z-10">
@@ -123,13 +125,13 @@
             </div>
 
             <!-- Inspector Panel -->
-            <div id="inspector-panel" class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-7 shadow-xl overflow-hidden flex flex-col">
+            <div id="inspector-panel" class="bg-white border border-slate-200 rounded-[2rem] p-7 shadow-lg overflow-hidden flex flex-col">
                 <!-- Data enriquecida JS -->
             </div>
         </section>
     </main>
 
-    <footer class="p-4 text-center bg-black border-t border-neutral-900 text-[9px] text-neutral-600 font-bold uppercase tracking-[0.5em]">
+    <footer class="p-4 text-center bg-slate-100 border-t border-slate-200 text-[9px] text-slate-500 font-bold uppercase tracking-[0.5em]">
         Pipeline Logic Engine • SER Network Identity • Puzzle Architecture v3.5
     </footer>
 
@@ -313,20 +315,30 @@
 
         function renderLibrary() {
             libContainer.innerHTML = '';
+            const usedIds = sequence.map(brick => brick.id);
+
             if (isShuffled) {
                 libContainer.className = 'flex flex-wrap gap-2 animate-pop';
-                libraryKeys.forEach(k => libContainer.appendChild(createBrickButton(k)));
+                libraryKeys
+                    .filter(k => !usedIds.includes(k))
+                    .forEach(k => libContainer.appendChild(createBrickButton(k)));
             } else {
                 libContainer.className = 'grid grid-cols-2 md:grid-cols-5 gap-3';
                 Object.keys(CATEGORIES).forEach(catKey => {
                     const col = document.createElement('div');
-                    col.className = 'space-y-2';
-                    col.innerHTML = `<h3 class="text-[10px] font-black uppercase tracking-widest ${CATEGORIES[catKey].color} border-b border-neutral-800 pb-1.5">${CATEGORIES[catKey].label}</h3>`;
-                    const list = document.createElement('div');
-                    list.className = 'flex flex-col gap-1.5';
-                    Object.keys(BRICK_DEFS).filter(k => BRICK_DEFS[k].category === catKey).forEach(k => list.appendChild(createBrickButton(k)));
-                    col.appendChild(list);
-                    libContainer.appendChild(col);
+                    const availableInCat = Object.keys(BRICK_DEFS).filter(k => 
+                        BRICK_DEFS[k].category === catKey && !usedIds.includes(k)
+                    );
+
+                    if (availableInCat.length > 0) {
+                        col.className = 'space-y-2';
+                        col.innerHTML = `<h3 class="text-[10px] font-black uppercase tracking-widest ${CATEGORIES[catKey].color} border-b border-slate-100 pb-1.5">${CATEGORIES[catKey].label}</h3>`;
+                        const list = document.createElement('div');
+                        list.className = 'flex flex-col gap-1.5';
+                        availableInCat.forEach(k => list.appendChild(createBrickButton(k)));
+                        col.appendChild(list);
+                        libContainer.appendChild(col);
+                    }
                 });
             }
             lucide.createIcons();
@@ -345,6 +357,7 @@
                 previewItem = null;
                 renderTimeline();
                 updateAnalysis();
+                renderLibrary();
             };
             const info = document.createElement('button');
             info.className = 'absolute right-1.5 top-1/2 -translate-y-1/2 p-1 text-white/30 hover:text-white transition-opacity bg-black/10 rounded-full';
@@ -357,7 +370,7 @@
         function renderTimeline() {
             timelineContainer.innerHTML = '';
             if (sequence.length === 0) {
-                timelineContainer.innerHTML = '<div class="w-full text-center opacity-20 py-10 font-bold uppercase text-sm tracking-widest italic font-bebas">Suelte Bricks para iniciar la arquitectura</div>';
+                timelineContainer.innerHTML = '<div class="w-full text-center opacity-40 py-10 font-bold uppercase text-sm tracking-widest italic font-bebas text-slate-400">Suelte Bricks para iniciar la arquitectura</div>';
                 return;
             }
             const wrapper = document.createElement('div');
@@ -386,7 +399,7 @@
         function removeBrick(idx) {
             sequence.splice(idx, 1);
             selectedIdx = null;
-            renderTimeline(); updateAnalysis(); updateInspector();
+            renderTimeline(); updateAnalysis(); updateInspector(); renderLibrary();
         }
 
         function updateAnalysis() {
@@ -394,7 +407,6 @@
             const bugs = [];
             if (sequence.length === 0) return;
 
-            // REGLA 1: INICIO
             if (sequence[0].id !== 'OBJETIVO' && sequence[0].id !== 'HISTORIA') {
                 bugs.push({ 
                     title: "Falta Cimiento", 
@@ -403,11 +415,8 @@
                 });
             }
 
-            // RECORRIDO DE REGLAS POR BRICK
             sequence.forEach((brick, i) => {
                 const prev = i > 0 ? sequence[i-1] : null;
-
-                // REGLA: VER requiere ENFOQUE
                 if (['MODELO_VIDEO', 'MODELO_LIDER'].includes(brick.id)) {
                     if (!prev || prev.id !== 'ENFOQUE') {
                         bugs.push({ 
@@ -417,8 +426,6 @@
                         });
                     }
                 }
-
-                // REGLA: NOMBRAR requiere Gira/Discute o ¿Por qué?
                 if (brick.id === 'NOMBRAR_TECNICO') {
                     const hasDiscovery = sequence.slice(0, i).some(b => b.id === 'GIRA_DISCUTE' || b.id === 'PREGUNTAR_PORQUE');
                     if (!hasDiscovery) {
@@ -429,8 +436,6 @@
                         });
                     }
                 }
-
-                // REGLA: PRÁCTICA requiere GUION
                 if (brick.id === 'PRACTICA_BRECHA') {
                     if (!prev || prev.id !== 'GUION') {
                         bugs.push({ 
@@ -443,15 +448,15 @@
             });
 
             if (bugs.length === 0) {
-                debuggerConsole.innerHTML = `<div class="p-5 text-emerald-400 bg-emerald-400/5 rounded-2xl border border-emerald-400/20 text-xs font-bold uppercase tracking-widest flex gap-3 items-center animate-pop"><i data-lucide="shield-check"></i>Pipeline saludable e institucional.</div>`;
+                debuggerConsole.innerHTML = `<div class="p-5 text-emerald-600 bg-emerald-50 rounded-2xl border border-emerald-100 text-xs font-bold uppercase tracking-widest flex gap-3 items-center animate-pop"><i data-lucide="shield-check"></i>Pipeline saludable e institucional.</div>`;
             } else {
                 bugs.forEach(bug => {
                     const d = document.createElement('div');
-                    d.className = 'p-4 bg-red-500/5 border border-red-500/20 rounded-2xl space-y-2 animate-pop';
+                    d.className = 'p-4 bg-red-50 border border-red-100 rounded-2xl space-y-2 animate-pop';
                     d.innerHTML = `
-                        <div class="flex gap-2 text-red-400 font-bold uppercase text-[10px] items-center"><i data-lucide="alert-triangle" class="w-4 h-4"></i> ${bug.title}</div>
-                        <p class="text-xs text-neutral-400">${bug.msg}</p>
-                        <div class="text-[9px] bg-indigo-500/10 text-indigo-300 py-1 px-2 rounded-lg border border-indigo-500/10 inline-block font-bold">FIX: ${bug.fix}</div>
+                        <div class="flex gap-2 text-red-500 font-bold uppercase text-[10px] items-center"><i data-lucide="alert-triangle" class="w-4 h-4"></i> ${bug.title}</div>
+                        <p class="text-xs text-slate-600 font-medium">${bug.msg}</p>
+                        <div class="text-[9px] bg-indigo-50 text-indigo-600 py-1 px-2 rounded-lg border border-indigo-100 inline-block font-bold">FIX: ${bug.fix}</div>
                     `;
                     debuggerConsole.appendChild(d);
                 });
@@ -464,50 +469,50 @@
             inspectorPanel.innerHTML = '';
             
             if (!item) {
-                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center opacity-30 text-neutral-600 font-black uppercase text-xs tracking-[0.4em] italic"><i data-lucide="zoom-in" class="w-12 h-12 mb-4"></i>Inspeccionar Elemento</div>';
+                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center opacity-30 text-slate-400 font-black uppercase text-xs tracking-[0.4em] italic"><i data-lucide="zoom-in" class="w-12 h-12 mb-4"></i>Inspeccionar Elemento</div>';
                 lucide.createIcons(); return;
             }
 
             const cat = CATEGORIES[item.category];
-            const examplesHtml = item.examples ? item.examples.map(ex => `<li class="mb-1 text-indigo-100">"${ex}"</li>`).join('') : '<li>N/A</li>';
+            const examplesHtml = item.examples ? item.examples.map(ex => `<li class="mb-1 text-slate-600">"${ex}"</li>`).join('') : '<li>N/A</li>';
 
             inspectorPanel.innerHTML = `
                 <div class="h-full flex flex-col custom-scrollbar overflow-y-auto pr-2 animate-pop">
-                    <div class="flex items-center gap-4 mb-5 pb-5 border-b border-neutral-800">
-                        <div class="p-3.5 rounded-2xl ${cat.brickClass} text-white shadow-2xl"><i data-lucide="${item.icon}" class="w-6 h-6"></i></div>
+                    <div class="flex items-center gap-4 mb-5 pb-5 border-b border-slate-100">
+                        <div class="p-3.5 rounded-2xl ${cat.brickClass} text-white shadow-lg"><i data-lucide="${item.icon}" class="w-6 h-6"></i></div>
                         <div>
-                            <h3 class="text-xl text-white uppercase tracking-wider">${item.label}</h3>
+                            <h3 class="text-xl text-slate-800 uppercase tracking-wider">${item.label}</h3>
                             <p class="text-[10px] font-bold uppercase tracking-widest ${cat.color}">${cat.label}</p>
                         </div>
                     </div>
                     
                     <div class="space-y-5">
-                        <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 shadow-inner">
-                            <p class="text-[9px] font-black text-neutral-500 uppercase tracking-widest mb-2 italic">Definición Técnica</p>
-                            <p class="text-sm text-neutral-200 leading-relaxed font-medium">${item.description}</p>
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 shadow-inner">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">Definición Técnica</p>
+                            <p class="text-sm text-slate-700 leading-relaxed font-medium">${item.description}</p>
                         </div>
 
-                        <div class="bg-[#009BD1]/5 p-5 rounded-2xl border border-[#009BD1]/10">
-                            <p class="text-[9px] font-black text-[#009BD1] uppercase tracking-widest mb-3">Modelos de Facilitación (SER)</p>
-                            <ul class="text-xs list-disc list-inside space-y-2 font-medium italic text-neutral-300">
+                        <div class="bg-sky-50 p-5 rounded-2xl border border-sky-100">
+                            <p class="text-[9px] font-black text-sky-600 uppercase tracking-widest mb-3">Modelos de Facilitación (SER)</p>
+                            <ul class="text-xs list-disc list-inside space-y-2 font-medium italic text-slate-600">
                                 ${examplesHtml}
                             </ul>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-[#E11B7E]/5 p-4 rounded-2xl border border-[#E11B7E]/10">
-                                <p class="text-[9px] font-black text-[#E11B7E] uppercase tracking-widest mb-1">Bug Típico</p>
-                                <p class="text-[10px] text-neutral-400 leading-tight">${item.bugs || 'N/A'}</p>
+                            <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100">
+                                <p class="text-[9px] font-black text-rose-600 uppercase tracking-widest mb-1">Bug Típico</p>
+                                <p class="text-[10px] text-rose-400 leading-tight font-medium">${item.bugs || 'N/A'}</p>
                             </div>
-                            <div class="bg-[#FCCC32]/5 p-4 rounded-2xl border border-[#FCCC32]/10">
-                                <p class="text-[9px] font-black text-[#FCCC32] uppercase tracking-widest mb-1">Pauta de Éxito</p>
-                                <p class="text-[10px] text-neutral-400 leading-tight">${item.reflection}</p>
+                            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100">
+                                <p class="text-[9px] font-black text-amber-600 uppercase tracking-widest mb-1">Pauta de Éxito</p>
+                                <p class="text-[10px] text-amber-500 leading-tight font-medium">${item.reflection}</p>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-3 pt-2">
                              <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                             <p class="text-xs text-emerald-500 uppercase font-black tracking-widest">Apalancamiento: ${item.impact}</p>
+                             <p class="text-xs text-emerald-600 uppercase font-black tracking-widest">Apalancamiento: ${item.impact}</p>
                         </div>
                     </div>
                 </div>
@@ -522,7 +527,7 @@
 
         document.getElementById('clear-canvas').onclick = () => {
             sequence = []; selectedIdx = null; previewItem = null;
-            renderTimeline(); updateAnalysis(); updateInspector();
+            renderTimeline(); updateAnalysis(); updateInspector(); renderLibrary();
         };
 
         window.onload = () => {
