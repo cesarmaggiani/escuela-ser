@@ -3,24 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DP Bricks v3.4 - Pipeline de Facilitación</title>
+    <title>DP Bricks v3.5 - Identidad Institucional SER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        /* Importación de tipografías oficiales según manual */
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
         
+        :root {
+            --ser-magenta: #E11B7E;
+            --ser-yellow: #FCCC32;
+            --ser-cyan: #009BD1;
+            --ser-dark: #1a1a1a;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050505;
-            color: #e5e5e5;
+            font-family: 'Cabin', sans-serif;
+            background-color: #0a0a0a;
+            color: #f5f5f5;
             overflow-x: hidden;
         }
 
+        h1, h2, h3, h4, .font-bebas {
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 0.05em;
+        }
+
+        /* Scrollbar Personalizada */
         .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #121212; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #444; }
 
+        /* Estilo de Rompecabezas (Puzzle Clip-Path) */
         .puzzle-piece {
             clip-path: path('M 0 0 L 120 0 Q 135 0 135 15 L 135 30 Q 145 40 135 50 L 135 75 Q 135 90 120 90 L 0 90 Q 10 75 10 50 Q 0 40 10 30 Q 10 15 0 0 Z');
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -29,7 +44,7 @@
         .active-brick {
             filter: brightness(1.2) contrast(1.1);
             transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 40px rgba(225, 27, 126, 0.3);
             z-index: 50 !important;
         }
 
@@ -42,28 +57,25 @@
             to { transform: scale(1); opacity: 1; }
         }
         .animate-pop { animation: popIn 0.3s ease-out forwards; }
-
-        .shuffled-mode #library-grid {
-            opacity: 0.8;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <header class="p-4 md:p-6 border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-xl sticky top-0 z-50">
+    <!-- Header con Identidad SER -->
+    <header class="p-4 md:p-6 border-b border-neutral-800 bg-neutral-900/80 backdrop-blur-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-500/20">
-                    <i data-lucide="zap" class="text-white fill-current w-5 h-5"></i>
+                <div class="bg-[#E11B7E] p-2.5 rounded-lg shadow-lg shadow-magenta-500/20">
+                    <i data-lucide="zap" class="text-white fill-current w-6 h-6"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-black tracking-tighter uppercase italic text-white">DP Bricks <span class="text-indigo-400 not-italic font-medium text-sm ml-1">v3.4 Enriquecido</span></h1>
-                    <p class="text-[10px] text-neutral-500 uppercase tracking-[0.3em] font-bold">Arquitecto de Facilitación basado en "Vivir el Aprendizaje"</p>
+                    <h1 class="text-2xl text-white leading-none">SER <span class="text-[#009BD1] ml-1">DP BRICKS</span></h1>
+                    <p class="text-[10px] text-neutral-500 uppercase tracking-[0.4em] font-bold">Superación | Excelencia | Resultados</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <button id="shuffle-btn" class="flex items-center gap-2 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-neutral-700 shadow-md">
-                    <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> <span id="shuffle-text">Revolver Librería</span>
+                <button id="shuffle-btn" class="flex items-center gap-2 px-5 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all border border-neutral-700">
+                    <i data-lucide="shuffle" class="w-4 h-4"></i> <span>Revolver</span>
                 </button>
             </div>
         </div>
@@ -73,24 +85,23 @@
         
         <!-- Toolbox -->
         <section id="toolbox-section" class="bg-neutral-900/40 p-5 rounded-[2rem] border border-neutral-800 shadow-inner">
-            <div class="mb-4 px-2 flex justify-between items-center">
-                <h2 class="text-[10px] font-black text-neutral-500 uppercase tracking-widest flex items-center gap-2">
-                    <i data-lucide="plus-circle" class="text-indigo-500 w-3.5 h-3.5"></i> Librería Pedagógica
+            <div class="mb-5 px-2">
+                <h2 class="text-lg text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="package" class="text-[#FCCC32] w-5 h-5"></i> Librería de Facilitación
                 </h2>
-                <div id="mode-badge" class="hidden text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/20 font-bold uppercase tracking-tighter">Modo Desordenado</div>
             </div>
 
-            <div id="library-grid" class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div id="library-grid" class="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <!-- Se genera vía JS -->
             </div>
         </section>
 
-        <!-- Pipeline -->
-        <section class="flex-1 bg-neutral-900/20 border border-neutral-800 rounded-[3rem] p-10 flex flex-col shadow-inner min-h-[260px] overflow-hidden relative">
-            <div class="flex items-center justify-between mb-4 px-6">
-                <h2 class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em]">Timeline de la Sesión</h2>
-                <button id="clear-canvas" class="text-[10px] text-red-500/50 hover:text-red-500 font-bold uppercase tracking-widest flex items-center gap-1 transition-colors">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Limpiar Pipeline
+        <!-- Pipeline (Lienzo) -->
+        <section class="flex-1 bg-neutral-900/20 border-2 border-dashed border-neutral-800 rounded-[3rem] p-10 flex flex-col shadow-inner min-h-[260px] overflow-hidden relative">
+            <div class="flex items-center justify-between mb-6 px-6">
+                <h2 class="text-sm font-bold text-neutral-500 uppercase tracking-[0.3em]">Pipeline de la Sesión</h2>
+                <button id="clear-canvas" class="text-xs text-red-500/70 hover:text-red-500 font-bold uppercase tracking-widest flex items-center gap-1 transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar Todo
                 </button>
             </div>
             
@@ -100,35 +111,36 @@
         </section>
 
         <!-- Análisis e Inspector -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[400px] mb-8">
-            <!-- Debugger -->
-            <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-6 shadow-xl flex flex-col overflow-hidden relative">
-                <h3 class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 relative z-10">
-                    <i data-lucide="terminal" class="text-indigo-400 w-4 h-4"></i> Pedagogical Debugger
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[420px] mb-10">
+            <!-- Terminal Debugger -->
+            <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-7 shadow-xl flex flex-col overflow-hidden relative">
+                <h3 class="text-xs font-bold text-neutral-500 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 relative z-10">
+                    <i data-lucide="binary" class="text-[#E11B7E] w-4 h-4"></i> Pedagogical Debugger
                 </h3>
                 <div id="debugger-console" class="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar relative z-10">
                     <!-- Logs dinámicos -->
                 </div>
             </div>
 
-            <!-- Inspector Enriquecido -->
-            <div id="inspector-panel" class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-6 shadow-xl overflow-hidden flex flex-col">
+            <!-- Inspector Panel -->
+            <div id="inspector-panel" class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-7 shadow-xl overflow-hidden flex flex-col">
                 <!-- Data enriquecida JS -->
             </div>
         </section>
     </main>
 
-    <footer class="p-3 text-center bg-black border-t border-neutral-900 text-[8px] text-neutral-700 font-black uppercase tracking-[0.6em]">
-        DP ARCHITECT ENGINE • PUZZLE v3.4 • BASED ON UNCOMMON SCHOOLS PRINCIPLES
+    <footer class="p-4 text-center bg-black border-t border-neutral-900 text-[9px] text-neutral-600 font-bold uppercase tracking-[0.5em]">
+        Pipeline Logic Engine • SER Network Identity • Puzzle Architecture v3.5
     </footer>
 
     <script>
+        // --- COLORES SEGÚN MANUAL ---
         const CATEGORIES = {
-            EJECUCION: { id: 'EJECUCION', label: 'Ejecución', color: 'text-indigo-400', brickClass: 'bg-indigo-600', hoverClass: 'hover:bg-indigo-500' },
-            VER: { id: 'VER', label: 'Ver', color: 'text-blue-400', brickClass: 'bg-blue-500', hoverClass: 'hover:bg-blue-400' },
-            NOMBRAR: { id: 'NOMBRAR', label: 'Nombrar', color: 'text-amber-400', brickClass: 'bg-amber-500', hoverClass: 'hover:bg-amber-400' },
-            HACER: { id: 'HACER', label: 'Hacer', color: 'text-rose-400', brickClass: 'bg-rose-500', hoverClass: 'hover:bg-rose-400' },
-            REFLEXIONAR: { id: 'REFLEXIONAR', label: 'Reflexionar', color: 'text-violet-400', brickClass: 'bg-violet-500', hoverClass: 'hover:bg-violet-400' }
+            EJECUCION: { id: 'EJECUCION', label: 'Ejecución', color: 'text-[#E11B7E]', brickClass: 'bg-[#E11B7E]', hoverClass: 'hover:bg-[#f02d8e]' },
+            VER: { id: 'VER', label: 'Ver', color: 'text-[#009BD1]', brickClass: 'bg-[#009BD1]', hoverClass: 'hover:bg-[#00b4f0]' },
+            NOMBRAR: { id: 'NOMBRAR', label: 'Nombrar', color: 'text-[#FCCC32]', brickClass: 'bg-[#FCCC32]', hoverClass: 'hover:bg-[#fdd658]' },
+            HACER: { id: 'HACER', label: 'Hacer', color: 'text-[#FCCC32]', brickClass: 'bg-[#FCCC32]', hoverClass: 'hover:bg-[#fdd658]' },
+            REFLEXIONAR: { id: 'REFLEXIONAR', label: 'Reflexionar', color: 'text-[#009BD1]', brickClass: 'bg-[#009BD1]', hoverClass: 'hover:bg-[#00b4f0]' }
         };
 
         const BRICK_DEFS = {
@@ -137,65 +149,54 @@
                 category: 'EJECUCION', 
                 label: 'Objetivo de Hacer', 
                 icon: 'target', 
-                description: 'Define qué serán capaces de HACER los docentes en sus salas. No es qué van a "saber" o "entender", sino qué acción física o verbal ejecutarán.', 
-                examples: ['"Los docentes serán capaces de aplicar una pausa dramática tras una línea maestra"', '"Los docentes podrán circular por la sala monitoreando 3 errores específicos"'],
-                reflection: '¿Es el objetivo medible y realizable hoy mismo en este taller?', 
-                bugs: 'Confundir el objetivo con la actividad (ej: "Ver un video" no es un objetivo, es el medio).',
-                impact: 'Alineación de esfuerzos.' 
+                description: 'Define qué serán capaces de HACER los docentes. No es saber, es ejecutar.', 
+                examples: ['"Los docentes aplicarán una pausa de 3 segundos tras la línea clave"', '"Los líderes modelarán la corrección individual privada"'],
+                reflection: '¿Es el objetivo claro, medible y realizable hoy?', 
+                bugs: 'Plantear un objetivo de "comprensión" en lugar de uno de "acción".',
+                impact: 'Propósito compartido.' 
             },
             HISTORIA: { 
                 id: 'HISTORIA', 
                 category: 'EJECUCION', 
-                label: 'Narrativa/Historia', 
+                label: 'Contar Historia', 
                 icon: 'book-open', 
-                description: 'Crea una conexión emocional y sentido de urgencia. Usa el "nosotros" colectivo para honrar la experiencia previa de los docentes.', 
-                examples: ['"Imaginen a un estudiante que finalmente entiende porque la instrucción fue del tamaño de un bocado..."', '"Hoy vamos a hacer un viaje para transformar el 1% más crítico de nuestra enseñanza"'],
-                reflection: '¿Uso "nosotros" en lugar de "yo"? ¿Presumo de los demás, no de mí?', 
-                bugs: 'Contar una historia demasiado larga que distraiga del objetivo técnico.',
-                impact: 'Seguridad psicológica.' 
+                description: 'Narrativa para conectar. Usa el "nosotros" colectivo.', 
+                examples: ['"Acabamos de mirar a alguien haciendo justamente eso..."', '"Vamos a hacer un viaje al aula de 5to grado..."'],
+                reflection: '¿Honro la experiencia de los participantes?', 
+                bugs: 'Hablar de "yo" o presumir de logros personales en lugar de los del equipo.',
+                impact: 'Conexión emocional.' 
             },
             PRESENCIA: { 
                 id: 'PRESENCIA', 
                 category: 'EJECUCION', 
                 label: 'Cara Abierta', 
                 icon: 'smile', 
-                description: 'Manejo consciente del lenguaje corporal del facilitador: cejas levantadas (no surcadas), contacto visual genuino y manos tranquilas.', 
-                examples: ['Modulación de voz para transmitir entusiasmo', 'Caminar por toda la sala rompiendo el plano frontal'],
-                reflection: '¿Mi lenguaje corporal invita a la participación o impone distancia?', 
-                bugs: 'Mantener las manos en los bolsillos o leer directamente las diapositivas.',
-                impact: 'Confianza y apertura.' 
+                description: 'Cejas levantadas, mirada a la audiencia y movimientos de manos tranquilos.', 
+                examples: ['Modulación de voz para transmitir emoción', 'Romper el plano caminando hacia el grupo'],
+                reflection: '¿Mis cejas están surcadas o levantadas?', 
+                bugs: 'Mantener un lenguaje corporal cerrado o defensivo.',
+                impact: 'Seguridad psicológica.' 
             },
             BOCADO: { 
                 id: 'BOCADO', 
                 category: 'EJECUCION', 
                 label: 'Instrucción Bocado', 
                 icon: 'layers', 
-                description: 'Dividir consignas complejas en pasos secuenciales. No dar la instrucción 2 hasta que la 1 se haya ejecutado.', 
-                examples: ['"Abran su libro en la página 10" (pausa hasta que todos lo hagan) -> "Subrayen la tercera línea..."'],
-                reflection: '¿Esperé a que todos cumplieran el primer paso antes de dar el segundo?', 
-                bugs: 'Dar todas las instrucciones juntas mientras los docentes ya están buscando sus materiales.',
-                impact: 'Reducción de carga cognitiva.' 
-            },
-            PAUSA: { 
-                id: 'PAUSA', 
-                category: 'EJECUCION', 
-                label: 'Pausa Dramática', 
-                icon: 'timer', 
-                description: 'Silencio estratégico de 3-5 segundos tras un punto vital para permitir que la idea se asiente en la memoria de largo plazo.', 
-                examples: ['"El éxito se gana en la planificación..." (Silencio absoluto) -> "¿Cómo hacemos eso?"'],
-                reflection: '¿Logré mantener el silencio sin romper la tensión?', 
-                bugs: 'Hablar inmediatamente después de una idea importante por nerviosismo al silencio.',
-                impact: 'Fijación del aprendizaje.' 
+                description: 'Dividir instrucciones complejas en pasos pequeños y entregarlos de a uno.', 
+                examples: ['"Abran la página 6..." (pausa) -> "Tienen 2 minutos para escribir..."'],
+                reflection: '¿Dividí la instrucción en pasos secuenciales?', 
+                bugs: 'Dar la instrucción 2 mientras los participantes aún procesan la 1.',
+                impact: 'Foco ejecutivo.' 
             },
             ENFOQUE: { 
                 id: 'ENFOQUE', 
                 category: 'VER', 
-                label: 'P. Enfoque', 
+                label: 'P. de Enfoque', 
                 icon: 'help-circle', 
-                description: 'Pregunta previa que estrecha la mirada de los participantes hacia acciones positivas específicas del modelo.', 
-                examples: ['"¿Qué hace exactamente el profesor con sus manos mientras el alumno responde?"', '"¿Cuántas palabras usa el líder para corregir el comportamiento?"'],
-                reflection: '¿La pregunta dirige la mirada a lo que queremos que vean (positivo) o a lo que salió mal?', 
-                bugs: 'Preguntar "¿Qué notaron?" (demasiado abierto, genera ruido visual).',
+                description: 'Pregunta previa que dirige la mirada hacia acciones positivas específicas.', 
+                examples: ['"¿Qué hace el líder con sus manos mientras el docente habla?"', '"¿Cómo modula su voz durante la corrección?"'],
+                reflection: '¿La pregunta enfoca lo positivo que quiero que vean?', 
+                bugs: 'Preguntar "¿Qué notaron?" (demasiado abierto, genera ruido).',
                 impact: 'Observación útil.' 
             },
             MODELO_VIDEO: { 
@@ -203,10 +204,10 @@
                 category: 'VER', 
                 label: 'Modelo Video', 
                 icon: 'video', 
-                description: 'Observación de un docente maestro en acción. Debe ser breve (<5 min) y enfocado en el éxito, no en la crítica.', 
-                examples: ['Clip de 2 minutos de Doug Lemov modelando "Voz Fuerte"', 'Video de un par de la misma escuela ejecutando una técnica nueva'],
-                reflection: '¿El video está probado, en cola y sin anuncios?', 
-                bugs: 'Mostrar videos de baja calidad o que no se relacionan directamente con el objetivo.',
+                description: 'Ver un modelo externo de éxito breve (<5 min).', 
+                examples: ['Video de un profesor experto aplicando Voz Fuerte', 'Clip de una reunión de análisis de datos efectiva'],
+                reflection: '¿El video está probado y puesto en el minuto exacto?', 
+                bugs: 'Mostrar videos largos que pierden el punto técnico.',
                 impact: 'Validación visual.' 
             },
             GIRA_DISCUTE: { 
@@ -214,10 +215,10 @@
                 category: 'NOMBRAR', 
                 label: 'Gira y Discute', 
                 icon: 'message-square', 
-                description: 'Procesamiento activo en parejas. Aumenta la ratio de pensamiento y permite que todos hablen antes del plenario.', 
-                examples: ['"Tienen 1 minuto para discutir con su pareja: ¿Por qué la pausa fue efectiva?"', '"Digan a su compañero una cosa que observaron en el video"'],
-                reflection: '¿Dí instrucciones de quién empieza (ej: el de pelo más largo)?', 
-                bugs: 'No monitorear las conversaciones mientras ocurren para recoger "gemas".',
+                description: 'Procesamiento en parejas para involucrar a todos en el pensamiento.', 
+                examples: ['"Discute con tu pareja: ¿Por qué la pausa fue efectiva?"', '"1 minuto para compartir una gema observada"'],
+                reflection: '¿Asigné quién comienza primero?', 
+                bugs: 'No monitorear las parejas mientras hablan.',
                 impact: 'Ratio de pensamiento.' 
             },
             PREGUNTAR_PORQUE: { 
@@ -225,54 +226,54 @@
                 category: 'NOMBRAR', 
                 label: 'Preguntar ¿Por qué?', 
                 icon: 'zap', 
-                description: 'Indagar en el propósito pedagógico. Los docentes deben entender el valor de la técnica antes de su nombre.', 
-                examples: ['"¿Qué hubiera pasado si el profesor no hubiera esperado esos 5 segundos?"', '"¿Cuál es el valor de corregir de forma anónima?"'],
-                reflection: '¿Logré que ellos descubrieran el valor por sí mismos?', 
-                bugs: 'Dar la respuesta lógica antes de que los docentes la deduzcan.',
-                impact: 'Apropiación lógica.' 
+                description: 'Momento para que el grupo descubra la lógica técnica del modelo.', 
+                examples: ['"¿Cuál es el valor de hacer eso?"', '"¿Qué hubiera pasado si no hubiéramos hecho la pausa?"'],
+                reflection: '¿Logré que ellos dedujeran el valor antes de nombrarlo?', 
+                bugs: 'Responder la pregunta antes de que los participantes piensen.',
+                impact: 'Lógica profunda.' 
             },
             NOMBRAR_TECNICO: { 
                 id: 'NOMBRAR_TECNICO', 
                 category: 'NOMBRAR', 
                 label: 'Nombre Técnico', 
                 icon: 'type', 
-                description: 'Asignar un lenguaje formal a la conclusión del grupo. Esto estandariza la comunicación en la escuela.', 
-                examples: ['"A esto le llamamos: Lo Correcto es lo Correcto"', '"Esta técnica se denomina: Umbral"'],
-                reflection: '¿Esperé hasta el final del debate para dar el nombre oficial?', 
-                bugs: 'Presentar el nombre de la técnica en la primera diapositiva.',
-                impact: 'Lenguaje común.' 
+                description: 'Asignar lenguaje formal a la conclusión. Fija la "Idea Central".', 
+                examples: ['"A esto le llamamos: Pausa Dramática"', '"Esta técnica es: Lo Correcto es lo Correcto"'],
+                reflection: '¿Esperé hasta el final para dar el nombre?', 
+                bugs: 'Nombrar la técnica al inicio de la diapositiva.',
+                impact: 'Estandarización.' 
             },
             GUION: { 
                 id: 'GUION', 
                 category: 'HACER', 
                 label: 'Hacer Guion', 
                 icon: 'pen-tool', 
-                description: 'Escribir las palabras exactas, gestos y pasos antes de practicar físicamente. Reduce la ansiedad.', 
-                examples: ['Escribir en la planificación las 5 palabras que diré en una corrección', 'Diseñar la pregunta de chequeo de la comprensión paso a paso'],
-                reflection: '¿Dí al menos 2-3 minutos de silencio para escribir el guion?', 
-                bugs: 'Pasar a la práctica física sin tener nada escrito (causa bloqueos mentales).',
+                description: 'Escribir palabras y señales exactas antes de practicar físicamente.', 
+                examples: ['Escribir el guion de corrección de 5 palabras', 'Planear la pregunta de chequeo de comprensión'],
+                reflection: '¿Dí tiempo de silencio total para escribir?', 
+                bugs: 'Practicar sin tener las palabras escritas (genera bloqueos).',
                 impact: 'Práctica segura.' 
             },
             PRACTICA_BRECHA: { 
                 id: 'PRACTICA_BRECHA', 
                 category: 'HACER', 
-                label: 'Práctica Física', 
+                label: 'Práctica Brecha', 
                 icon: 'user-round', 
-                description: 'Juego de roles enfocado en la brecha: lo que más cuesta lograr. Se practica hasta la automatización.', 
-                examples: ['Simular una clase con un "alumno disruptivo" para practicar la calma', 'Practicar la modulación de voz frente a un par'],
-                reflection: '¿Estamos practicando lo que ya saben o lo que les cuesta?', 
-                bugs: 'Hacer una práctica "amigable" donde nadie se equivoca.',
+                description: 'Juego de roles enfocado en lo que más cuesta lograr.', 
+                examples: ['Simular una clase difícil para practicar el tono', 'Practicar la modulación de voz frente a un par'],
+                reflection: '¿Monitoreo con el ejemplar en mano?', 
+                bugs: 'Hacer una práctica "light" donde no hay errores que corregir.',
                 impact: 'Transferencia física.' 
             },
             DE_NUEVO: { 
                 id: 'DE_NUEVO', 
                 category: 'HACER', 
-                label: 'Hacerlo de Nuevo', 
+                label: 'De Nuevo', 
                 icon: 'refresh-ccw', 
-                description: 'Incorporar retroalimentación inmediata y repetir la ronda. No se avanza hasta que salga bien.', 
-                examples: ['"Eso fue bueno, pero intenta decir la corrección sin usar el nombre del alumno. ¡De nuevo!"'],
-                reflection: '¿La retroalimentación fue del tamaño de un bocado para aplicarla ya?', 
-                bugs: 'Dar feedback y pasar a otro tema sin repetir la acción con el cambio sugerido.',
+                description: 'Repetir la acción incorporando feedback inmediato. Perfeccionamiento.', 
+                examples: ['"Eso fue bueno, pero intenta sin usar el nombre. ¡De nuevo!"'],
+                reflection: '¿El feedback fue del tamaño de un bocado?', 
+                bugs: 'Dar feedback y no repetir la acción.',
                 impact: 'Maestría técnica.' 
             },
             REFLEXIONAR: { 
@@ -280,10 +281,10 @@
                 category: 'REFLEXIONAR', 
                 label: 'Sellar Aprendizaje', 
                 icon: 'pen-tool', 
-                description: 'Registro escrito de conclusiones finales. Anclaje de la memoria y metacognición.', 
-                examples: ['"Escriban en su diario de facilitación las 3 claves que no quieren olvidar hoy"', '"¿Cómo cambiará tu planificación mañana con lo visto hoy?"'],
-                reflection: '¿Dí tiempo de silencio total para que esto ocurra?', 
-                bugs: 'Hacer la reflexión mientras se reparten materiales de salida.',
+                description: 'Registro escrito breve de pensamientos y reflexiones clave.', 
+                examples: ['"Escriban en su diario las 3 claves de hoy"', '"Reflexiona: ¿Cómo aplicarás esto mañana?"'],
+                reflection: '¿Limite la reflexión a 1-2 minutos?', 
+                bugs: 'Hacer la reflexión mientras hay ruido o distracciones.',
                 impact: 'Anclaje cognitivo.' 
             }
         };
@@ -301,15 +302,17 @@
 
         function renderLibrary() {
             libContainer.innerHTML = '';
+            const keysToRender = isShuffled ? libraryKeys.sort(() => Math.random() - 0.5) : libraryKeys;
+            
             if (isShuffled) {
                 libContainer.className = 'flex flex-wrap gap-2 animate-pop';
-                libraryKeys.forEach(k => libContainer.appendChild(createBrickButton(k)));
+                keysToRender.forEach(k => libContainer.appendChild(createBrickButton(k)));
             } else {
                 libContainer.className = 'grid grid-cols-2 md:grid-cols-5 gap-3';
                 Object.keys(CATEGORIES).forEach(catKey => {
                     const col = document.createElement('div');
                     col.className = 'space-y-2';
-                    col.innerHTML = `<h3 class="text-[8px] font-black uppercase tracking-widest ${CATEGORIES[catKey].color} border-b border-neutral-800 pb-1.5">${CATEGORIES[catKey].label}</h3>`;
+                    col.innerHTML = `<h3 class="text-[10px] font-black uppercase tracking-widest ${CATEGORIES[catKey].color} border-b border-neutral-800 pb-1.5">${CATEGORIES[catKey].label}</h3>`;
                     const list = document.createElement('div');
                     list.className = 'flex flex-col gap-1.5';
                     Object.keys(BRICK_DEFS).filter(k => BRICK_DEFS[k].category === catKey).forEach(k => list.appendChild(createBrickButton(k)));
@@ -324,19 +327,23 @@
             const brick = BRICK_DEFS[key];
             const wrap = document.createElement('div');
             wrap.className = 'relative group';
+            
             const btn = document.createElement('button');
-            btn.className = `${CATEGORIES[brick.category].brickClass} ${CATEGORIES[brick.category].hoverClass} w-full py-2 px-3 pr-7 rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-95 text-white border border-white/5 text-left`;
-            btn.innerHTML = `<i data-lucide="${brick.icon}" class="w-3.5 h-3.5 opacity-80 shrink-0"></i><span class="font-bold text-[9px] uppercase tracking-tighter truncate">${brick.label}</span>`;
+            const cat = CATEGORIES[brick.category];
+            btn.className = `${cat.brickClass} ${cat.hoverClass} w-full py-2.5 px-3 pr-8 rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-95 text-white border border-white/10 text-left`;
+            btn.innerHTML = `<i data-lucide="${brick.icon}" class="w-4 h-4 opacity-90 shrink-0"></i><span class="font-bebas text-xs uppercase tracking-wider truncate">${brick.label}</span>`;
             btn.onclick = () => {
                 sequence.push({...brick, instanceId: Math.random()});
                 previewItem = null;
                 renderTimeline();
                 updateAnalysis();
             };
+            
             const info = document.createElement('button');
             info.className = 'absolute right-1.5 top-1/2 -translate-y-1/2 p-1 text-white/30 hover:text-white transition-opacity bg-black/10 rounded-full';
-            info.innerHTML = '<i data-lucide="info" class="w-3 h-3"></i>';
+            info.innerHTML = '<i data-lucide="info" class="w-3.5 h-3.5"></i>';
             info.onclick = (e) => { e.stopPropagation(); previewItem = brick; selectedIdx = null; updateInspector(); };
+            
             wrap.appendChild(btn); wrap.appendChild(info);
             return wrap;
         }
@@ -344,27 +351,32 @@
         function renderTimeline() {
             timelineContainer.innerHTML = '';
             if (sequence.length === 0) {
-                timelineContainer.innerHTML = '<div class="w-full text-center opacity-20 py-10 font-black uppercase text-xs tracking-widest italic tracking-widest">Arrastra o haz clic en bricks para armar el Pipeline</div>';
+                timelineContainer.innerHTML = '<div class="w-full text-center opacity-20 py-10 font-bold uppercase text-sm tracking-widest italic font-bebas">Suelte Bricks para iniciar la arquitectura</div>';
                 return;
             }
+
             const wrapper = document.createElement('div');
             wrapper.className = 'flex items-center';
+            
             sequence.forEach((brick, idx) => {
                 const piece = document.createElement('div');
-                piece.className = `relative flex-shrink-0 w-[145px] h-[95px] p-5 transition-all cursor-pointer flex flex-col justify-center puzzle-piece brick-transition ${CATEGORIES[brick.category].brickClass} ${selectedIdx === idx ? 'active-brick' : 'z-10 opacity-90 hover:opacity-100 hover:z-20'}`;
+                const cat = CATEGORIES[brick.category];
+                piece.className = `relative flex-shrink-0 w-[145px] h-[95px] p-5 transition-all cursor-pointer flex flex-col justify-center puzzle-piece brick-transition ${cat.brickClass} ${selectedIdx === idx ? 'active-brick' : 'z-10 opacity-90 hover:opacity-100 hover:z-20'}`;
                 piece.style.marginLeft = idx === 0 ? '0' : '-18px';
                 piece.onclick = () => { selectedIdx = idx; previewItem = null; renderTimeline(); updateInspector(); };
+
                 piece.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
-                        <div class="bg-black/20 p-1 rounded text-white/80"><i data-lucide="${brick.icon}" class="w-3.5 h-3.5"></i></div>
-                        <button onclick="event.stopPropagation(); removeBrick(${idx})" class="p-1 bg-black/20 hover:bg-red-500 rounded-full text-white transition-colors">
+                        <div class="bg-black/20 p-1 rounded text-white/80"><i data-lucide="${brick.icon}" class="w-4 h-4"></i></div>
+                        <button onclick="event.stopPropagation(); removeBrick(${idx})" class="p-1 bg-black/20 hover:bg-black rounded-full text-white transition-colors">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
-                    <h4 class="font-bold text-[10px] uppercase tracking-tighter leading-none text-white">${brick.label}</h4>
+                    <h4 class="font-bebas text-sm uppercase tracking-wider text-white truncate">${brick.label}</h4>
                 `;
                 wrapper.appendChild(piece);
             });
+            
             timelineContainer.appendChild(wrapper);
             lucide.createIcons();
         }
@@ -379,29 +391,35 @@
             debuggerConsole.innerHTML = '';
             const bugs = [];
             if (sequence.length === 0) return;
+
             if (!['OBJETIVO', 'HISTORIA'].includes(sequence[0]?.id)) {
-                bugs.push({ title: "Falta Raíz", msg: "Inicias sin marco estratégico.", fix: "Añade Objetivo o Historia al inicio." });
+                bugs.push({ title: "Falta Cimiento", msg: "La sesión no tiene un marco estratégico.", fix: "Añade [Objetivo] o [Historia] al inicio." });
             }
+
             sequence.forEach((brick, i) => {
                 const prev = sequence[i-1];
                 if (['MODELO_VIDEO', 'MODELO_LIDER'].includes(brick.id) && (!prev || prev.id !== 'ENFOQUE')) {
-                    bugs.push({ title: "Observación Ciega", msg: `"${brick.label}" no tiene dirección.`, fix: "Añade [P. Enfoque] antes." });
+                    bugs.push({ title: "Observación Ciega", msg: `"${brick.label}" carece de dirección visual.`, fix: "Añade [P. de Enfoque] antes." });
                 }
                 if (brick.id === 'NOMBRAR_TECNICO' && (!prev || (prev.id !== 'GIRA_DISCUTE' && prev.id !== 'PREGUNTAR_PORQUE'))) {
-                    bugs.push({ title: "Abstracción Previa", msg: "Nombras antes de descubrir.", fix: "Añade Gira/Discute o ¿Por qué? antes." });
+                    bugs.push({ title: "Salto Lógico", msg: "Nombrando antes de permitir el descubrimiento.", fix: "Añade [Gira y Discute] antes." });
                 }
                 if (brick.id === 'PRACTICA_BRECHA' && (!prev || prev.id !== 'GUION')) {
-                    bugs.push({ title: "Pánico Escénico", msg: "Práctica sin guion escrito.", fix: "Añade [Hacer Guion] antes." });
+                    bugs.push({ title: "Falta de Guion", msg: "Práctica física sin planeación previa.", fix: "Añade [Hacer Guion] antes." });
                 }
             });
 
             if (bugs.length === 0) {
-                debuggerConsole.innerHTML = `<div class="p-4 text-emerald-400 bg-emerald-400/5 rounded-2xl border border-emerald-400/20 text-[10px] font-bold uppercase tracking-widest">Pipeline pedagógicamente íntegro.</div>`;
+                debuggerConsole.innerHTML = `<div class="p-5 text-emerald-400 bg-emerald-400/5 rounded-2xl border border-emerald-400/20 text-xs font-bold uppercase tracking-widest flex gap-3 items-center animate-pop"><i data-lucide="shield-check"></i>Pipeline saludable e institucional.</div>`;
             } else {
                 bugs.forEach(bug => {
                     const d = document.createElement('div');
-                    d.className = 'p-3 bg-red-500/5 border border-red-500/20 rounded-xl space-y-1';
-                    d.innerHTML = `<p class="text-[9px] font-black text-red-400 uppercase tracking-tighter">${bug.title}: ${bug.msg}</p><p class="text-[8px] text-indigo-400 font-bold uppercase tracking-widest">Fix: ${bug.fix}</p>`;
+                    d.className = 'p-4 bg-red-500/5 border border-red-500/20 rounded-2xl space-y-2';
+                    d.innerHTML = `
+                        <div class="flex gap-2 text-red-400 font-bold uppercase text-[10px] items-center"><i data-lucide="alert-triangle" class="w-4 h-4"></i> ${bug.title}</div>
+                        <p class="text-xs text-neutral-400">${bug.msg}</p>
+                        <div class="text-[9px] bg-indigo-500/10 text-indigo-300 py-1 px-2 rounded-lg border border-indigo-500/10 inline-block font-bold">FIX: ${bug.fix}</div>
+                    `;
                     debuggerConsole.appendChild(d);
                 });
             }
@@ -413,50 +431,50 @@
             inspectorPanel.innerHTML = '';
             
             if (!item) {
-                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center opacity-30 text-neutral-600 font-black uppercase text-[10px] tracking-[0.4em] italic"><i data-lucide="zoom-in" class="w-10 h-10 mb-2"></i>Inspeccionar Brick</div>';
+                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center opacity-30 text-neutral-600 font-black uppercase text-xs tracking-[0.4em] italic"><i data-lucide="zoom-in" class="w-12 h-12 mb-4"></i>Inspeccionar Elemento</div>';
                 lucide.createIcons(); return;
             }
 
             const cat = CATEGORIES[item.category];
-            const examplesHtml = item.examples ? item.examples.map(ex => `<li class="mb-1 text-indigo-200">"${ex}"</li>`).join('') : '<li>N/A</li>';
+            const examplesHtml = item.examples ? item.examples.map(ex => `<li class="mb-1 text-indigo-100">"${ex}"</li>`).join('') : '<li>N/A</li>';
 
             inspectorPanel.innerHTML = `
                 <div class="h-full flex flex-col custom-scrollbar overflow-y-auto pr-2 animate-pop">
-                    <div class="flex items-center gap-4 mb-4 pb-4 border-b border-neutral-800">
-                        <div class="p-3 rounded-2xl ${cat.brickClass} text-white shadow-xl"><i data-lucide="${item.icon}"></i></div>
+                    <div class="flex items-center gap-4 mb-5 pb-5 border-b border-neutral-800">
+                        <div class="p-3.5 rounded-2xl ${cat.brickClass} text-white shadow-2xl"><i data-lucide="${item.icon}" class="w-6 h-6"></i></div>
                         <div>
-                            <h3 class="text-sm font-bold uppercase tracking-tight">${item.label}</h3>
-                            <p class="text-[9px] font-black uppercase tracking-widest ${cat.color}">${cat.label}</p>
+                            <h3 class="text-xl text-white uppercase tracking-wider">${item.label}</h3>
+                            <p class="text-[10px] font-bold uppercase tracking-widest ${cat.color}">${cat.label}</p>
                         </div>
                     </div>
                     
-                    <div class="space-y-4">
-                        <div class="bg-neutral-950 p-4 rounded-xl border border-neutral-800">
-                            <p class="text-[8px] font-black text-neutral-500 uppercase tracking-widest mb-1 italic italic">¿Qué es?</p>
-                            <p class="text-xs text-neutral-300 leading-relaxed">${item.description}</p>
+                    <div class="space-y-5">
+                        <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 shadow-inner">
+                            <p class="text-[9px] font-black text-neutral-500 uppercase tracking-widest mb-2 italic">Definición Técnica</p>
+                            <p class="text-sm text-neutral-200 leading-relaxed font-medium">${item.description}</p>
                         </div>
 
-                        <div class="bg-indigo-500/5 p-4 rounded-xl border border-indigo-500/10">
-                            <p class="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-2">Ejemplos de Facilitación</p>
-                            <ul class="text-[11px] list-disc list-inside space-y-1 font-medium italic">
+                        <div class="bg-[#009BD1]/5 p-5 rounded-2xl border border-[#009BD1]/10">
+                            <p class="text-[9px] font-black text-[#009BD1] uppercase tracking-widest mb-3">Modelos de Facilitación (SER)</p>
+                            <ul class="text-xs list-disc list-inside space-y-2 font-medium italic text-neutral-300">
                                 ${examplesHtml}
                             </ul>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-red-500/5 p-3 rounded-xl border border-red-500/10">
-                                <p class="text-[8px] font-black text-red-400 uppercase tracking-widest mb-1">Error Común</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-[#E11B7E]/5 p-4 rounded-2xl border border-[#E11B7E]/10">
+                                <p class="text-[9px] font-black text-[#E11B7E] uppercase tracking-widest mb-1">Bug Típico</p>
                                 <p class="text-[10px] text-neutral-400 leading-tight">${item.bugs || 'N/A'}</p>
                             </div>
-                            <div class="bg-amber-500/5 p-3 rounded-xl border border-amber-500/10">
-                                <p class="text-[8px] font-black text-amber-400 uppercase tracking-widest mb-1">Pauta de Éxito</p>
+                            <div class="bg-[#FCCC32]/5 p-4 rounded-2xl border border-[#FCCC32]/10">
+                                <p class="text-[9px] font-black text-[#FCCC32] uppercase tracking-widest mb-1">Pauta de Éxito</p>
                                 <p class="text-[10px] text-neutral-400 leading-tight">${item.reflection}</p>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2 pt-2">
-                             <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                             <p class="text-[9px] text-emerald-500 uppercase font-black tracking-widest">Impacto: ${item.impact}</p>
+                        <div class="flex items-center gap-3 pt-2">
+                             <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                             <p class="text-xs text-emerald-500 uppercase font-black tracking-widest">Apalancamiento: ${item.impact}</p>
                         </div>
                     </div>
                 </div>
@@ -466,15 +484,6 @@
 
         document.getElementById('shuffle-btn').onclick = () => {
             isShuffled = !isShuffled;
-            if (isShuffled) {
-                libraryKeys = libraryKeys.sort(() => Math.random() - 0.5);
-                document.getElementById('shuffle-text').innerText = 'Ordenar Librería';
-                document.getElementById('mode-badge').classList.remove('hidden');
-            } else {
-                libraryKeys = Object.keys(BRICK_DEFS);
-                document.getElementById('shuffle-text').innerText = 'Revolver Librería';
-                document.getElementById('mode-badge').classList.add('hidden');
-            }
             renderLibrary();
         };
 
