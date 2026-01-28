@@ -16,23 +16,12 @@
             overflow-x: hidden;
         }
 
-        /* Scrollbar Personalizada */
         .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #121212; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #444; }
 
-        /* Estilo de Rompecabezas (Puzzle Clip-Path) */
         .puzzle-piece {
-            /* M 0 0 -> Inicio superior izquierdo
-               L 120 0 -> Línea hasta esquina superior derecha
-               Q 135 0 135 15 -> Curva pestaña
-               Q 145 40 135 50 -> "Diente" del puzzle
-               Q 135 90 120 90 -> Curva final derecha
-               L 0 90 -> Línea inferior
-               Q 10 75 10 50 -> Muesca izquierda (entrada)
-               Q 0 40 10 30 -> Muesca curva
-               Q 10 15 0 0 -> Regreso al inicio */
             clip-path: path('M 0 0 L 120 0 Q 135 0 135 15 L 135 30 Q 145 40 135 50 L 135 75 Q 135 90 120 90 L 0 90 Q 10 75 10 50 Q 0 40 10 30 Q 10 15 0 0 Z');
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -48,17 +37,19 @@
             transition: transform 0.2s, opacity 0.2s, filter 0.2s;
         }
         
-        /* Animación de entrada */
         @keyframes popIn {
             from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
         .animate-pop { animation: popIn 0.3s ease-out forwards; }
+
+        .shuffled-mode #library-grid {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Header con Controles -->
     <header class="p-4 md:p-6 border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -66,8 +57,8 @@
                     <i data-lucide="zap" class="text-white fill-current w-5 h-5"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-black tracking-tighter uppercase italic text-white">DP Bricks <span class="text-indigo-400 not-italic font-medium text-sm ml-1">v3.4</span></h1>
-                    <p class="text-[10px] text-neutral-500 uppercase tracking-[0.3em] font-bold">Arquitecto de Facilitación</p>
+                    <h1 class="text-xl font-black tracking-tighter uppercase italic text-white">DP Bricks <span class="text-indigo-400 not-italic font-medium text-sm ml-1">v3.4 Enriquecido</span></h1>
+                    <p class="text-[10px] text-neutral-500 uppercase tracking-[0.3em] font-bold">Arquitecto de Facilitación basado en "Vivir el Aprendizaje"</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -80,26 +71,26 @@
 
     <main class="flex-1 flex flex-col p-4 md:p-6 gap-6 max-w-7xl mx-auto w-full">
         
-        <!-- Toolbox (Librería de Componentes) -->
+        <!-- Toolbox -->
         <section id="toolbox-section" class="bg-neutral-900/40 p-5 rounded-[2rem] border border-neutral-800 shadow-inner">
             <div class="mb-4 px-2 flex justify-between items-center">
                 <h2 class="text-[10px] font-black text-neutral-500 uppercase tracking-widest flex items-center gap-2">
-                    <i data-lucide="plus-circle" class="text-indigo-500 w-3.5 h-3.5"></i> Componentes Pedagógicos
+                    <i data-lucide="plus-circle" class="text-indigo-500 w-3.5 h-3.5"></i> Librería Pedagógica
                 </h2>
-                <div id="mode-badge" class="hidden text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/20 font-bold uppercase tracking-tighter">Modo Desafío Activo</div>
+                <div id="mode-badge" class="hidden text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/20 font-bold uppercase tracking-tighter">Modo Desordenado</div>
             </div>
 
             <div id="library-grid" class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <!-- El contenido se genera con JavaScript -->
+                <!-- Se genera vía JS -->
             </div>
         </section>
 
-        <!-- Pipeline Lineal (Línea de tiempo) -->
+        <!-- Pipeline -->
         <section class="flex-1 bg-neutral-900/20 border border-neutral-800 rounded-[3rem] p-10 flex flex-col shadow-inner min-h-[260px] overflow-hidden relative">
             <div class="flex items-center justify-between mb-4 px-6">
-                <h2 class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em]">Pipeline de la Sesión</h2>
+                <h2 class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em]">Timeline de la Sesión</h2>
                 <button id="clear-canvas" class="text-[10px] text-red-500/50 hover:text-red-500 font-bold uppercase tracking-widest flex items-center gap-1 transition-colors">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Limpiar Todo
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Limpiar Pipeline
                 </button>
             </div>
             
@@ -108,34 +99,30 @@
             </div>
         </section>
 
-        <!-- Paneles de Análisis e Inspección -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[340px] mb-4">
-            <!-- Terminal Debugger -->
+        <!-- Análisis e Inspector -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[400px] mb-8">
+            <!-- Debugger -->
             <div class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-6 shadow-xl flex flex-col overflow-hidden relative">
-                <div class="absolute top-0 right-0 p-4 opacity-10">
-                    <i data-lucide="terminal" class="w-20 h-20"></i>
-                </div>
                 <h3 class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.3em] mb-5 flex items-center gap-2 relative z-10">
-                    <i data-lucide="zap" class="text-indigo-400 w-4 h-4"></i> Pedagogical Debugger
+                    <i data-lucide="terminal" class="text-indigo-400 w-4 h-4"></i> Pedagogical Debugger
                 </h3>
                 <div id="debugger-console" class="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar relative z-10">
-                    <!-- Errores y éxitos dinámicos -->
+                    <!-- Logs dinámicos -->
                 </div>
             </div>
 
-            <!-- Inspector de Técnica -->
+            <!-- Inspector Enriquecido -->
             <div id="inspector-panel" class="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-6 shadow-xl overflow-hidden flex flex-col">
-                <!-- Información detallada del bloque -->
+                <!-- Data enriquecida JS -->
             </div>
         </section>
     </main>
 
     <footer class="p-3 text-center bg-black border-t border-neutral-900 text-[8px] text-neutral-700 font-black uppercase tracking-[0.6em]">
-        Pipeline Logic Engine • Puzzle Architecture v3.4 • Original Design
+        DP ARCHITECT ENGINE • PUZZLE v3.4 • BASED ON UNCOMMON SCHOOLS PRINCIPLES
     </footer>
 
     <script>
-        // --- BASE DE DATOS DE TÉCNICAS (Basado en Vivir el Aprendizaje) ---
         const CATEGORIES = {
             EJECUCION: { id: 'EJECUCION', label: 'Ejecución', color: 'text-indigo-400', brickClass: 'bg-indigo-600', hoverClass: 'hover:bg-indigo-500' },
             VER: { id: 'VER', label: 'Ver', color: 'text-blue-400', brickClass: 'bg-blue-500', hoverClass: 'hover:bg-blue-400' },
@@ -145,42 +132,172 @@
         };
 
         const BRICK_DEFS = {
-            OBJETIVO: { id: 'OBJETIVO', category: 'EJECUCION', label: 'Objetivo', icon: 'target', description: 'Define qué serán capaces de HACER los docentes.', reflection: '¿Es este objetivo un "Hacer" claro, medible y realizable?', impact: 'Propósito definido.' },
-            HISTORIA: { id: 'HISTORIA', category: 'EJECUCION', label: 'Historia', icon: 'book-open', description: 'Narrativa para conectar emocionalmente.', reflection: '¿Uso el "nosotros" colectivo? ¿Honro la experiencia previa?', impact: 'Conexión inicial.' },
-            PRESENCIA: { id: 'PRESENCIA', category: 'EJECUCION', label: 'Cara Abierta', icon: 'smile', description: 'Tono y lenguaje corporal del líder.', reflection: '¿Mantengo las cejas levantadas y las manos tranquilas?', impact: 'Seguridad psicológica.' },
-            BOCADO: { id: 'BOCADO', category: 'EJECUCION', label: 'Instrucción', icon: 'layers', description: 'Consignas breves entregadas una a una.', reflection: '¿Dividí la instrucción en pasos secuenciales?', impact: 'Foco ejecutivo.' },
-            PAUSA: { id: 'PAUSA', category: 'EJECUCION', label: 'Pausa Dramática', icon: 'timer', description: 'Silencio estratégico para fijar ideas.', reflection: '¿Hice el silencio justo después de la línea maestra?', impact: 'Fijación cognitiva.' },
-            
-            ENFOQUE: { id: 'ENFOQUE', category: 'VER', label: 'P. Enfoque', icon: 'help-circle', description: 'Pregunta previa para dirigir la mirada.', reflection: '¿La pregunta enfoca las acciones positivas del modelo?', impact: 'Observación útil.' },
-            MODELO_VIDEO: { id: 'MODELO_VIDEO', category: 'VER', label: 'Video', icon: 'video', description: 'Ver modelo externo de éxito (<5 min).', reflection: '¿El video está probado y puesto en cola?', impact: 'Validación visual.' },
-            MODELO_LIDER: { id: 'MODELO_LIDER', category: 'VER', label: 'Líder Modela', icon: 'user-check', description: 'El facilitador muestra la técnica.', reflection: '¿Me atrevo a mostrar el error común para identificarlo?', impact: 'Referente directo.' },
-
-            GIRA_DISCUTE: { id: 'GIRA_DISCUTE', category: 'NOMBRAR', label: 'Gira/Discute', icon: 'message-square', description: 'Procesamiento activo en parejas.', reflection: '¿Dí instrucciones de quién empieza? ¿Monitoreo calidad?', impact: 'Ratio de pensamiento.' },
-            PREGUNTAR_PORQUE: { id: 'PREGUNTAR_PORQUE', category: 'NOMBRAR', label: '¿Por qué?', icon: 'zap', description: 'Apropiación lógica del propósito.', reflection: '¿Pregunté "¿Qué hubiera pasado si no hiciéramos eso?"?', impact: 'Lógica profunda.' },
-            NOMBRAR_TECNICO: { id: 'NOMBRAR_TECNICO', category: 'NOMBRAR', label: 'Nombre Técnico', icon: 'type', description: 'Fijar lenguaje formal y estandarizado.', reflection: '¿Esperé hasta el final para dar el nombre?', impact: 'Estandarización.' },
-
-            GUION: { id: 'GUION', category: 'HACER', label: 'Hacer Guion', icon: 'pen-tool', description: 'Planear señales y palabras exactas.', reflection: '¿Dí tiempo para escribir el guion antes de actuar?', impact: 'Práctica segura.' },
-            PRACTICA_BRECHA: { id: 'PRACTICA_BRECHA', category: 'HACER', label: 'Práctica', icon: 'user-round', description: 'Juego de roles de la técnica.', reflection: '¿Monitoreo con el ejemplar en mano para dar feedback?', impact: 'Transferencia física.' },
-            DE_NUEVO: { id: 'DE_NUEVO', category: 'HACER', label: 'De Nuevo', icon: 'refresh-ccw', description: 'Repetir para perfeccionar la técnica.', reflection: '¿Nombre el error común antes de repetir la ronda?', impact: 'Excelencia técnica.' },
-
-            REFLEXIONAR: { id: 'REFLEXIONAR', category: 'REFLEXIONAR', label: 'Reflexión', icon: 'pen-tool', description: 'Sellar el aprendizaje al escribirlo.', reflection: '¿Limite la reflexión a 1 o 2 minutos en silencio?', impact: 'Anclaje cognitivo.' },
-            PLAN_ACCION: { id: 'PLAN_ACCION', category: 'REFLEXIONAR', label: 'Plan Mañana', icon: 'file-text', description: 'Acción concreta para el aula real.', reflection: '¿Anotamos cuándo observaré esto en el aula?', impact: 'Responsabilidad.' }
+            OBJETIVO: { 
+                id: 'OBJETIVO', 
+                category: 'EJECUCION', 
+                label: 'Objetivo de Hacer', 
+                icon: 'target', 
+                description: 'Define qué serán capaces de HACER los docentes en sus salas. No es qué van a "saber" o "entender", sino qué acción física o verbal ejecutarán.', 
+                examples: ['"Los docentes serán capaces de aplicar una pausa dramática tras una línea maestra"', '"Los docentes podrán circular por la sala monitoreando 3 errores específicos"'],
+                reflection: '¿Es el objetivo medible y realizable hoy mismo en este taller?', 
+                bugs: 'Confundir el objetivo con la actividad (ej: "Ver un video" no es un objetivo, es el medio).',
+                impact: 'Alineación de esfuerzos.' 
+            },
+            HISTORIA: { 
+                id: 'HISTORIA', 
+                category: 'EJECUCION', 
+                label: 'Narrativa/Historia', 
+                icon: 'book-open', 
+                description: 'Crea una conexión emocional y sentido de urgencia. Usa el "nosotros" colectivo para honrar la experiencia previa de los docentes.', 
+                examples: ['"Imaginen a un estudiante que finalmente entiende porque la instrucción fue del tamaño de un bocado..."', '"Hoy vamos a hacer un viaje para transformar el 1% más crítico de nuestra enseñanza"'],
+                reflection: '¿Uso "nosotros" en lugar de "yo"? ¿Presumo de los demás, no de mí?', 
+                bugs: 'Contar una historia demasiado larga que distraiga del objetivo técnico.',
+                impact: 'Seguridad psicológica.' 
+            },
+            PRESENCIA: { 
+                id: 'PRESENCIA', 
+                category: 'EJECUCION', 
+                label: 'Cara Abierta', 
+                icon: 'smile', 
+                description: 'Manejo consciente del lenguaje corporal del facilitador: cejas levantadas (no surcadas), contacto visual genuino y manos tranquilas.', 
+                examples: ['Modulación de voz para transmitir entusiasmo', 'Caminar por toda la sala rompiendo el plano frontal'],
+                reflection: '¿Mi lenguaje corporal invita a la participación o impone distancia?', 
+                bugs: 'Mantener las manos en los bolsillos o leer directamente las diapositivas.',
+                impact: 'Confianza y apertura.' 
+            },
+            BOCADO: { 
+                id: 'BOCADO', 
+                category: 'EJECUCION', 
+                label: 'Instrucción Bocado', 
+                icon: 'layers', 
+                description: 'Dividir consignas complejas en pasos secuenciales. No dar la instrucción 2 hasta que la 1 se haya ejecutado.', 
+                examples: ['"Abran su libro en la página 10" (pausa hasta que todos lo hagan) -> "Subrayen la tercera línea..."'],
+                reflection: '¿Esperé a que todos cumplieran el primer paso antes de dar el segundo?', 
+                bugs: 'Dar todas las instrucciones juntas mientras los docentes ya están buscando sus materiales.',
+                impact: 'Reducción de carga cognitiva.' 
+            },
+            PAUSA: { 
+                id: 'PAUSA', 
+                category: 'EJECUCION', 
+                label: 'Pausa Dramática', 
+                icon: 'timer', 
+                description: 'Silencio estratégico de 3-5 segundos tras un punto vital para permitir que la idea se asiente en la memoria de largo plazo.', 
+                examples: ['"El éxito se gana en la planificación..." (Silencio absoluto) -> "¿Cómo hacemos eso?"'],
+                reflection: '¿Logré mantener el silencio sin romper la tensión?', 
+                bugs: 'Hablar inmediatamente después de una idea importante por nerviosismo al silencio.',
+                impact: 'Fijación del aprendizaje.' 
+            },
+            ENFOQUE: { 
+                id: 'ENFOQUE', 
+                category: 'VER', 
+                label: 'P. Enfoque', 
+                icon: 'help-circle', 
+                description: 'Pregunta previa que estrecha la mirada de los participantes hacia acciones positivas específicas del modelo.', 
+                examples: ['"¿Qué hace exactamente el profesor con sus manos mientras el alumno responde?"', '"¿Cuántas palabras usa el líder para corregir el comportamiento?"'],
+                reflection: '¿La pregunta dirige la mirada a lo que queremos que vean (positivo) o a lo que salió mal?', 
+                bugs: 'Preguntar "¿Qué notaron?" (demasiado abierto, genera ruido visual).',
+                impact: 'Observación útil.' 
+            },
+            MODELO_VIDEO: { 
+                id: 'MODELO_VIDEO', 
+                category: 'VER', 
+                label: 'Modelo Video', 
+                icon: 'video', 
+                description: 'Observación de un docente maestro en acción. Debe ser breve (<5 min) y enfocado en el éxito, no en la crítica.', 
+                examples: ['Clip de 2 minutos de Doug Lemov modelando "Voz Fuerte"', 'Video de un par de la misma escuela ejecutando una técnica nueva'],
+                reflection: '¿El video está probado, en cola y sin anuncios?', 
+                bugs: 'Mostrar videos de baja calidad o que no se relacionan directamente con el objetivo.',
+                impact: 'Validación visual.' 
+            },
+            GIRA_DISCUTE: { 
+                id: 'GIRA_DISCUTE', 
+                category: 'NOMBRAR', 
+                label: 'Gira y Discute', 
+                icon: 'message-square', 
+                description: 'Procesamiento activo en parejas. Aumenta la ratio de pensamiento y permite que todos hablen antes del plenario.', 
+                examples: ['"Tienen 1 minuto para discutir con su pareja: ¿Por qué la pausa fue efectiva?"', '"Digan a su compañero una cosa que observaron en el video"'],
+                reflection: '¿Dí instrucciones de quién empieza (ej: el de pelo más largo)?', 
+                bugs: 'No monitorear las conversaciones mientras ocurren para recoger "gemas".',
+                impact: 'Ratio de pensamiento.' 
+            },
+            PREGUNTAR_PORQUE: { 
+                id: 'PREGUNTAR_PORQUE', 
+                category: 'NOMBRAR', 
+                label: 'Preguntar ¿Por qué?', 
+                icon: 'zap', 
+                description: 'Indagar en el propósito pedagógico. Los docentes deben entender el valor de la técnica antes de su nombre.', 
+                examples: ['"¿Qué hubiera pasado si el profesor no hubiera esperado esos 5 segundos?"', '"¿Cuál es el valor de corregir de forma anónima?"'],
+                reflection: '¿Logré que ellos descubrieran el valor por sí mismos?', 
+                bugs: 'Dar la respuesta lógica antes de que los docentes la deduzcan.',
+                impact: 'Apropiación lógica.' 
+            },
+            NOMBRAR_TECNICO: { 
+                id: 'NOMBRAR_TECNICO', 
+                category: 'NOMBRAR', 
+                label: 'Nombre Técnico', 
+                icon: 'type', 
+                description: 'Asignar un lenguaje formal a la conclusión del grupo. Esto estandariza la comunicación en la escuela.', 
+                examples: ['"A esto le llamamos: Lo Correcto es lo Correcto"', '"Esta técnica se denomina: Umbral"'],
+                reflection: '¿Esperé hasta el final del debate para dar el nombre oficial?', 
+                bugs: 'Presentar el nombre de la técnica en la primera diapositiva.',
+                impact: 'Lenguaje común.' 
+            },
+            GUION: { 
+                id: 'GUION', 
+                category: 'HACER', 
+                label: 'Hacer Guion', 
+                icon: 'pen-tool', 
+                description: 'Escribir las palabras exactas, gestos y pasos antes de practicar físicamente. Reduce la ansiedad.', 
+                examples: ['Escribir en la planificación las 5 palabras que diré en una corrección', 'Diseñar la pregunta de chequeo de la comprensión paso a paso'],
+                reflection: '¿Dí al menos 2-3 minutos de silencio para escribir el guion?', 
+                bugs: 'Pasar a la práctica física sin tener nada escrito (causa bloqueos mentales).',
+                impact: 'Práctica segura.' 
+            },
+            PRACTICA_BRECHA: { 
+                id: 'PRACTICA_BRECHA', 
+                category: 'HACER', 
+                label: 'Práctica Física', 
+                icon: 'user-round', 
+                description: 'Juego de roles enfocado en la brecha: lo que más cuesta lograr. Se practica hasta la automatización.', 
+                examples: ['Simular una clase con un "alumno disruptivo" para practicar la calma', 'Practicar la modulación de voz frente a un par'],
+                reflection: '¿Estamos practicando lo que ya saben o lo que les cuesta?', 
+                bugs: 'Hacer una práctica "amigable" donde nadie se equivoca.',
+                impact: 'Transferencia física.' 
+            },
+            DE_NUEVO: { 
+                id: 'DE_NUEVO', 
+                category: 'HACER', 
+                label: 'Hacerlo de Nuevo', 
+                icon: 'refresh-ccw', 
+                description: 'Incorporar retroalimentación inmediata y repetir la ronda. No se avanza hasta que salga bien.', 
+                examples: ['"Eso fue bueno, pero intenta decir la corrección sin usar el nombre del alumno. ¡De nuevo!"'],
+                reflection: '¿La retroalimentación fue del tamaño de un bocado para aplicarla ya?', 
+                bugs: 'Dar feedback y pasar a otro tema sin repetir la acción con el cambio sugerido.',
+                impact: 'Maestría técnica.' 
+            },
+            REFLEXIONAR: { 
+                id: 'REFLEXIONAR', 
+                category: 'REFLEXIONAR', 
+                label: 'Sellar Aprendizaje', 
+                icon: 'pen-tool', 
+                description: 'Registro escrito de conclusiones finales. Anclaje de la memoria y metacognición.', 
+                examples: ['"Escriban en su diario de facilitación las 3 claves que no quieren olvidar hoy"', '"¿Cómo cambiará tu planificación mañana con lo visto hoy?"'],
+                reflection: '¿Dí tiempo de silencio total para que esto ocurra?', 
+                bugs: 'Hacer la reflexión mientras se reparten materiales de salida.',
+                impact: 'Anclaje cognitivo.' 
+            }
         };
 
-        // --- ESTADO GLOBAL ---
         let sequence = [];
         let selectedIdx = null;
         let previewItem = null;
         let isShuffled = false;
         let libraryKeys = Object.keys(BRICK_DEFS);
 
-        // --- DOM ELEMENTS ---
         const libContainer = document.getElementById('library-grid');
         const timelineContainer = document.getElementById('timeline-container');
         const debuggerConsole = document.getElementById('debugger-console');
         const inspectorPanel = document.getElementById('inspector-panel');
-
-        // --- FUNCIONES DE RENDERIZADO ---
 
         function renderLibrary() {
             libContainer.innerHTML = '';
@@ -207,7 +324,6 @@
             const brick = BRICK_DEFS[key];
             const wrap = document.createElement('div');
             wrap.className = 'relative group';
-            
             const btn = document.createElement('button');
             btn.className = `${CATEGORIES[brick.category].brickClass} ${CATEGORIES[brick.category].hoverClass} w-full py-2 px-3 pr-7 rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-95 text-white border border-white/5 text-left`;
             btn.innerHTML = `<i data-lucide="${brick.icon}" class="w-3.5 h-3.5 opacity-80 shrink-0"></i><span class="font-bold text-[9px] uppercase tracking-tighter truncate">${brick.label}</span>`;
@@ -217,12 +333,10 @@
                 renderTimeline();
                 updateAnalysis();
             };
-            
             const info = document.createElement('button');
             info.className = 'absolute right-1.5 top-1/2 -translate-y-1/2 p-1 text-white/30 hover:text-white transition-opacity bg-black/10 rounded-full';
             info.innerHTML = '<i data-lucide="info" class="w-3 h-3"></i>';
             info.onclick = (e) => { e.stopPropagation(); previewItem = brick; selectedIdx = null; updateInspector(); };
-            
             wrap.appendChild(btn); wrap.appendChild(info);
             return wrap;
         }
@@ -230,19 +344,16 @@
         function renderTimeline() {
             timelineContainer.innerHTML = '';
             if (sequence.length === 0) {
-                timelineContainer.innerHTML = '<div class="w-full text-center opacity-20 py-10 font-black uppercase text-xs tracking-widest italic">Añade bricks desde la librería</div>';
+                timelineContainer.innerHTML = '<div class="w-full text-center opacity-20 py-10 font-black uppercase text-xs tracking-widest italic tracking-widest">Arrastra o haz clic en bricks para armar el Pipeline</div>';
                 return;
             }
-
             const wrapper = document.createElement('div');
             wrapper.className = 'flex items-center';
-            
             sequence.forEach((brick, idx) => {
                 const piece = document.createElement('div');
                 piece.className = `relative flex-shrink-0 w-[145px] h-[95px] p-5 transition-all cursor-pointer flex flex-col justify-center puzzle-piece brick-transition ${CATEGORIES[brick.category].brickClass} ${selectedIdx === idx ? 'active-brick' : 'z-10 opacity-90 hover:opacity-100 hover:z-20'}`;
                 piece.style.marginLeft = idx === 0 ? '0' : '-18px';
                 piece.onclick = () => { selectedIdx = idx; previewItem = null; renderTimeline(); updateInspector(); };
-
                 piece.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
                         <div class="bg-black/20 p-1 rounded text-white/80"><i data-lucide="${brick.icon}" class="w-3.5 h-3.5"></i></div>
@@ -251,14 +362,9 @@
                         </button>
                     </div>
                     <h4 class="font-bold text-[10px] uppercase tracking-tighter leading-none text-white">${brick.label}</h4>
-                    <div class="absolute -bottom-8 left-0 right-0 flex justify-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onclick="event.stopPropagation(); moveBrick(${idx}, 'left')" class="p-1 bg-neutral-800 rounded text-white"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
-                        <button onclick="event.stopPropagation(); moveBrick(${idx}, 'right')" class="p-1 bg-neutral-800 rounded text-white"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
-                    </div>
                 `;
                 wrapper.appendChild(piece);
             });
-            
             timelineContainer.appendChild(wrapper);
             lucide.createIcons();
         }
@@ -266,56 +372,39 @@
         function removeBrick(idx) {
             sequence.splice(idx, 1);
             selectedIdx = null;
-            renderTimeline();
-            updateAnalysis();
-            updateInspector();
-        }
-
-        function moveBrick(idx, dir) {
-            if (dir === 'left' && idx > 0) [sequence[idx], sequence[idx-1]] = [sequence[idx-1], sequence[idx]];
-            else if (dir === 'right' && idx < sequence.length - 1) [sequence[idx], sequence[idx+1]] = [sequence[idx+1], sequence[idx]];
-            renderTimeline(); updateAnalysis();
+            renderTimeline(); updateAnalysis(); updateInspector();
         }
 
         function updateAnalysis() {
             debuggerConsole.innerHTML = '';
             const bugs = [];
             if (sequence.length === 0) return;
-
+            if (!['OBJETIVO', 'HISTORIA'].includes(sequence[0]?.id)) {
+                bugs.push({ title: "Falta Raíz", msg: "Inicias sin marco estratégico.", fix: "Añade Objetivo o Historia al inicio." });
+            }
             sequence.forEach((brick, i) => {
                 const prev = sequence[i-1];
-                // Regla de Enfoque
                 if (['MODELO_VIDEO', 'MODELO_LIDER'].includes(brick.id) && (!prev || prev.id !== 'ENFOQUE')) {
-                    bugs.push({ title: "Observación Pasiva", msg: `"${brick.label}" sin dirección.`, fix: "Añade [Enfoque] antes.", hint: "Fase [VER]: Preparar la mirada evita que el modelo sea ruido visual." });
+                    bugs.push({ title: "Observación Ciega", msg: `"${brick.label}" no tiene dirección.`, fix: "Añade [P. Enfoque] antes." });
                 }
-                // Regla de Procesamiento
-                if (brick.id === 'NOMBRAR_TECNICO' && (!prev || (prev.id !== 'GIRA_DISCUTE' && prev.id !== 'PREGUNTAR_VALOR'))) {
-                    bugs.push({ title: "Salto de Cognición", msg: "Nombrando antes de procesar.", fix: "Añade [Gira/Discute] antes.", hint: "Fase [NOMBRAR]: Los docentes deben descubrir la esencia antes del nombre." });
+                if (brick.id === 'NOMBRAR_TECNICO' && (!prev || (prev.id !== 'GIRA_DISCUTE' && prev.id !== 'PREGUNTAR_PORQUE'))) {
+                    bugs.push({ title: "Abstracción Previa", msg: "Nombras antes de descubrir.", fix: "Añade Gira/Discute o ¿Por qué? antes." });
                 }
-                // Regla de Guion
                 if (brick.id === 'PRACTICA_BRECHA' && (!prev || prev.id !== 'GUION')) {
-                    bugs.push({ title: "Práctica sin Guion", msg: "Docentes sin preparación.", fix: "Añade [Hacer Guion] antes.", hint: "Fase [HACER]: El guion reduce la carga cognitiva durante la práctica." });
+                    bugs.push({ title: "Pánico Escénico", msg: "Práctica sin guion escrito.", fix: "Añade [Hacer Guion] antes." });
                 }
             });
-
-            if (!['OBJETIVO', 'HISTORIA'].includes(sequence[0]?.id)) {
-                bugs.push({ title: "Inicio sin Raíz", msg: "Sesión sin marco.", fix: "Inicia con [Objetivo] o [Historia].", hint: "Toda arquitectura pedagógica sólida comienza con [EJECUCIÓN]." });
-            }
 
             if (bugs.length === 0) {
-                debuggerConsole.innerHTML = `<div class="flex gap-3 text-emerald-400 bg-emerald-400/5 p-4 rounded-2xl border border-emerald-400/20 animate-pop"><i data-lucide="shield-check"></i><p class="text-[11px] font-bold uppercase tracking-widest leading-tight">Pipeline robusto. Estructura de alto impacto detectada.</p></div>`;
+                debuggerConsole.innerHTML = `<div class="p-4 text-emerald-400 bg-emerald-400/5 rounded-2xl border border-emerald-400/20 text-[10px] font-bold uppercase tracking-widest">Pipeline pedagógicamente íntegro.</div>`;
+            } else {
+                bugs.forEach(bug => {
+                    const d = document.createElement('div');
+                    d.className = 'p-3 bg-red-500/5 border border-red-500/20 rounded-xl space-y-1';
+                    d.innerHTML = `<p class="text-[9px] font-black text-red-400 uppercase tracking-tighter">${bug.title}: ${bug.msg}</p><p class="text-[8px] text-indigo-400 font-bold uppercase tracking-widest">Fix: ${bug.fix}</p>`;
+                    debuggerConsole.appendChild(d);
+                });
             }
-
-            bugs.forEach(bug => {
-                const div = document.createElement('div');
-                div.className = 'p-4 rounded-2xl border border-red-500/20 bg-red-500/5 space-y-2 animate-in slide-in-from-top-2';
-                div.innerHTML = `
-                    <div class="flex gap-3 text-red-400"><i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i><div><p class="text-[10px] font-black uppercase tracking-tighter">${bug.title}: ${bug.msg}</p></div></div>
-                    <div class="flex gap-2 text-indigo-400 bg-indigo-400/10 p-2 rounded-xl border border-indigo-400/10 items-center"><i data-lucide="wrench" class="w-3 h-3"></i><p class="text-[9px] font-bold uppercase tracking-tight">Fix: ${bug.fix}</p></div>
-                    <div class="flex gap-2 text-amber-500/80 bg-amber-500/5 p-2 rounded-xl border border-amber-500/10 items-start italic"><i data-lucide="lightbulb" class="shrink-0 w-3 h-3 mt-0.5"></i><p class="text-[9px] leading-tight font-medium">${bug.hint}</p></div>
-                `;
-                debuggerConsole.appendChild(div);
-            });
             lucide.createIcons();
         }
 
@@ -324,36 +413,50 @@
             inspectorPanel.innerHTML = '';
             
             if (!item) {
-                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center text-neutral-700 text-center px-10 opacity-30 animate-pulse"><i data-lucide="search" class="w-12 h-12 mb-4"></i><p class="text-xs font-black uppercase tracking-[0.2em] italic">Haz clic en una pieza o pulsa (i)</p></div>';
+                inspectorPanel.innerHTML = '<div class="h-full flex flex-col items-center justify-center opacity-30 text-neutral-600 font-black uppercase text-[10px] tracking-[0.4em] italic"><i data-lucide="zoom-in" class="w-10 h-10 mb-2"></i>Inspeccionar Brick</div>';
                 lucide.createIcons(); return;
             }
 
             const cat = CATEGORIES[item.category];
+            const examplesHtml = item.examples ? item.examples.map(ex => `<li class="mb-1 text-indigo-200">"${ex}"</li>`).join('') : '<li>N/A</li>';
+
             inspectorPanel.innerHTML = `
-                <div class="h-full flex flex-col animate-pop duration-300">
-                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-neutral-800">
-                        <div class="flex items-center gap-4">
-                            <div class="p-3 rounded-2xl ${cat.brickClass} text-white shadow-lg"><i data-lucide="${item.icon}"></i></div>
-                            <div>
-                                <h3 class="text-sm font-bold uppercase tracking-tight">${item.label}</h3>
-                                <p class="text-[9px] font-black uppercase tracking-widest ${cat.color}">${cat.label}</p>
-                            </div>
+                <div class="h-full flex flex-col custom-scrollbar overflow-y-auto pr-2 animate-pop">
+                    <div class="flex items-center gap-4 mb-4 pb-4 border-b border-neutral-800">
+                        <div class="p-3 rounded-2xl ${cat.brickClass} text-white shadow-xl"><i data-lucide="${item.icon}"></i></div>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-tight">${item.label}</h3>
+                            <p class="text-[9px] font-black uppercase tracking-widest ${cat.color}">${cat.label}</p>
                         </div>
-                        ${previewItem ? `<div class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border border-indigo-500/20">Previsualización</div>` : ''}
                     </div>
-                    <div class="flex-1 space-y-4 overflow-y-auto custom-scrollbar pr-2">
-                        <div class="p-5 bg-neutral-950 rounded-2xl border border-neutral-800 relative group shadow-inner">
-                            <div class="absolute left-0 top-0 w-1 h-full bg-indigo-500 opacity-40"></div>
-                            <p class="text-[9px] text-neutral-500 uppercase font-black mb-1 tracking-widest italic">¿En qué consiste?</p>
-                            <p class="text-sm text-neutral-200 font-medium">"${item.description}"</p>
-                            <div class="mt-4 pt-4 border-t border-neutral-800">
-                                <p class="text-[9px] text-neutral-500 uppercase font-black mb-1 tracking-widest">Pauta de Retroalimentación</p>
-                                <p class="text-xs text-neutral-400 italic leading-relaxed">"${item.reflection}"</p>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-neutral-950 p-4 rounded-xl border border-neutral-800">
+                            <p class="text-[8px] font-black text-neutral-500 uppercase tracking-widest mb-1 italic italic">¿Qué es?</p>
+                            <p class="text-xs text-neutral-300 leading-relaxed">${item.description}</p>
+                        </div>
+
+                        <div class="bg-indigo-500/5 p-4 rounded-xl border border-indigo-500/10">
+                            <p class="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-2">Ejemplos de Facilitación</p>
+                            <ul class="text-[11px] list-disc list-inside space-y-1 font-medium italic">
+                                ${examplesHtml}
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-red-500/5 p-3 rounded-xl border border-red-500/10">
+                                <p class="text-[8px] font-black text-red-400 uppercase tracking-widest mb-1">Error Común</p>
+                                <p class="text-[10px] text-neutral-400 leading-tight">${item.bugs || 'N/A'}</p>
+                            </div>
+                            <div class="bg-amber-500/5 p-3 rounded-xl border border-amber-500/10">
+                                <p class="text-[8px] font-black text-amber-400 uppercase tracking-widest mb-1">Pauta de Éxito</p>
+                                <p class="text-[10px] text-neutral-400 leading-tight">${item.reflection}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 px-1">
-                             <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                             <p class="text-[10px] text-emerald-500 uppercase font-black tracking-widest">Impacto: ${item.impact}</p>
+
+                        <div class="flex items-center gap-2 pt-2">
+                             <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                             <p class="text-[9px] text-emerald-500 uppercase font-black tracking-widest">Impacto: ${item.impact}</p>
                         </div>
                     </div>
                 </div>
@@ -361,16 +464,14 @@
             lucide.createIcons();
         }
 
-        // --- BOTONES ---
         document.getElementById('shuffle-btn').onclick = () => {
-            if (!isShuffled) {
+            isShuffled = !isShuffled;
+            if (isShuffled) {
                 libraryKeys = libraryKeys.sort(() => Math.random() - 0.5);
-                isShuffled = true;
-                document.getElementById('shuffle-text').innerText = 'Ordenar Categorías';
+                document.getElementById('shuffle-text').innerText = 'Ordenar Librería';
                 document.getElementById('mode-badge').classList.remove('hidden');
             } else {
                 libraryKeys = Object.keys(BRICK_DEFS);
-                isShuffled = false;
                 document.getElementById('shuffle-text').innerText = 'Revolver Librería';
                 document.getElementById('mode-badge').classList.add('hidden');
             }
@@ -382,14 +483,12 @@
             renderTimeline(); updateAnalysis(); updateInspector();
         };
 
-        // --- INIT ---
         window.onload = () => {
             renderLibrary();
             renderTimeline();
             updateAnalysis();
             updateInspector();
         };
-
     </script>
 </body>
 </html>
