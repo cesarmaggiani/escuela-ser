@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café con Docentes - Arte y Deporte</title>
+    <!-- Fuentes oficiales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --ser-pink: #E11B7E;
+            --ser-yellow: #FCCC32;
+            --ser-blue: #009BD1;
+        }
+        body {
+            font-family: 'Cabin', sans-serif;
+            background-color: #f8fafc;
+        }
+        .font-title {
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .box-revealed {
+            background-color: white !important;
+            border-color: #f1f5f9 !important;
+            transform: scale(0.95);
+        }
+        .modal-active {
+            display: flex !important;
+        }
+        .animate-pop {
+            animation: pop 0.3s ease-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .emoji-display {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+        @media (min-width: 768px) {
+            .emoji-display {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Barra de Herramientas -->
+        <div class="flex justify-end mb-4 gap-6">
+            <button onclick="toggleFullScreen()" class="flex items-center gap-2 text-slate-400 hover:text-[var(--ser-pink)] transition-colors text-xs font-bold uppercase tracking-widest">
+                <svg id="fullscreen-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                <span id="fullscreen-text">Pantalla Completa</span>
+            </button>
+            <button onclick="openInstructions()" class="flex items-center gap-2 text-slate-400 hover:text-[var(--ser-blue)] transition-colors text-xs font-bold uppercase tracking-widest">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Instrucciones
+            </button>
+        </div>
+
+        <!-- Encabezado -->
+        <header class="text-center mb-10 pt-4">
+            <h1 class="font-title text-5xl md:text-7xl text-slate-800 mb-2 tracking-tight uppercase">
+                CAFÉ CON DOCENTES
+            </h1>
+            <p class="text-slate-500 text-lg md:text-xl">
+                Inspiración en las Artes y el Deporte
+            </p>
+            <div class="h-1.5 w-20 bg-[var(--ser-pink)] mx-auto mt-6 rounded-full"></div>
+        </header>
+
+        <!-- Cuadrícula de iconos -->
+        <div id="grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <!-- Casillas generadas por JS -->
+        </div>
+
+        <!-- Botón de reinicio -->
+        <div class="mt-16 text-center">
+            <button onclick="resetBoard()" class="text-xs uppercase tracking-[0.2em] text-slate-300 hover:text-[var(--ser-pink)] transition-colors font-bold">
+                Reiniciar tablero
+            </button>
+        </div>
+
+        <footer class="mt-20 text-center border-t border-slate-200 pt-8 pb-10">
+            <p class="text-[10px] text-slate-400 uppercase tracking-widest font-medium">
+                Dinámica Grupal - Reflexión Docente
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal Pregunta -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div id="modal-content" class="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl animate-pop border-t-8">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon-small" class="w-12 h-12 flex items-center justify-center rounded-lg text-3xl"></div>
+                    <span id="modal-tag" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"></span>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <p id="modal-text" class="text-2xl md:text-3xl font-medium text-slate-800 leading-tight mb-10"></p>
+            <button id="modal-btn" onclick="closeModal()" class="w-full text-white py-4 rounded-lg font-title text-2xl tracking-widest hover:brightness-110 transition-all shadow-lg uppercase">
+                Continuar
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Instrucciones -->
+    <div id="modal-instructions" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-[60]">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl animate-pop border-t-8 border-[var(--ser-blue)]">
+            <div class="flex justify-between items-start mb-4">
+                <h2 class="font-title text-3xl text-slate-800">Guía de la actividad</h2>
+                <button onclick="closeInstructions()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-4 text-slate-600 text-sm leading-relaxed mb-8">
+                <div class="flex gap-3">
+                    <span class="bg-[var(--ser-blue)] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold italic">A</span>
+                    <p>Elige un <b>emoji de arte o deporte</b> que te llame la atención.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="bg-[var(--ser-blue)] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold italic">B</span>
+                    <p>Responde a la pregunta de reflexión asociada al icono seleccionado.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="bg-[var(--ser-blue)] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold italic">C</span>
+                    <p>Al terminar, invita a un colega a elegir el siguiente del tablero.</p>
+                </div>
+            </div>
+            <button onclick="closeInstructions()" class="w-full bg-[var(--ser-blue)] text-white py-3 rounded-lg font-title text-xl tracking-widest hover:brightness-110 transition-all uppercase">
+                ¡Empecemos!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const PINK = '#E11B7E';
+        const YELLOW = '#FCCC32';
+        const BLUE = '#009BD1';
+
+        const items = [
+            { id: 1, type: 'art', color: PINK, icon: '🎨', tag: 'Arte: Creatividad', content: '¿Qué "herramienta creativa" o técnica didáctica te ha funcionado mejor este mes?' },
+            { id: 2, type: 'sport', color: YELLOW, icon: '⚽', tag: 'Deporte: Equipo', content: '¿Qué gran jugada en equipo has observado entre tus colegas recientemente?' },
+            { id: 3, type: 'wildcard', color: BLUE, icon: '🎵', tag: 'Comodín: Melodía', content: '🃏 COMODÍN: Comparte una canción o artista que te motive durante la planificación.' },
+            { id: 4, type: 'sport', color: BLUE, icon: '🏆', tag: 'Deporte: Victoria', content: '¿Cuál es el "trofeo invisible" o pequeño logro que te hace sentir orgulloso hoy?' },
+            { id: 5, type: 'art', color: PINK, icon: '🎭', tag: 'Arte: Expresión', content: '¿Cómo manejas las diferentes "emociones" de tu audiencia (estudiantes) en el aula?' },
+            { id: 6, type: 'sport', color: YELLOW, icon: '📣', tag: 'Deporte: Estrategia', content: '¿Cuándo fue la última vez que tuviste que "cambiar la táctica" a mitad de una clase?' },
+            { id: 7, type: 'wildcard', color: PINK, icon: '📸', tag: 'Comodín: Conexión', content: '🃏 COMODÍN: ¡Momento de conocerse! Elige a un compañero que aún no conozcas bien y pregúntale: ¿Qué es lo que más te apasiona de ser docente?' },
+            { id: 8, type: 'sport', color: BLUE, icon: '🏃', tag: 'Deporte: Resistencia', content: '¿Qué hábito te ayuda a mantener el ritmo y la energía en las semanas más pesadas?' },
+            { id: 9, type: 'art', color: YELLOW, icon: '🎙️', tag: 'Arte: Mensaje', content: 'Si tuvieras un micrófono abierto para toda la comunidad educativa, ¿qué les dirías?' }
+        ];
+
+        let revealed = new Set();
+
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            items.forEach(item => {
+                const isRevealed = revealed.has(item.id);
+                const button = document.createElement('button');
+                button.id = `box-${item.id}`;
+                button.style.backgroundColor = isRevealed ? 'white' : item.color;
+                button.className = `
+                    relative h-36 md:h-52 rounded-2xl transition-all duration-500 transform 
+                    flex items-center justify-center shadow-md border-2 overflow-hidden
+                    ${isRevealed ? 'box-revealed' : 'hover:brightness-110 hover:-translate-y-1 shadow-lg border-transparent'}
+                `;
+                
+                button.innerHTML = `
+                    <div class="emoji-display ${isRevealed ? 'opacity-10' : 'opacity-100'} transition-opacity select-none">
+                        ${item.icon}
+                    </div>
+                    ${isRevealed ? `
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <svg class="w-12 h-12 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: ${item.color}">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    ` : ''}
+                `;
+                
+                button.onclick = () => revealItem(item);
+                grid.appendChild(button);
+            });
+        }
+
+        function revealItem(item) {
+            revealed.add(item.id);
+            renderGrid();
+            
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalTag = document.getElementById('modal-tag');
+            const modalText = document.getElementById('modal-text');
+            const modalBtn = document.getElementById('modal-btn');
+            const modalIconSmall = document.getElementById('modal-icon-small');
+
+            modalContent.style.borderTopColor = item.color;
+            modalTag.innerText = item.tag;
+            modalTag.style.backgroundColor = `${item.color}20`;
+            modalTag.style.color = item.color;
+            modalText.innerText = item.content;
+            modalBtn.style.backgroundColor = item.color;
+            
+            modalIconSmall.style.backgroundColor = `${item.color}15`;
+            modalIconSmall.innerHTML = item.icon;
+
+            modal.classList.add('modal-active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('modal-active');
+        }
+
+        function openInstructions() {
+            document.getElementById('modal-instructions').classList.add('modal-active');
+        }
+
+        function closeInstructions() {
+            document.getElementById('modal-instructions').classList.remove('modal-active');
+        }
+
+        function toggleFullScreen() {
+            const text = document.getElementById('fullscreen-text');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                text.innerText = "Salir de Pantalla Completa";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    text.innerText = "Pantalla Completa";
+                }
+            }
+        }
+
+        function resetBoard() {
+            revealed.clear();
+            renderGrid();
+        }
+
+        renderGrid();
+    </script>
+</body>
+</html>
