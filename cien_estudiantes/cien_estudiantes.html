@@ -418,12 +418,12 @@
       </div>
 
       <!-- EL TABLERO DE LAS 5 RESPUESTAS OCULTAS -->
-      <!-- MODIFICADO: Ahora es "grid-cols-1" y tiene un ancho máximo de "max-w-3xl" para ver respuestas completas en una sola columna -->
+      <!-- RESPUESTAS EN UNA SOLA COLUMNA CENTRADA -->
       <div id="pub-answers-grid" class="grid grid-cols-1 gap-4 max-w-3xl mx-auto w-full mb-6 z-10">
         <!-- Renderizado de las 5 tarjetas 3D mediante JS -->
       </div>
 
-      <!-- BOTÓN DISCRETO FLOTANTE DE PANTALLA COMPLETA (Elevado a z-[60] para flotar sobre todo) -->
+      <!-- BOTÓN DISCRETO FLOTANTE DE PANTALLA COMPLETA (z-[60] para flotar sobre todo) -->
       <button id="btn-fullscreen" onclick="toggleFullscreen()" class="absolute bottom-4 right-4 z-[60] p-3 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-full border border-slate-700/50 shadow-lg transition-all opacity-40 hover:opacity-100 focus:outline-none" title="Activar Pantalla Completa (F)">
         <!-- Icono de Expandir (Fullscreen) -->
         <svg id="svg-fs-expand" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -587,6 +587,69 @@
     ];
 
     // ==========================================
+    // SINTETIZADOR DE SONIDOS (Web Audio API)
+    // ==========================================
+    let audioEnabled = false;
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = ctx.currentTime;
+
+        if (type === 'correct') {
+          const osc1 = ctx.createOscillator();
+          const gain1 = ctx.createGain();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(523.25, now);
+          osc1.frequency.setValueAtTime(659.25, now + 0.1);
+          osc1.frequency.setValueAtTime(783.99, now + 0.2);
+          gain1.gain.setValueAtTime(0.2, now);
+          gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+          osc1.connect(gain1);
+          gain1.connect(ctx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.4);
+        } 
+        else if (type === 'strike') {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(90, now);
+          osc2.frequency.setValueAtTime(93, now);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.8);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.8);
+          osc2.stop(now + 0.8);
+        } 
+        else if (type === 'victory') {
+          const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+            gain.gain.setValueAtTime(0.15, now + idx * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.3);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.1);
+            osc.stop(now + idx * 0.1 + 0.3);
+          });
+        }
+      } catch (e) {
+        console.warn("La reproducción de sonido falló:", e);
+      }
+    }
+
+    // ==========================================
     // ESTADO DE LA APLICACIÓN
     // ==========================================
     let viewMode = 'split'; // 'split', 'admin', 'projector'
@@ -615,10 +678,27 @@
 
     // Inicializar App
     window.onload = function() {
-      // Cargar el estado guardado para AMBOS modos (Admin y Proyector) al iniciar
+      // CARGA CON FILTRADO ROBUSTO (Solución definitiva para evitar propiedades "undefined" por versiones previas en caché)
       const saved = localStorage.getItem('mexicanos_game_state');
       if (saved) {
-        gameState = JSON.parse(saved);
+        try {
+          const loadedState = JSON.parse(saved);
+          gameState = {
+            teamA: loadedState.teamA || { name: "EQUIPO TRICOLOR", score: 0 },
+            teamB: loadedState.teamB || { name: "EQUIPO CALAVERA", score: 0 },
+            currentRoundIdx: typeof loadedState.currentRoundIdx === 'number' ? loadedState.currentRoundIdx : 0,
+            bank: typeof loadedState.bank === 'number' ? loadedState.bank : 0,
+            strikes: typeof loadedState.strikes === 'number' ? loadedState.strikes : 0,
+            revealedAnswers: Array.isArray(loadedState.revealedAnswers) ? loadedState.revealedAnswers : [],
+            showStrikeOverlay: !!loadedState.showStrikeOverlay,
+            rounds: (Array.isArray(loadedState.rounds) && loadedState.rounds.length > 0) ? loadedState.rounds : DEFAULT_ROUNDS,
+            gameStarted: !!loadedState.gameStarted,
+            victoryTrigger: !!loadedState.victoryTrigger
+          };
+        } catch (e) {
+          console.error("Error al recuperar los datos del juego:", e);
+          gameState.rounds = DEFAULT_ROUNDS;
+        }
       } else {
         gameState.rounds = DEFAULT_ROUNDS;
       }
@@ -635,10 +715,13 @@
       syncViewAndData();
       startConfettiLoop();
 
-      // Escuchar sincronizaciones entre pestañas
+      // Escuchar sincronizaciones entre pestañas (con sanitizado extra)
       window.addEventListener('storage', function(e) {
         if (e.key === 'mexicanos_game_state' && e.newValue) {
           const parsed = JSON.parse(e.newValue);
+          
+          if (!parsed.revealedAnswers) parsed.revealedAnswers = [];
+          if (!parsed.rounds) parsed.rounds = DEFAULT_ROUNDS;
           
           // Lanzar efectos de sonido correspondientes
           if (parsed.strikes > gameState.strikes) {
@@ -802,6 +885,10 @@
         document.getElementById('input-teamB-name').value = gameState.teamB.name;
       }
 
+      // Asegurar que las variables críticas existan para que no se caiga la renderización
+      if (!gameState.revealedAnswers) gameState.revealedAnswers = [];
+      if (!gameState.rounds) gameState.rounds = DEFAULT_ROUNDS;
+
       // 2. Marcadores del Administrador
       document.getElementById('label-admin-teamA').innerText = gameState.teamA.name;
       document.getElementById('label-admin-teamB').innerText = gameState.teamB.name;
@@ -809,7 +896,7 @@
       document.getElementById('label-admin-scoreB').innerText = `${gameState.teamB.score} pts`;
 
       // 3. Rondas y Preguntas
-      const currentRound = gameState.rounds[gameState.currentRoundIdx];
+      const currentRound = gameState.rounds[gameState.currentRoundIdx] || gameState.rounds[0];
       document.getElementById('round-indicator').innerText = `Pregunta ${gameState.currentRoundIdx + 1} de ${gameState.rounds.length}`;
       document.getElementById('round-title').innerText = currentRound.title;
       document.getElementById('round-multiplier').innerText = `Multiplicador: x${currentRound.multiplier}`;
@@ -973,6 +1060,9 @@
     }
 
     function revealAnswer(idx, points) {
+      if (!gameState.revealedAnswers) {
+        gameState.revealedAnswers = [];
+      }
       if (gameState.revealedAnswers.includes(idx)) return;
       
       playSound('correct');
@@ -1017,7 +1107,6 @@
       syncViewAndData();
     }
 
-    // Avanzar de ronda
     function nextRound() {
       gameState.currentRoundIdx = (gameState.currentRoundIdx + 1) % gameState.rounds.length;
       gameState.bank = 0;
@@ -1027,7 +1116,6 @@
       syncViewAndData();
     }
 
-    // Retroceder de ronda
     function prevRound() {
       gameState.currentRoundIdx = gameState.currentRoundIdx === 0 ? gameState.rounds.length - 1 : gameState.currentRoundIdx - 1;
       gameState.bank = 0;
@@ -1047,7 +1135,7 @@
           strikes: 0,
           revealedAnswers: [],
           showStrikeOverlay: false,
-          rounds: gameState.rounds, // Conservamos las rondas del localStorage
+          rounds: gameState.rounds || DEFAULT_ROUNDS, // Conservamos las rondas del localStorage
           gameStarted: false, 
           victoryTrigger: false
         };
