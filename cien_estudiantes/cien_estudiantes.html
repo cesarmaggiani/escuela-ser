@@ -103,9 +103,15 @@
             <input id="input-teamB-name" type="text" value="EQUIPO CALAVERA" oninput="updateTeamName('teamB', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-white font-bold uppercase tracking-wide focus:outline-none focus:border-rose-500">
           </div>
         </div>
-        <button onclick="startGame()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold rounded-xl hover:brightness-110 active:scale-95 transition-all text-center">
-          🚀 ¡INICIAR JUEGO!
-        </button>
+        
+        <div class="flex gap-2 pt-2">
+          <button onclick="startGame()" class="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold rounded-xl hover:brightness-110 active:scale-95 transition-all text-center text-sm">
+            🚀 ¡INICIAR JUEGO!
+          </button>
+          <button onclick="openEditor()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition-all text-sm flex items-center gap-1">
+            📝 Editar Preguntas
+          </button>
+        </div>
       </div>
 
       <!-- CONTROLES ACTIVOS DEL JUEGO -->
@@ -118,6 +124,9 @@
             <div class="flex items-center gap-3">
               <button onclick="editTeamNames()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1">
                 ✏️ Editar Nombres
+              </button>
+              <button onclick="openEditor()" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1">
+                📝 Editar Preguntas
               </button>
               <button onclick="resetGame()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
                 🔄 Reiniciar Todo
@@ -327,33 +336,95 @@
         <!-- Renderizado de las 5 tarjetas 3D mediante JS -->
       </div>
 
-      <!-- BOTÓN DISCRETO FLOTANTE DE PANTALLA COMPLETA -->
-      <button id="btn-fullscreen" onclick="toggleFullscreen()" class="absolute bottom-4 right-4 z-30 p-3 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-full border border-slate-700/50 shadow-lg transition-all opacity-40 hover:opacity-100 focus:outline-none" title="Activar Pantalla Completa (F)">
+      <!-- BOTÓN DISCRETO FLOTANTE DE PANTALLA COMPLETA (Elevado a z-[60] para flotar sobre todo) -->
+      <button id="btn-fullscreen" onclick="toggleFullscreen()" class="absolute bottom-4 right-4 z-[60] p-3 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-full border border-slate-700/50 shadow-lg transition-all opacity-40 hover:opacity-100 focus:outline-none" title="Activar Pantalla Completa (F)">
         <!-- Icono de Expandir (Fullscreen) -->
         <svg id="svg-fs-expand" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
         </svg>
         <!-- Icono de Contraer (Exit Fullscreen) -->
         <svg id="svg-fs-collapse" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l5 5m0 0v-4m0 4H5m15-5l-5 5m0 0v-4m0 4h4M4 20l5-5m0 0v4m0-4H5m15 5l-5-5m0 0v4m0-4h4" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l5 5m0 0v-4m0 4H5m15-5l-5 5m0 0v-4m0 4h4M4 20l5-5m0 0v-4m0-4H5m15 5l-5-5m0 0v-4m0-4h4" />
         </svg>
       </button>
 
-      <!-- INTERRUPTOR DE AUDIO PARA NAVEGADORES -->
+      <!-- INTERRUPTOR DE AUDIO PARA NAVEGADORES (Con botón de pantalla completa integrado) -->
       <div id="audio-auth-screen" class="hidden absolute inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
         <span class="text-6xl mb-4">🔊</span>
         <h2 class="text-2xl font-black text-amber-400 mb-2">¡Sincronización Lista con tu Proyector!</h2>
         <p class="text-sm text-slate-300 max-w-md mb-6">
-          Para permitir que el navegador emita efectos de sonido clásicos de televisión, haz clic en el siguiente botón.
+          Para permitir que el navegador emita efectos de sonido clásicos de televisión, haz clic en el botón de abajo. Puedes poner el proyector en pantalla completa desde aquí mismo.
         </p>
-        <button onclick="authorizeAudio()" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-lg font-black rounded-2xl shadow-xl transition-all active:scale-95">
-          🎺 ¡ACTIVAR AUDIO Y CONECTAR!
-        </button>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <button id="btn-auth-fullscreen" onclick="toggleFullscreen()" class="px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white text-lg font-bold rounded-2xl border border-slate-700 shadow-xl transition-all active:scale-95 flex items-center gap-2">
+            🖥️ Pantalla Completa (F)
+          </button>
+          <button onclick="authorizeAudio()" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-lg font-black rounded-2xl shadow-xl transition-all active:scale-95">
+            🎺 ¡ACTIVAR AUDIO Y CONECTAR!
+          </button>
+        </div>
       </div>
 
     </section>
 
   </main>
+
+  <!-- MODAL / EDITOR BANCO DE PREGUNTAS -->
+  <div id="editor-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl animate-scale-up">
+      <!-- HEADER DEL EDITOR -->
+      <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50 rounded-t-3xl">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📝</span>
+          <div>
+            <h3 class="text-lg font-black text-white uppercase tracking-wider">Editor del Banco de Preguntas</h3>
+            <p class="text-[11px] text-slate-400">Modifica, elimina o agrega nuevas rondas y respuestas para la sesión.</p>
+          </div>
+        </div>
+        <button onclick="closeEditor()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- CONTENIDO DEL EDITOR -->
+      <div class="flex-1 overflow-hidden flex flex-col md:flex-row min-h-0">
+        <!-- COLUMNA IZQUIERDA: LISTA DE PREGUNTAS -->
+        <div class="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-slate-800 p-4 overflow-y-auto flex flex-col justify-between bg-slate-950/40">
+          <div class="space-y-2">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Lista de Rondas</p>
+            <div id="editor-rounds-list" class="space-y-1">
+              <!-- Cargado dinámicamente con JS -->
+            </div>
+          </div>
+          <button onclick="addNewRound()" class="w-full mt-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-indigo-500 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5">
+            ➕ Agregar Nueva Ronda
+          </button>
+        </div>
+
+        <!-- COLUMNA DERECHA: FORMULARIO DE EDICIÓN -->
+        <div id="editor-form" class="flex-1 p-6 overflow-y-auto space-y-4">
+          <!-- Cargado dinámicamente con JS -->
+        </div>
+      </div>
+
+      <!-- FOOTER DEL EDITOR -->
+      <div class="px-6 py-4 border-t border-slate-800 flex flex-wrap gap-3 justify-between items-center bg-slate-950/50 rounded-b-3xl">
+        <button onclick="resetToDefaultRounds()" class="px-4 py-2 bg-rose-950/40 border border-rose-500/30 text-rose-400 hover:text-rose-300 font-bold text-xs uppercase tracking-wider rounded-xl transition-all">
+          ⚠️ Restablecer Predeterminados
+        </button>
+        <div class="flex gap-2">
+          <button onclick="closeEditor()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs uppercase tracking-wider rounded-xl transition-all">
+            Cancelar
+          </button>
+          <button onclick="saveEditorChanges()" class="px-6 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all active:scale-95">
+            💾 Guardar y Aplicar Cambios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- CONTROLADORES Y LÓGICA DEL JUEGO -->
   <script>
@@ -429,69 +500,6 @@
     ];
 
     // ==========================================
-    // SINTETIZADOR DE SONIDOS (Web Audio API)
-    // ==========================================
-    let audioEnabled = false;
-
-    function playSound(type) {
-      if (!audioEnabled) return;
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = ctx.currentTime;
-
-        if (type === 'correct') {
-          const osc1 = ctx.createOscillator();
-          const gain1 = ctx.createGain();
-          osc1.type = 'sine';
-          osc1.frequency.setValueAtTime(523.25, now);
-          osc1.frequency.setValueAtTime(659.25, now + 0.1);
-          osc1.frequency.setValueAtTime(783.99, now + 0.2);
-          gain1.gain.setValueAtTime(0.2, now);
-          gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-          osc1.connect(gain1);
-          gain1.connect(ctx.destination);
-          osc1.start(now);
-          osc1.stop(now + 0.4);
-        } 
-        else if (type === 'strike') {
-          const osc1 = ctx.createOscillator();
-          const osc2 = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc1.type = 'sawtooth';
-          osc2.type = 'sawtooth';
-          osc1.frequency.setValueAtTime(90, now);
-          osc2.frequency.setValueAtTime(93, now);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.8);
-          osc1.connect(gain);
-          osc2.connect(gain);
-          gain.connect(ctx.destination);
-          osc1.start(now);
-          osc2.start(now);
-          osc1.stop(now + 0.8);
-          osc2.stop(now + 0.8);
-        } 
-        else if (type === 'victory') {
-          const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
-          notes.forEach((freq, idx) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
-            gain.gain.setValueAtTime(0.15, now + idx * 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.3);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + idx * 0.1);
-            osc.stop(now + idx * 0.1 + 0.3);
-          });
-        }
-      } catch (e) {
-        console.warn("La reproducción de sonido falló:", e);
-      }
-    }
-
-    // ==========================================
     // ESTADO DE LA APLICACIÓN
     // ==========================================
     let viewMode = 'split'; // 'split', 'admin', 'projector'
@@ -508,6 +516,10 @@
       victoryTrigger: false
     };
 
+    // Estructuras de trabajo del editor
+    let editingRounds = [];
+    let selectedEditIdx = 0;
+
     // Detectar si se abre como proyector puro
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('view') === 'projector') {
@@ -520,6 +532,8 @@
       const saved = localStorage.getItem('mexicanos_game_state');
       if (saved) {
         gameState = JSON.parse(saved);
+      } else {
+        gameState.rounds = DEFAULT_ROUNDS;
       }
 
       if (viewMode === 'projector') {
@@ -527,7 +541,7 @@
         document.getElementById('admin-header').classList.add('hidden');
         document.getElementById('admin-panel').classList.add('hidden');
         
-        // Si ya hay un juego iniciado, mostramos la pantalla de audio y conectamos
+        // Mostrar la pantalla de audio y conectar
         document.getElementById('audio-auth-screen').classList.remove('hidden');
       }
       
@@ -624,7 +638,7 @@
       playSound('correct');
     }
 
-    // FUNCIÓN DE PANTALLA COMPLETA INTEGRADA (Requisito de interacción directa)
+    // FUNCIÓN DE PANTALLA COMPLETA INTEGRADA
     function toggleFullscreen() {
       const doc = document.documentElement;
       const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
@@ -632,11 +646,11 @@
       if (!isFS) {
         if (doc.requestFullscreen) {
           doc.requestFullscreen();
-        } else if (doc.mozRequestFullScreen) { // Firefox
+        } else if (doc.mozRequestFullScreen) {
           doc.mozRequestFullScreen();
-        } else if (doc.webkitRequestFullscreen) { // Chrome, Safari y Opera
+        } else if (doc.webkitRequestFullscreen) {
           doc.webkitRequestFullscreen();
-        } else if (doc.msRequestFullscreen) { // IE/Edge
+        } else if (doc.msRequestFullscreen) {
           doc.msRequestFullscreen();
         }
       } else {
@@ -652,25 +666,31 @@
       }
     }
 
-    // Monitorear y sincronizar visualmente el botón con el estado nativo de la pantalla completa
+    // Sincroniza visualmente ambos botones (flotante y del auth overlay)
     function updateFullscreenIcons() {
       const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
       const expandIcon = document.getElementById('svg-fs-expand');
       const collapseIcon = document.getElementById('svg-fs-collapse');
       const btn = document.getElementById('btn-fullscreen');
+      const btnAuthFS = document.getElementById('btn-auth-fullscreen');
 
-      if (isFS) {
-        expandIcon.classList.add('hidden');
-        collapseIcon.classList.remove('hidden');
-        btn.title = "Salir de Pantalla Completa (F)";
-      } else {
-        expandIcon.classList.remove('hidden');
-        collapseIcon.classList.add('hidden');
-        btn.title = "Activar Pantalla Completa (F)";
+      if (btn) {
+        if (isFS) {
+          expandIcon.classList.add('hidden');
+          collapseIcon.classList.remove('hidden');
+          btn.title = "Salir de Pantalla Completa (F)";
+        } else {
+          expandIcon.classList.remove('hidden');
+          collapseIcon.classList.add('hidden');
+          btn.title = "Activar Pantalla Completa (F)";
+        }
+      }
+
+      if (btnAuthFS) {
+        btnAuthFS.innerHTML = isFS ? '🗗 Salir de Pantalla Completa (F)' : '🖥️ Pantalla Completa (F)';
       }
     }
 
-    // Escuchadores del cambio de pantalla completa del navegador
     document.addEventListener('fullscreenchange', updateFullscreenIcons);
     document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
     document.addEventListener('mozfullscreenchange', updateFullscreenIcons);
@@ -830,6 +850,9 @@
       } else {
         overlay.classList.add('hidden');
       }
+
+      // Sincronizar iconos/textos de pantalla completa iniciales
+      updateFullscreenIcons();
     }
 
     // ==========================================
@@ -934,15 +957,226 @@
           strikes: 0,
           revealedAnswers: [],
           showStrikeOverlay: false,
-          rounds: DEFAULT_ROUNDS,
-          gameStarted: false, // Regresa a pantalla de edición
+          rounds: gameState.rounds, // Conservamos las rondas del localStorage
+          gameStarted: false, 
           victoryTrigger: false
         };
-        // Limpiamos memoria del navegador explícitamente al reiniciar
+        // Limpiar memoria
         localStorage.removeItem('mexicanos_game_state');
         saveState();
         syncViewAndData();
       }
+    }
+
+    // ==========================================
+    // SISTEMA DEL EDITOR DEL BANCO DE PREGUNTAS
+    // ==========================================
+    function openEditor() {
+      editingRounds = JSON.parse(JSON.stringify(gameState.rounds));
+      selectedEditIdx = 0;
+      
+      document.getElementById('editor-modal').classList.remove('hidden');
+      renderEditor();
+    }
+
+    function closeEditor() {
+      document.getElementById('editor-modal').classList.add('hidden');
+    }
+
+    function renderEditor() {
+      const listContainer = document.getElementById('editor-rounds-list');
+      listContainer.innerHTML = '';
+
+      editingRounds.forEach((round, index) => {
+        const item = document.createElement('div');
+        const isSelected = index === selectedEditIdx;
+        item.className = `p-3 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
+          isSelected ? 'bg-indigo-600/30 border border-indigo-500/40 text-white' : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
+        }`;
+        
+        item.onclick = (e) => {
+          if (e.target.closest('.delete-btn')) return;
+          selectedEditIdx = index;
+          renderEditor();
+        };
+
+        item.innerHTML = `
+          <div class="truncate pr-2">
+            <p class="text-[10px] font-black uppercase text-indigo-400 leading-none">x${round.multiplier}</p>
+            <p class="text-xs font-bold leading-tight truncate mt-1">${round.question || 'Nueva pregunta'}</p>
+          </div>
+          <button class="delete-btn p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded-lg transition-all" onclick="deleteRound(${index})">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        `;
+        listContainer.appendChild(item);
+      });
+
+      const form = document.getElementById('editor-form');
+      form.innerHTML = '';
+
+      if (editingRounds.length === 0) {
+        form.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center p-8 space-y-3">
+            <span class="text-5xl">📋</span>
+            <h4 class="text-lg font-bold text-slate-400">No hay rondas creadas</h4>
+            <p class="text-xs text-slate-500 max-w-sm">Presiona el botón de la izquierda para agregar una nueva ronda al concurso.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const activeRound = editingRounds[selectedEditIdx];
+      const totalPoints = activeRound.answers.reduce((acc, ans) => acc + (parseInt(ans.points) || 0), 0);
+      const pointsStyle = totalPoints === 100 ? 'text-emerald-400' : 'text-amber-400 animate-pulse';
+
+      let answersInputsHtml = '';
+      activeRound.answers.forEach((ans, index) => {
+        answersInputsHtml += `
+          <div class="grid grid-cols-12 gap-3 items-center">
+            <span class="col-span-1 text-xs font-black text-slate-500 text-center">${index + 1}</span>
+            <input type="text" value="${ans.text}" oninput="updateEditAnswer(${index}, 'text', this.value)" placeholder="Escribe la respuesta" class="col-span-8 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+            <input type="number" value="${ans.points}" oninput="updateEditAnswer(${index}, 'points', this.value)" placeholder="Pts" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-center text-slate-100 font-mono focus:outline-none focus:border-indigo-500" min="0" max="100">
+          </div>
+        `;
+      });
+
+      form.innerHTML = `
+        <div class="space-y-4">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-2 space-y-1.5">
+              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Título de la Ronda</label>
+              <input type="text" value="${activeRound.title}" oninput="updateEditField('title', this.value)" placeholder="Ej. Ronda 1: Hábitos en Casa" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-indigo-500">
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Multiplicador</label>
+              <select onchange="updateEditField('multiplier', this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-black focus:outline-none focus:border-indigo-500">
+                <option value="1" ${activeRound.multiplier == 1 ? 'selected' : ''}>Puntos x1</option>
+                <option value="2" ${activeRound.multiplier == 2 ? 'selected' : ''}>Puntos x2 (Doble)</option>
+                <option value="3" ${activeRound.multiplier == 3 ? 'selected' : ''}>Puntos x3 (Triple)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Pregunta de la Ronda</label>
+            <textarea rows="2" oninput="updateEditField('question', this.value)" placeholder="Escribe la pregunta completa aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 resize-none">${activeRound.question}</textarea>
+          </div>
+
+          <div class="space-y-3 pt-2">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Respuestas más populares (Máximo 5)</label>
+              <span class="text-xs font-bold ${pointsStyle}">
+                Suma de puntos: ${totalPoints} / 100
+                ${totalPoints !== 100 ? '⚠️ (Se sugiere sumar 100)' : '✓'}
+              </span>
+            </div>
+            <div class="space-y-2">
+              ${answersInputsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateEditField(field, value) {
+      if (field === 'multiplier') {
+        editingRounds[selectedEditIdx][field] = parseInt(value) || 1;
+      } else {
+        editingRounds[selectedEditIdx][field] = value;
+      }
+      const activeRound = editingRounds[selectedEditIdx];
+      const items = document.getElementById('editor-rounds-list').children;
+      if (items[selectedEditIdx]) {
+        items[selectedEditIdx].querySelector('p.text-xs').innerText = activeRound.question || 'Nueva pregunta';
+        items[selectedEditIdx].querySelector('p.text-indigo-400').innerText = `x${activeRound.multiplier}`;
+      }
+    }
+
+    function updateEditAnswer(index, key, value) {
+      const activeRound = editingRounds[selectedEditIdx];
+      if (key === 'points') {
+        activeRound.answers[index][key] = parseInt(value) || 0;
+        
+        const totalPoints = activeRound.answers.reduce((acc, ans) => acc + (parseInt(ans.points) || 0), 0);
+        const pointsSpan = document.querySelector('#editor-form label + span');
+        if (pointsSpan) {
+          pointsSpan.innerText = `Suma de puntos: ${totalPoints} / 100 ${totalPoints !== 100 ? '⚠️ (Se sugiere sumar 100)' : '✓'}`;
+          pointsSpan.className = `text-xs font-bold ${totalPoints === 100 ? 'text-emerald-400' : 'text-amber-400 animate-pulse'}`;
+        }
+      } else {
+        activeRound.answers[index][key] = value;
+      }
+    }
+
+    function addNewRound() {
+      const newRound = {
+        id: Date.now(),
+        title: `Ronda ${editingRounds.length + 1}`,
+        question: "Menciona una nueva pregunta para el salón...",
+        multiplier: 1,
+        answers: [
+          { text: "Respuesta número 1", points: 40 },
+          { text: "Respuesta número 2", points: 25 },
+          { text: "Respuesta número 3", points: 20 },
+          { text: "Respuesta número 4", points: 10 },
+          { text: "Respuesta número 5", points: 5 }
+        ]
+      };
+
+      editingRounds.push(newRound);
+      selectedEditIdx = editingRounds.length - 1;
+      renderEditor();
+    }
+
+    function deleteRound(index) {
+      if (confirm("¿Estás seguro de que deseas eliminar esta ronda?")) {
+        editingRounds.splice(index, 1);
+        selectedEditIdx = Math.max(0, selectedEditIdx - 1);
+        renderEditor();
+      }
+    }
+
+    function resetToDefaultRounds() {
+      if (confirm("Se restablecerán todas las preguntas y multiplicadores originales. Perderás tus modificaciones. ¿Deseas continuar?")) {
+        editingRounds = JSON.parse(JSON.stringify(DEFAULT_ROUNDS));
+        selectedEditIdx = 0;
+        renderEditor();
+      }
+    }
+
+    function saveEditorChanges() {
+      if (editingRounds.length === 0) {
+        alert("Debes tener por lo menos una ronda configurada en el juego.");
+        return;
+      }
+
+      for (let i = 0; i < editingRounds.length; i++) {
+        if (!editingRounds[i].title.trim() || !editingRounds[i].question.trim()) {
+          alert(`La ronda número ${i + 1} tiene el título o la pregunta en blanco.`);
+          selectedEditIdx = i;
+          renderEditor();
+          return;
+        }
+      }
+
+      gameState.rounds = editingRounds;
+      
+      if (gameState.currentRoundIdx >= gameState.rounds.length) {
+        gameState.currentRoundIdx = 0;
+      }
+
+      gameState.bank = 0;
+      gameState.revealedAnswers = [];
+      gameState.strikes = 0;
+
+      saveState();
+      syncViewAndData();
+      closeEditor();
+      
+      playSound('correct');
     }
 
     // ==========================================
@@ -1008,7 +1242,6 @@
         }
       }
       
-      // Ajustar canvas al cambiar tamaño
       window.addEventListener('resize', function() {
         canvas.width = canvas.parentElement.clientWidth;
         canvas.height = canvas.parentElement.clientHeight;
