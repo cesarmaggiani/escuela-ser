@@ -47,6 +47,92 @@
     .animate-bounce-short {
       animation: bounce-short 0.5s ease-in-out infinite;
     }
+
+    /* ================================================================= */
+    /* DISEÑO ADAPTATIVO VERTICAL PARA PREVENIR RECORTES EN PROYECTORES */
+    /* ================================================================= */
+    
+    /* Para pantallas con altura estándar/baja (menor a 800px) como proyectores 1280x800 o laptops comunes */
+    @media (max-height: 820px) {
+      #projector-panel {
+        padding: 1rem !important;
+      }
+      #projector-panel .my-8 {
+        margin-top: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+      }
+      #projector-panel .mt-6 {
+        margin-top: 0.5rem !important;
+      }
+      #projector-panel .mb-6 {
+        margin-bottom: 0.5rem !important;
+      }
+      #projector-panel .h-16 {
+        height: 3.5rem !important; /* Reduce la altura de las tarjetas de ~64px a 56px */
+      }
+      #pub-answers-grid {
+        gap: 0.5rem !important; /* Tarjetas más juntas */
+      }
+      #pub-round-question {
+        font-size: 1.5rem !important; /* Texto de la pregunta ligeramente menor */
+        line-height: 1.8rem !important;
+      }
+      #pub-teamA-name, #pub-teamB-name {
+        font-size: 1.15rem !important;
+      }
+      #pub-teamA-score, #pub-teamB-score {
+        font-size: 2.5rem !important;
+        padding-top: 0.4rem !important;
+        padding-bottom: 0.4rem !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
+
+    /* Para proyectores muy bajos o antiguos de resolución 4:3 (menor a 680px de altura) */
+    @media (max-height: 680px) {
+      #projector-panel {
+        padding: 0.5rem !important;
+      }
+      #projector-panel .my-8 {
+        margin-top: 0.25rem !important;
+        margin-bottom: 0.25rem !important;
+      }
+      #projector-panel .mt-6 {
+        margin-top: 0.25rem !important;
+      }
+      #projector-panel .h-16 {
+        height: 2.75rem !important; /* Reduce las tarjetas de respuestas a 44px */
+      }
+      #pub-answers-grid {
+        gap: 0.35rem !important;
+      }
+      #pub-round-question {
+        font-size: 1.25rem !important;
+        line-height: 1.5rem !important;
+      }
+      #pub-round-title {
+        font-size: 9px !important;
+        top: -10px !important;
+      }
+      #pub-teamA-name, #pub-teamB-name {
+        font-size: 1rem !important;
+      }
+      #pub-teamA-score, #pub-teamB-score {
+        font-size: 1.75rem !important;
+        padding-top: 0.2rem !important;
+        padding-bottom: 0.2rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+      }
+      #projector-panel .py-6 {
+        padding-top: 0.75rem !important;
+        padding-bottom: 0.75rem !important;
+      }
+      #pub-bank {
+        font-size: 1.5rem !important;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen bg-slate-950 text-white overflow-x-hidden flex flex-col selection:bg-rose-500 selection:text-white">
@@ -931,6 +1017,7 @@
       syncViewAndData();
     }
 
+    // Avanzar de ronda
     function nextRound() {
       gameState.currentRoundIdx = (gameState.currentRoundIdx + 1) % gameState.rounds.length;
       gameState.bank = 0;
@@ -940,6 +1027,7 @@
       syncViewAndData();
     }
 
+    // Retroceder de ronda
     function prevRound() {
       gameState.currentRoundIdx = gameState.currentRoundIdx === 0 ? gameState.rounds.length - 1 : gameState.currentRoundIdx - 1;
       gameState.bank = 0;
