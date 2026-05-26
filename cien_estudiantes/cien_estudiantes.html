@@ -377,7 +377,7 @@
           <button onclick="startGame()" class="flex-1 py-3 bg-gradient-to-r from-serBlue to-serMagenta text-white font-title tracking-wider rounded-xl hover:brightness-110 active:scale-95 transition-all text-center text-lg">
             🚀 ¡INICIAR JUEGO!
           </button>
-          <button onclick="openEditor()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition-all text-xs uppercase flex items-center gap-1 font-body font-bold">
+          <button onclick="openEditor()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition-all text-xs uppercase flex items-center gap-1 font-body font-bold font-bold">
             📝 Editar Preguntas
           </button>
         </div>
@@ -710,6 +710,77 @@
   <!-- CONTROLADORES Y LÓGICA DEL JUEGO -->
   <script>
     // ==========================================
+    // PREGUNTAS Y RESPUESTAS POR DEFECTO
+    // ==========================================
+    const DEFAULT_ROUNDS = [
+      {
+        id: 1,
+        title: "Ronda 1: Salir a la Calle (Sencilla)",
+        question: "Menciona algo que un adolescente jamás se le olvidaría llevar cuando sale a la calle",
+        multiplier: 1,
+        answers: [
+          { text: "El celular (con batería)", points: 50 },
+          { text: "Los audífonos (para ir escuchando música)", points: 25 },
+          { text: "Dinero / La cartera / Monedero", points: 15 },
+          { text: "Las llaves de la casa", points: 7 },
+          { text: "Chicles / Bálsamo labial / Perfume", points: 3 }
+        ]
+      },
+      {
+        id: 2,
+        title: "Ronda 2: Gustos Musicales (Sencilla)",
+        question: "Menciona un género o artista musical que no puede faltar en la playlist de un estudiante de secundaria",
+        multiplier: 1,
+        answers: [
+          { text: "Reggaetón / Urbano (Bad Bunny, Karol G, Feid)", points: 35 },
+          { text: "Corridos Tumbados / Regional (Peso Pluma, Nata)", points: 30 },
+          { text: "K-Pop (BTS, BLACKPINK, NewJeans)", points: 15 },
+          { text: "Pop en Inglés (Taylor Swift, Olivia Rodrigo, Billie)", points: 12 },
+          { text: "Trap / Rap / Hip-Hop (Duki, Travis Scott)", points: 8 }
+        ]
+      },
+      {
+        id: 3,
+        title: "Ronda 3: Redes Sociales (¡DOBLE PUNTOS!)",
+        question: "Menciona la red social o aplicación que usan los estudiantes para enterarse del 'chisme' o de lo que hacen sus amigos",
+        multiplier: 2,
+        answers: [
+          { text: "Instagram (Historias / Close Friends)", points: 45 },
+          { text: "WhatsApp (Estados o grupos del salón)", points: 30 },
+          { text: "TikTok (Videos o tendencias)", points: 15 },
+          { text: "Snapchat / Facebook", points: 7 },
+          { text: "X (Twitter)", points: 3 }
+        ]
+      },
+      {
+        id: 4,
+        title: "Ronda 4: Educación Física (¡TRIPLE PUNTOS!)",
+        question: "Cuál es la excusa más común para no hacer ejercicio en la clase de Educación Física",
+        multiplier: 3,
+        answers: [
+          { text: "“Me duele la panza, la cabeza o me siento mal”", points: 45 },
+          { text: "“No traje el uniforme de deportes / los tenis”", points: 28 },
+          { text: "“Me lastimé el pie o la rodilla ayer jugando”", points: 15 },
+          { text: "“Está haciendo demasiado calor o sol”", points: 8 },
+          { text: "“Se me olvidó desayunar / no tengo energía”", points: 4 }
+        ]
+      },
+      {
+        id: 5,
+        title: "Ronda de Reserva: Hábitos en Casa (Por si hay empate)",
+        question: "Qué es lo primero que hace un estudiante al llegar a su casa después de las clases",
+        multiplier: 1,
+        answers: [
+          { text: "Quitarse el uniforme / ponerse ropa cómoda", points: 40 },
+          { text: "Agarrar el celular / revisar redes sociales", points: 25 },
+          { text: "Comer / buscar comida en la cocina", points: 20 },
+          { text: "Dormirse una siesta", points: 10 },
+          { text: "Ponerse a hacer la tarea", points: 5 }
+        ]
+      }
+    ];
+
+    // ==========================================
     // SISTEMA DE ALMACENAMIENTO INDEPENDIENTE MP3 (IndexedDB)
     // ==========================================
     const DB_NAME = 'MexicanosGameDB';
@@ -768,47 +839,185 @@
       const toastMsg = document.getElementById('toast-message');
       const toastText = document.getElementById('toast-text');
       
-      toastText.innerText = message;
-      if (type === 'error') {
-        toastMsg.className = "bg-rose-950 border border-serMagenta/40 text-serMagenta px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
-      } else if (type === 'success') {
-        toastMsg.className = "bg-emerald-950 border border-emerald-500/40 text-emerald-400 px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
-      } else {
-        toastMsg.className = "bg-slate-900 border border-serYellow/30 text-serYellow px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+      if (toastText) toastText.innerText = message;
+      if (toastMsg) {
+        if (type === 'error') {
+          toastMsg.className = "bg-rose-950 border border-serMagenta/40 text-serMagenta px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+        } else if (type === 'success') {
+          toastMsg.className = "bg-emerald-950 border border-emerald-500/40 text-emerald-400 px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+        } else {
+          toastMsg.className = "bg-slate-900 border border-serYellow/30 text-serYellow px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+        }
       }
       
-      toast.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
-      toast.classList.add('opacity-100', 'scale-100');
+      if (toast) {
+        toast.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'scale-100');
+      }
       
       setTimeout(() => {
-        toast.classList.remove('opacity-100', 'scale-100');
-        toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+        if (toast) {
+          toast.classList.remove('opacity-100', 'scale-100');
+          toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+        }
       }, 3500);
     }
 
     let confirmResolve = null;
     function customConfirm(message) {
-      document.getElementById('confirm-modal-text').innerText = message;
-      document.getElementById('confirm-modal').classList.remove('hidden');
+      const modalText = document.getElementById('confirm-modal-text');
+      const modal = document.getElementById('confirm-modal');
+      if (modalText) modalText.innerText = message;
+      if (modal) modal.classList.remove('hidden');
       return new Promise((resolve) => {
         confirmResolve = resolve;
       });
     }
-
-    document.getElementById('btn-confirm-cancel').onclick = function() {
-      document.getElementById('confirm-modal').classList.add('hidden');
-      if (confirmResolve) confirmResolve(false);
-    };
-    document.getElementById('btn-confirm-ok').onclick = function() {
-      document.getElementById('confirm-modal').classList.add('hidden');
-      if (confirmResolve) confirmResolve(true);
-    };
 
     // ==========================================
     // ESTADO E INTERFAZ DEL JUEGO
     // ==========================================
     let currentLoadedMusicName = null;
     let currentLoadedObjectURL = null;
+    let viewMode = 'split'; // 'split', 'admin', 'projector'
+    let audioCtx = null;
+    let synthThemeIntervalId = null;
+
+    let gameState = {
+      teamA: { name: "EQUIPO EXCELENCIA", score: 0 },
+      teamB: { name: "EQUIPO SUPERACIÓN", score: 0 },
+      currentRoundIdx: 0,
+      bank: 0,
+      strikes: 0,
+      revealedAnswers: [],
+      showStrikeOverlay: false,
+      rounds: DEFAULT_ROUNDS,
+      gameStarted: false,
+      victoryTrigger: false,
+      welcomeMusicEnabled: true,
+      welcomeMusicType: 'synth', 
+      welcomeMusicUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 
+      welcomeMusicPlaying: false
+    };
+
+    // Estructuras de trabajo del editor
+    let editingRounds = [];
+    let selectedEditIdx = 0;
+
+    // Detectar si se abre como proyector puro
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('view') === 'projector') {
+      viewMode = 'projector';
+    }
+
+    // Inicializar App de forma segura al estar el DOM cargado
+    window.onload = function() {
+      // Enlazar de forma segura los botones de confirmación para evitar crashes si el script inicia antes que el DOM
+      const btnConfirmCancel = document.getElementById('btn-confirm-cancel');
+      const btnConfirmOk = document.getElementById('btn-confirm-ok');
+      if (btnConfirmCancel) {
+        btnConfirmCancel.onclick = function() {
+          document.getElementById('confirm-modal').classList.add('hidden');
+          if (confirmResolve) confirmResolve(false);
+        };
+      }
+      if (btnConfirmOk) {
+        btnConfirmOk.onclick = function() {
+          document.getElementById('confirm-modal').classList.add('hidden');
+          if (confirmResolve) confirmResolve(true);
+        };
+      }
+
+      // CARGA CON FILTRADO Y MAPEO COMPLETO (Corrige propiedades indefinidas de versiones viejas)
+      const saved = localStorage.getItem('mexicanos_game_state');
+      if (saved) {
+        try {
+          const loadedState = JSON.parse(saved);
+          gameState = {
+            teamA: loadedState.teamA || { name: "EQUIPO EXCELENCIA", score: 0 },
+            teamB: loadedState.teamB || { name: "EQUIPO SUPERACIÓN", score: 0 },
+            currentRoundIdx: typeof loadedState.currentRoundIdx === 'number' ? loadedState.currentRoundIdx : 0,
+            bank: typeof loadedState.bank === 'number' ? loadedState.bank : 0,
+            strikes: typeof loadedState.strikes === 'number' ? loadedState.strikes : 0,
+            revealedAnswers: Array.isArray(loadedState.revealedAnswers) ? loadedState.revealedAnswers : [],
+            showStrikeOverlay: !!loadedState.showStrikeOverlay,
+            rounds: (Array.isArray(loadedState.rounds) && loadedState.rounds.length > 0) ? loadedState.rounds : DEFAULT_ROUNDS,
+            gameStarted: !!loadedState.gameStarted,
+            victoryTrigger: !!loadedState.victoryTrigger,
+            welcomeMusicEnabled: loadedState.welcomeMusicEnabled !== undefined ? loadedState.welcomeMusicEnabled : true,
+            welcomeMusicType: loadedState.welcomeMusicType || 'synth',
+            welcomeMusicUrl: loadedState.welcomeMusicUrl || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            welcomeMusicPlaying: !!loadedState.welcomeMusicPlaying,
+            localMusicName: loadedState.localMusicName || ''
+          };
+        } catch (e) {
+          console.error("Error al recuperar los datos del juego:", e);
+          gameState.rounds = DEFAULT_ROUNDS;
+        }
+      } else {
+        gameState.rounds = DEFAULT_ROUNDS;
+      }
+
+      if (viewMode === 'projector') {
+        // Adaptar vista completa de proyector
+        const adminHeader = document.getElementById('admin-header');
+        const adminPanel = document.getElementById('admin-panel');
+        const authScreen = document.getElementById('audio-auth-screen');
+        
+        if (adminHeader) adminHeader.classList.add('hidden');
+        if (adminPanel) adminPanel.classList.add('hidden');
+        document.body.classList.add('view-projector');
+        
+        // Mostrar la pantalla de audio y conectar
+        if (authScreen) authScreen.classList.remove('hidden');
+      }
+      
+      syncViewAndData();
+      startConfettiLoop();
+
+      // Escuchar sincronizaciones entre pestañas
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'mexicanos_game_state' && e.newValue) {
+          const parsed = JSON.parse(e.newValue);
+          
+          if (!parsed.revealedAnswers) parsed.revealedAnswers = [];
+          if (!parsed.rounds) parsed.rounds = DEFAULT_ROUNDS;
+          
+          // Lanzar efectos de sonido correspondientes
+          if (parsed.strikes > gameState.strikes) {
+            playSound('strike');
+          } else if (parsed.revealedAnswers.length > gameState.revealedAnswers.length) {
+            playSound('correct');
+          } else if (parsed.bank === 0 && (parsed.teamA.score > gameState.teamA.score || parsed.teamB.score > gameState.teamB.score)) {
+            playSound('victory');
+            triggerConfetti();
+          }
+
+          gameState = parsed;
+          syncViewAndData();
+        } else if (e.key === 'mexicanos_game_logo' || e.key === 'mexicanos_game_music_trigger') {
+          syncViewAndData();
+        }
+      });
+
+      // Configurar detector de teclado para pantalla completa en la ventana del proyector
+      window.addEventListener('keydown', function(e) {
+        if (e.key.toLowerCase() === 'f') {
+          toggleFullscreen();
+        }
+      });
+    };
+
+    // Guardar cambios en el almacenamiento local para sincronización interactiva
+    function saveState() {
+      if (viewMode !== 'projector') {
+        try {
+          localStorage.setItem('mexicanos_game_state', JSON.stringify(gameState));
+        } catch (e) {
+          console.error("Error al guardar el estado del juego:", e);
+        }
+      }
+    }
 
     // ==========================================
     // CARGADOR DE LOGO (DECOUPLED)
@@ -844,8 +1053,10 @@
 
     function removeLogo() {
       localStorage.removeItem('mexicanos_game_logo');
-      document.getElementById('input-logo-file').value = '';
-      document.getElementById('input-logo-url').value = '';
+      const inputFile = document.getElementById('input-logo-file');
+      const inputUrl = document.getElementById('input-logo-url');
+      if (inputFile) inputFile.value = '';
+      if (inputUrl) inputUrl.value = '';
       syncViewAndData();
       showToast("Logotipo removido.", "success");
     }
@@ -910,8 +1121,10 @@
 
       audioEnabled = true;
       const btn = document.getElementById('btn-audio');
-      btn.className = "p-2 bg-emerald-600 text-white rounded-lg text-sm font-title tracking-wider transition-all";
-      btn.innerText = "🔔 Sonido Listo";
+      if (btn) {
+        btn.className = "p-2 bg-emerald-600 text-white rounded-lg text-sm font-title tracking-wider transition-all";
+        btn.innerText = "🔔 Sonido Listo";
+      }
 
       if (gameState.welcomeMusicType === 'synth') {
         if (adminLocalAudio) {
@@ -926,7 +1139,7 @@
         adminLocalAudio = new Audio(gameState.welcomeMusicUrl);
         adminLocalAudio.loop = true;
         adminLocalAudio.volume = 0.5;
-        adminLocalAudio.play().catch(e => showToast("Error al reproducir. Revisa la URL o permisos CORS.", "error"));
+        adminLocalAudio.play().catch(e => showToast("Error al reproducir. Revisa la URL o permisos.", "error"));
       } else if (gameState.welcomeMusicType === 'local') {
         stopSynthWelcomeTheme();
         if (adminLocalAudio) adminLocalAudio.pause();
@@ -939,7 +1152,7 @@
             adminLocalAudio.volume = 0.5;
             adminLocalAudio.play().catch(e => showToast("El audio fue bloqueado por permisos del navegador.", "error"));
           } else {
-            showToast("Por favor, selecciona primero un archivo de audio presionando 'Seleccionar MP3'.", "error");
+            showToast("Selecciona primero un archivo de audio presionando 'Seleccionar MP3'.", "error");
           }
         } catch (err) {
           console.error(err);
@@ -998,29 +1211,93 @@
       }
     }
 
-    // Sincronizar UI entera basándose en `gameState`
+    // ==========================================
+    // MELODÍA ARPEGIADA DE BIENVENIDA (SINTETIZADA)
+    // ==========================================
+    function playSynthWelcomeTheme() {
+      if (synthThemeIntervalId) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) {
+        return;
+      }
+      
+      const tempo = 135; // BPM
+      const stepTime = 60 / tempo / 2; // Corcheas
+      
+      const themeNotes = [
+        261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 261.63, 329.63,
+        349.23, 440.00, 523.25, 698.46, 523.25, 440.00, 349.23, 440.00,
+        392.00, 493.88, 587.33, 783.99, 587.33, 493.88, 392.00, 493.88,
+        523.25, 659.25, 783.99, 1046.50, 783.99, 523.25, 392.00, 261.63
+      ];
+      
+      let step = 0;
+      
+      function playStep() {
+        if (!audioEnabled || !gameState.welcomeMusicPlaying || gameState.gameStarted) {
+          stopSynthWelcomeTheme();
+          return;
+        }
+        
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(themeNotes[step % themeNotes.length], audioCtx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + stepTime - 0.02);
+        
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + stepTime);
+        
+        step++;
+      }
+      
+      playStep();
+      synthThemeIntervalId = setInterval(playStep, stepTime * 1000);
+    }
+
+    function stopSynthWelcomeTheme() {
+      if (synthThemeIntervalId) {
+        clearInterval(synthThemeIntervalId);
+        synthThemeIntervalId = null;
+      }
+    }
+
+    // Sincronizar UI entera basándose en `gameState` (Protegido contra nulos)
     function syncViewAndData() {
       const setupSec = document.getElementById('setup-section');
       const controlsSec = document.getElementById('game-controls');
 
       if (gameState.gameStarted) {
-        setupSec.classList.add('hidden');
-        controlsSec.classList.remove('hidden');
+        if (setupSec) setupSec.classList.add('hidden');
+        if (controlsSec) controlsSec.classList.remove('hidden');
       } else {
-        setupSec.classList.remove('hidden');
-        controlsSec.classList.add('hidden');
+        if (setupSec) setupSec.classList.remove('hidden');
+        if (controlsSec) controlsSec.classList.add('hidden');
         
-        document.getElementById('input-teamA-name').value = gameState.teamA.name;
-        document.getElementById('input-teamB-name').value = gameState.teamB.name;
+        // Sincronizar de forma segura y protegida
+        const inputTeamA = document.getElementById('input-teamA-name');
+        const inputTeamB = document.getElementById('input-teamB-name');
+        if (inputTeamA) inputTeamA.value = gameState.teamA.name;
+        if (inputTeamB) inputTeamB.value = gameState.teamB.name;
 
-        // Sincronizar UI de música de introducción en admin
-        document.getElementById('check-music-enable').checked = gameState.welcomeMusicEnabled;
+        // Sincronizar checkbox de música
+        const checkMusic = document.getElementById('check-music-enable');
+        if (checkMusic) checkMusic.checked = gameState.welcomeMusicEnabled;
         
         const musicSettingsGroup = document.getElementById('music-settings-group');
-        if (gameState.welcomeMusicEnabled) {
-          musicSettingsGroup.classList.remove('hidden');
-        } else {
-          musicSettingsGroup.classList.add('hidden');
+        if (musicSettingsGroup) {
+          if (gameState.welcomeMusicEnabled) {
+            musicSettingsGroup.classList.remove('hidden');
+          } else {
+            musicSettingsGroup.classList.add('hidden');
+          }
         }
 
         const btnSynth = document.getElementById('btn-music-synth');
@@ -1033,26 +1310,25 @@
         const inputMusicUrl = document.getElementById('input-music-url');
         const labelMusicFileStatus = document.getElementById('label-music-file-status');
 
-        btnSynth.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
-        btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
-        btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+        if (btnSynth) btnSynth.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+        if (btnLocal) btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+        if (btnUrl) btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
 
-        wrapperLocal.classList.add('hidden');
-        wrapperUrl.classList.add('hidden');
+        if (wrapperLocal) wrapperLocal.classList.add('hidden');
+        if (wrapperUrl) wrapperUrl.classList.add('hidden');
 
         if (gameState.welcomeMusicType === 'synth') {
-          btnSynth.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
+          if (btnSynth) btnSynth.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
         } else if (gameState.welcomeMusicType === 'local') {
-          btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
-          wrapperLocal.classList.remove('hidden');
+          if (btnLocal) btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
+          if (wrapperLocal) wrapperLocal.classList.remove('hidden');
           if (labelMusicFileStatus) {
-            // Se limpia el timestamp para mostrar un nombre estético y limpio
             const cleanMusicName = (gameState.localMusicName || "").split('?')[0];
             labelMusicFileStatus.innerText = cleanMusicName || "Ningún archivo";
           }
         } else {
-          btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serMagenta/50 text-serMagenta text-center";
-          wrapperUrl.classList.remove('hidden');
+          if (btnUrl) btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serMagenta/50 text-serMagenta text-center";
+          if (wrapperUrl) wrapperUrl.classList.remove('hidden');
           if (inputMusicUrl && !inputMusicUrl.matches(':focus')) {
             inputMusicUrl.value = gameState.welcomeMusicUrl;
           }
@@ -1064,8 +1340,8 @@
         const currentLogo = localStorage.getItem('mexicanos_game_logo') || '';
 
         if (currentLogo) {
-          logoPreview.classList.remove('hidden');
-          imgPreview.src = currentLogo;
+          if (logoPreview) logoPreview.classList.remove('hidden');
+          if (imgPreview) imgPreview.src = currentLogo;
           if (inputUrl && !inputUrl.matches(':focus')) {
             if (currentLogo.startsWith('data:image')) {
               inputUrl.value = '';
@@ -1074,7 +1350,7 @@
             }
           }
         } else {
-          logoPreview.classList.add('hidden');
+          if (logoPreview) logoPreview.classList.add('hidden');
           if (inputUrl) inputUrl.value = '';
         }
       }
@@ -1083,135 +1359,189 @@
       if (!gameState.rounds) gameState.rounds = DEFAULT_ROUNDS;
 
       // Marcadores del Administrador
-      document.getElementById('label-admin-teamA').innerText = gameState.teamA.name;
-      document.getElementById('label-admin-teamB').innerText = gameState.teamB.name;
-      document.getElementById('label-admin-scoreA').innerText = `${gameState.teamA.score} pts`;
-      document.getElementById('label-admin-scoreB').innerText = `${gameState.teamB.score} pts`;
+      const labelScoreA = document.getElementById('label-admin-scoreA');
+      const labelScoreB = document.getElementById('label-admin-scoreB');
+      if (labelScoreA) labelScoreA.innerText = `${gameState.teamA.score} pts`;
+      if (labelScoreB) labelScoreB.innerText = `${gameState.teamB.score} pts`;
 
       // Rondas y Preguntas
       const currentRound = gameState.rounds[gameState.currentRoundIdx] || gameState.rounds[0];
-      document.getElementById('round-indicator').innerText = `Pregunta ${gameState.currentRoundIdx + 1} de ${gameState.rounds.length}`;
-      document.getElementById('round-title').innerText = currentRound.title;
-      document.getElementById('round-multiplier').innerText = `Multiplicador: x${currentRound.multiplier}`;
-      document.getElementById('round-question').innerText = `"${currentRound.question}"`;
+      const indicator = document.getElementById('round-indicator');
+      const rTitle = document.getElementById('round-title');
+      const rMultiplier = document.getElementById('round-multiplier');
+      const rQuestion = document.getElementById('round-question');
+
+      if (indicator) indicator.innerText = `Pregunta ${gameState.currentRoundIdx + 1} de ${gameState.rounds.length}`;
+      if (rTitle) rTitle.innerText = currentRound.title;
+      if (rMultiplier) rMultiplier.innerText = `Multiplicador: x${currentRound.multiplier}`;
+      if (rQuestion) rQuestion.innerText = `"${currentRound.question}"`;
 
       // Panel de Respuestas del Administrador (Botones de revelado)
       const answersPanel = document.getElementById('answers-panel');
-      answersPanel.innerHTML = '';
-      currentRound.answers.forEach((ans, idx) => {
-        const isRev = gameState.revealedAnswers.includes(idx);
-        const btn = document.createElement('button');
-        btn.className = `w-full flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
-          isRev ? 'bg-serYellow/20 border-serYellow/40 text-serYellow' : 'bg-slate-800/80 border-slate-700 hover:border-serYellow/50 hover:bg-slate-800 text-slate-200'
-        }`;
-        btn.onclick = () => revealAnswer(idx, ans.points);
-        btn.innerHTML = `
-          <div class="flex items-center gap-3 font-body">
-            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isRev ? 'bg-serYellow text-slate-950' : 'bg-slate-700 text-slate-300'}">${idx + 1}</span>
-            <span class="font-bold">${ans.text}</span>
-          </div>
-          <span class="font-title tracking-wider bg-slate-950 px-3 py-1 rounded-md text-serYellow border border-slate-800">${ans.points} pts</span>
-        `;
-        answersPanel.appendChild(btn);
-      });
+      if (answersPanel) {
+        answersPanel.innerHTML = '';
+        currentRound.answers.forEach((ans, idx) => {
+          const isRev = gameState.revealedAnswers.includes(idx);
+          const btn = document.createElement('button');
+          btn.className = `w-full flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
+            isRev ? 'bg-serYellow/20 border-serYellow/40 text-serYellow' : 'bg-slate-800/80 border-slate-700 hover:border-serYellow/50 hover:bg-slate-800 text-slate-200'
+          }`;
+          btn.onclick = () => revealAnswer(idx, ans.points);
+          btn.innerHTML = `
+            <div class="flex items-center gap-3 font-body">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isRev ? 'bg-serYellow text-slate-950' : 'bg-slate-700 text-slate-300'}">${idx + 1}</span>
+              <span class="font-bold">${ans.text}</span>
+            </div>
+            <span class="font-title tracking-wider bg-slate-950 px-3 py-1 rounded-md text-serYellow border border-slate-800">${ans.points} pts</span>
+          `;
+          answersPanel.appendChild(btn);
+        });
+      }
 
       // Pozo e Indicadores del Administrador
-      document.getElementById('bank-points').innerText = `${gameState.bank} pts`;
-      document.getElementById('multiplier-reminder').innerText = `Se aplicará x${currentRound.multiplier} (${gameState.bank * currentRound.multiplier} pts totales) al entregar.`;
+      const bankPointsLabel = document.getElementById('bank-points');
+      const multiplierLabel = document.getElementById('multiplier-reminder');
+      if (bankPointsLabel) bankPointsLabel.innerText = `${gameState.bank} pts`;
+      if (multiplierLabel) multiplierLabel.innerText = `Se aplicará x${currentRound.multiplier} (${gameState.bank * currentRound.multiplier} pts totales) al entregar.`;
 
       // Actualizar dots de strikes en admin
       for (let i = 1; i <= 3; i++) {
         const dot = document.getElementById(`strike-dot-${i}`);
-        if (gameState.strikes >= i) {
-          dot.className = "w-8 h-8 rounded border-2 bg-serMagenta/20 border-serMagenta text-serMagenta flex items-center justify-center font-black text-lg animate-pulse";
-        } else {
-          dot.className = "w-8 h-8 rounded border-2 bg-slate-900 border-slate-800 text-slate-700 flex items-center justify-center font-black text-lg";
+        if (dot) {
+          if (gameState.strikes >= i) {
+            dot.className = "w-8 h-8 rounded border-2 bg-serMagenta/20 border-serMagenta text-serMagenta flex items-center justify-center font-black text-lg animate-pulse";
+          } else {
+            dot.className = "w-8 h-8 rounded border-2 bg-slate-900 border-slate-800 text-slate-700 flex items-center justify-center font-black text-lg";
+          }
         }
       }
 
       // Habilitar/deshabilitar botones de asignación
-      document.getElementById('btn-assign-A').disabled = gameState.bank === 0;
-      document.getElementById('btn-assign-B').disabled = gameState.bank === 0;
-      document.getElementById('assign-points-A').innerText = `+${gameState.bank * currentRound.multiplier} pts`;
-      document.getElementById('assign-points-B').innerText = `+${gameState.bank * currentRound.multiplier} pts`;
+      const btnAssignA = document.getElementById('btn-assign-A');
+      const btnAssignB = document.getElementById('btn-assign-B');
+      const assignA = document.getElementById('assign-points-A');
+      const assignB = document.getElementById('assign-points-B');
+
+      if (btnAssignA) btnAssignA.disabled = gameState.bank === 0;
+      if (btnAssignB) btnAssignB.disabled = gameState.bank === 0;
+      if (assignA) assignA.innerText = `+${gameState.bank * currentRound.multiplier} pts`;
+      if (assignB) assignB.innerText = `+${gameState.bank * currentRound.multiplier} pts`;
 
       // -----------------------------------------------------------------
       // ACTUALIZACIONES DE LA PANTALLA PÚBLICA (PROYECTOR / BIENVENIDA)
       // -----------------------------------------------------------------
-      const logoData = localStorage.getItem('mexicanos_game_logo') || '';
-
+      const pubWelcomeBoard = document.getElementById('pub-welcome-board');
+      const pubActiveBoard = document.getElementById('pub-active-board');
+      
       if (gameState.gameStarted) {
-        document.getElementById('pub-welcome-board').classList.add('hidden');
-        document.getElementById('pub-active-board').classList.remove('hidden');
+        if (pubWelcomeBoard) pubWelcomeBoard.classList.add('hidden');
+        if (pubActiveBoard) pubActiveBoard.classList.remove('hidden');
 
-        document.getElementById('pub-teamA-name').innerText = gameState.teamA.name;
-        document.getElementById('pub-teamB-name').innerText = gameState.teamB.name;
-        document.getElementById('pub-teamA-score').innerText = gameState.teamA.score;
-        document.getElementById('pub-teamB-score').innerText = gameState.teamB.score;
+        const pTeamAName = document.getElementById('pub-teamA-name');
+        const pTeamBName = document.getElementById('pub-teamB-name');
+        const pTeamAScore = document.getElementById('pub-teamA-score');
+        const pTeamBScore = document.getElementById('pub-teamB-score');
 
-        document.getElementById('pub-round-title').innerText = currentRound.title;
-        document.getElementById('pub-round-question').innerText = `¿${currentRound.question}`;
-        document.getElementById('pub-bank').innerText = gameState.bank;
+        if (pTeamAName) pTeamAName.innerText = gameState.teamA.name;
+        if (pTeamBName) pTeamBName.innerText = gameState.teamB.name;
+        if (pTeamAScore) pTeamAScore.innerText = gameState.teamA.score;
+        if (pTeamBScore) pTeamBScore.innerText = gameState.teamB.score;
+
+        const pRoundTitle = document.getElementById('pub-round-title');
+        const pRoundQuestion = document.getElementById('pub-round-question');
+        const pBank = document.getElementById('pub-bank');
+
+        if (pRoundTitle) pRoundTitle.innerText = currentRound.title;
+        if (pRoundQuestion) pRoundQuestion.innerText = `¿${currentRound.question}`;
+        if (pBank) pBank.innerText = gameState.bank;
 
         for (let i = 1; i <= 3; i++) {
           const pubStrike = document.getElementById(`pub-strike-${i}`);
-          if (gameState.strikes >= i) {
-            pubStrike.className = "w-6 h-6 rounded flex items-center justify-center font-title text-sm bg-serMagenta text-slate-950 shadow-[0_0_10px_rgba(225,27,126,0.5)]";
-          } else {
-            pubStrike.className = "w-6 h-6 rounded flex items-center justify-center font-title text-sm bg-slate-800 text-slate-600";
+          if (pubStrike) {
+            if (gameState.strikes >= i) {
+              pubStrike.className = "w-6 h-6 rounded flex items-center justify-center font-title text-sm bg-serMagenta text-slate-950 shadow-[0_0_10px_rgba(225,27,126,0.5)]";
+            } else {
+              pubStrike.className = "w-6 h-6 rounded flex items-center justify-center font-title text-sm bg-slate-800 text-slate-600";
+            }
           }
         }
 
         const pubGrid = document.getElementById('pub-answers-grid');
-        pubGrid.innerHTML = '';
-        currentRound.answers.forEach((ans, idx) => {
-          const isRev = gameState.revealedAnswers.includes(idx);
-          const cardContainer = document.createElement('div');
-          cardContainer.className = "pub-card-container h-16 relative perspective-3d";
-          cardContainer.innerHTML = `
-            <div class="w-full h-full transform-style-3d absolute ${isRev ? 'rotate-x-180' : ''}">
-              <div class="absolute inset-0 backface-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-2 border-serBlue/40 rounded-2xl flex items-center justify-between px-6 shadow-[0_0_15px_rgba(0,155,209,0.1)]">
-                <span class="text-3xl font-title tracking-wider text-serBlue/80">${idx + 1}</span>
-                <div class="w-10 h-10 rounded-full bg-serBlue/10 border border-serBlue/30 flex items-center justify-center shadow-inner">
-                  <span class="text-xl font-title text-serBlue font-black">?</span>
+        if (pubGrid) {
+          pubGrid.innerHTML = '';
+          currentRound.answers.forEach((ans, idx) => {
+            const isRev = gameState.revealedAnswers.includes(idx);
+            const cardContainer = document.createElement('div');
+            cardContainer.className = "pub-card-container h-16 relative perspective-3d";
+            cardContainer.innerHTML = `
+              <div class="w-full h-full transform-style-3d absolute ${isRev ? 'rotate-x-180' : ''}">
+                <!-- CARA FRONTAL (OCULTA) - Usando Azul Oficial como contorno -->
+                <div class="absolute inset-0 backface-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-2 border-serBlue/40 rounded-2xl flex items-center justify-between px-6 shadow-[0_0_15px_rgba(0,155,209,0.1)]">
+                  <span class="text-3xl font-title tracking-wider text-serBlue/80">${idx + 1}</span>
+                  <div class="w-10 h-10 rounded-full bg-serBlue/10 border border-serBlue/30 flex items-center justify-center shadow-inner">
+                    <span class="text-xl font-title text-serBlue font-black">?</span>
+                  </div>
+                </div>
+                <!-- CARA TRASERA (REVELADA) - Usando Amarillo Oficial -->
+                <div class="absolute inset-0 backface-hidden rotate-x-180 bg-gradient-to-r from-serYellow via-amber-300 to-serYellow border-2 border-yellow-100 rounded-2xl flex items-center justify-between px-6 shadow-xl text-slate-950">
+                  <span class="text-lg font-bold uppercase tracking-wide truncate pr-4 font-body">${ans.text}</span>
+                  <span class="text-xl font-title tracking-widest bg-slate-950 text-serYellow px-4 py-1 rounded-xl border border-yellow-200">${ans.points}</span>
                 </div>
               </div>
-              <div class="absolute inset-0 backface-hidden rotate-x-180 bg-gradient-to-r from-serYellow via-amber-300 to-serYellow border-2 border-yellow-100 rounded-2xl flex items-center justify-between px-6 shadow-xl text-slate-950">
-                <span class="text-lg font-bold uppercase tracking-wide truncate pr-4 font-body">${ans.text}</span>
-                <span class="text-xl font-title tracking-widest bg-slate-950 text-serYellow px-4 py-1 rounded-xl border border-yellow-200">${ans.points}</span>
-              </div>
-            </div>
-          `;
-          pubGrid.appendChild(cardContainer);
-        });
+            `;
+            pubGrid.appendChild(cardContainer);
+          });
+        }
       } else {
-        document.getElementById('pub-welcome-board').classList.remove('hidden');
-        document.getElementById('pub-active-board').classList.add('hidden');
+        if (pubWelcomeBoard) pubWelcomeBoard.classList.remove('hidden');
+        if (pubActiveBoard) pubActiveBoard.classList.add('hidden');
 
-        document.getElementById('pub-welcome-teamA').innerText = gameState.teamA.name;
-        document.getElementById('pub-welcome-teamB').innerText = gameState.teamB.name;
+        const pWelcomeA = document.getElementById('pub-welcome-teamA');
+        const pWelcomeB = document.getElementById('pub-welcome-teamB');
+        if (pWelcomeA) pWelcomeA.innerText = gameState.teamA.name;
+        if (pWelcomeB) pWelcomeB.innerText = gameState.teamB.name;
 
         const logoContainer = document.getElementById('pub-logo-container');
-        if (logoData) {
-          logoContainer.innerHTML = `<img src="${logoData}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in" alt="Logo de Bienvenida">`;
-        } else {
-          logoContainer.innerHTML = `
-            <div class="flex flex-col items-center animate-fade-in">
-              <div class="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-gradient-to-tr from-serMagenta to-serBlue rounded-full shadow-[0_0_30px_rgba(225,27,126,0.3)] animate-bounce-short mb-6">
-                <div class="absolute inset-1.5 border-4 border-dashed border-white/20 rounded-full"></div>
-                <span class="text-4xl md:text-5xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">🎓</span>
+        if (logoContainer) {
+          if (logoData) {
+            logoContainer.innerHTML = `<img src="${logoData}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in" alt="Logo de Bienvenida">`;
+          } else {
+            logoContainer.innerHTML = `
+              <div class="flex flex-col items-center animate-fade-in font-body">
+                <div class="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-gradient-to-tr from-serMagenta to-serBlue rounded-full shadow-[0_0_30px_rgba(225,27,126,0.3)] animate-bounce-short mb-6">
+                  <div class="absolute inset-1.5 border-4 border-dashed border-white/20 rounded-full"></div>
+                  <span class="text-4xl md:text-5xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">🎓</span>
+                </div>
+                <div class="font-title text-4xl md:text-6xl tracking-widest text-white uppercase select-none font-bold">
+                  100 Estudiantes Dijeron
+                </div>
+                <p class="text-[10px] font-bold text-serYellow uppercase tracking-widest mt-3 bg-serYellow/10 px-4 py-1.5 rounded-full border border-serYellow/20 select-none">Edición Escolar</p>
               </div>
-              <div class="font-title text-4xl md:text-6xl tracking-widest text-white uppercase select-none font-bold">
-                100 Estudiantes Dijeron
-              </div>
-              <p class="text-[10px] font-bold text-serYellow uppercase tracking-widest mt-3 bg-serYellow/10 px-4 py-1.5 rounded-full border border-serYellow/20 select-none font-body">Edición Escolar</p>
-            </div>
-          `;
+            `;
+          }
         }
       }
 
       manageProyectorWelcomeMusic();
       updateFullscreenIcons();
+    }
+
+    // ==========================================
+    // SEGURO POP-UP CONTRA BLOQUEOS DE NAVEGADOR
+    // ==========================================
+    function openProjectorWindow() {
+      const url = `${window.location.origin}${window.location.pathname}?view=projector`;
+      try {
+        const newWin = window.open(url, '_blank', 'width=1280,height=720');
+        if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+          showToast("El navegador bloqueó la ventana emergente. Habilita pop-ups o usa 'Vista Dividida'.", "error");
+        } else {
+          showToast("Transmisión al proyector iniciada con éxito.", "success");
+        }
+      } catch (e) {
+        console.error(e);
+        showToast("Error al abrir. Usa la Vista Dividida o habilita ventanas emergentes.", "error");
+      }
     }
 
     // ==========================================
@@ -1356,115 +1686,119 @@
 
     function renderEditor() {
       const listContainer = document.getElementById('editor-rounds-list');
-      listContainer.innerHTML = '';
+      if (listContainer) {
+        listContainer.innerHTML = '';
 
-      editingRounds.forEach((round, index) => {
-        const item = document.createElement('div');
-        const isSelected = index === selectedEditIdx;
-        item.className = `p-3 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
-          isSelected ? 'bg-indigo-600/30 border border-indigo-500/40 text-white' : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
-        }`;
-        
-        item.onclick = (e) => {
-          if (e.target.closest('.delete-btn')) return;
-          selectedEditIdx = index;
-          renderEditor();
-        };
+        editingRounds.forEach((round, index) => {
+          const item = document.createElement('div');
+          const isSelected = index === selectedEditIdx;
+          item.className = `p-3 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
+            isSelected ? 'bg-indigo-600/30 border border-indigo-500/40 text-white' : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
+          }`;
+          
+          item.onclick = (e) => {
+            if (e.target.closest('.delete-btn')) return;
+            selectedEditIdx = index;
+            renderEditor();
+          };
 
-        const escapedQuestionText = escapeHtml(round.question || 'Nueva pregunta');
+          const escapedQuestionText = escapeHtml(round.question || 'Nueva pregunta');
 
-        item.innerHTML = `
-          <div class="truncate pr-2 font-body">
-            <p class="text-[10px] font-black uppercase text-serBlue leading-none font-title tracking-widest">x${round.multiplier}</p>
-            <p class="text-xs font-bold leading-tight truncate mt-1">${escapedQuestionText}</p>
-          </div>
-          <button class="delete-btn p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-serMagenta rounded-lg transition-all" onclick="deleteRound(${index})">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        `;
-        listContainer.appendChild(item);
-      });
-
-      const form = document.getElementById('editor-form');
-      form.innerHTML = '';
-
-      if (editingRounds.length === 0) {
-        form.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-center p-8 space-y-3 font-body">
-            <span class="text-5xl">📋</span>
-            <h4 class="text-lg font-bold text-slate-400">No hay rondas creadas</h4>
-            <p class="text-xs text-slate-500 max-w-sm">Presiona el botón de la izquierda para agregar una nueva ronda al concurso.</p>
-          </div>
-        `;
-        return;
+          item.innerHTML = `
+            <div class="truncate pr-2 font-body">
+              <p class="text-[10px] font-black uppercase text-serBlue leading-none font-title tracking-widest">x${round.multiplier}</p>
+              <p class="text-xs font-bold leading-tight truncate mt-1">${escapedQuestionText}</p>
+            </div>
+            <button class="delete-btn p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-serMagenta rounded-lg transition-all" onclick="deleteRound(${index})">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          `;
+          listContainer.appendChild(item);
+        });
       }
 
-      const activeRound = editingRounds[selectedEditIdx];
-      const totalPoints = activeRound.answers.reduce((acc, ans) => acc + (parseInt(ans.points) || 0), 0);
-      const pointsStyle = totalPoints === 100 ? 'text-emerald-400 font-bold' : 'text-serYellow font-bold animate-pulse';
+      const form = document.getElementById('editor-form');
+      if (form) {
+        form.innerHTML = '';
 
-      let answersInputsHtml = '';
-      activeRound.answers.forEach((ans, index) => {
-        const escapedAnswerText = escapeHtml(ans.text);
-        answersInputsHtml += `
-          <div class="grid grid-cols-12 gap-3 items-center font-body">
-            <span class="col-span-1 text-xs font-black text-slate-500 text-center">${index + 1}</span>
-            <input type="text" value="${escapedAnswerText}" oninput="updateEditAnswer(${index}, 'text', this.value)" placeholder="Escribe la respuesta" class="col-span-8 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue">
-            <input type="number" value="${ans.points}" oninput="updateEditAnswer(${index}, 'points', this.value)" placeholder="Pts" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-center text-slate-100 font-mono focus:outline-none focus:border-serBlue" min="0" max="100">
+        if (editingRounds.length === 0) {
+          form.innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-center p-8 space-y-3 font-body">
+              <span class="text-5xl">📋</span>
+              <h4 class="text-lg font-bold text-slate-400">No hay rondas creadas</h4>
+              <p class="text-xs text-slate-500 max-w-sm">Presiona el botón de la izquierda para agregar una nueva ronda al concurso.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const activeRound = editingRounds[selectedEditIdx];
+        const totalPoints = activeRound.answers.reduce((acc, ans) => acc + (parseInt(ans.points) || 0), 0);
+        const pointsStyle = totalPoints === 100 ? 'text-emerald-400 font-bold' : 'text-serYellow font-bold animate-pulse';
+
+        let answersInputsHtml = '';
+        activeRound.answers.forEach((ans, index) => {
+          const escapedAnswerText = escapeHtml(ans.text);
+          answersInputsHtml += `
+            <div class="grid grid-cols-12 gap-3 items-center font-body">
+              <span class="col-span-1 text-xs font-black text-slate-500 text-center">${index + 1}</span>
+              <input type="text" value="${escapedAnswerText}" oninput="updateEditAnswer(${index}, 'text', this.value)" placeholder="Escribe la respuesta" class="col-span-8 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue">
+              <input type="number" value="${ans.points}" oninput="updateEditAnswer(${index}, 'points', this.value)" placeholder="Pts" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-center text-slate-100 font-mono focus:outline-none focus:border-serBlue" min="0" max="100">
+            </div>
+          `;
+        });
+
+        const escapedRoundTitle = escapeHtml(activeRound.title);
+        const escapedRoundQuestion = escapeHtml(activeRound.question);
+
+        form.innerHTML = `
+          <div class="space-y-4 font-body">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="col-span-2 space-y-1.5">
+                <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Título de la Ronda</label>
+                <input type="text" value="${escapedRoundTitle}" oninput="updateEditField('title', this.value)" placeholder="Ej. Ronda 1: Hábitos en Casa" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-serBlue">
+              </div>
+              <div class="space-y-1.5">
+                <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Multiplicador</label>
+                <select onchange="updateEditField('multiplier', this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-serBlue">
+                  <option value="1" ${activeRound.multiplier == 1 ? 'selected' : ''}>Puntos x1</option>
+                  <option value="2" ${activeRound.multiplier == 2 ? 'selected' : ''}>Puntos x2 (Doble)</option>
+                  <option value="3" ${activeRound.multiplier == 3 ? 'selected' : ''}>Puntos x3 (Triple)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Pregunta de la Ronda</label>
+              <textarea rows="2" oninput="updateEditField('question', this.value)" placeholder="Escribe la pregunta completa aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue resize-none">${escapedRoundQuestion}</textarea>
+            </div>
+
+            <div class="space-y-3 pt-2">
+              <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Respuestas más populares (Máximo 5)</label>
+                <span class="text-xs font-bold ${pointsStyle}">
+                  Suma de puntos: ${totalPoints} / 100
+                  ${totalPoints !== 100 ? '⚠️ (Se sugiere sumar 100)' : '✓'}
+                </span>
+              </div>
+              <div class="space-y-2">
+                ${answersInputsHtml}
+              </div>
+            </div>
           </div>
         `;
-      });
-
-      const escapedRoundTitle = escapeHtml(activeRound.title);
-      const escapedRoundQuestion = escapeHtml(activeRound.question);
-
-      form.innerHTML = `
-        <div class="space-y-4 font-body">
-          <div class="grid grid-cols-3 gap-4">
-            <div class="col-span-2 space-y-1.5">
-              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Título de la Ronda</label>
-              <input type="text" value="${escapedRoundTitle}" oninput="updateEditField('title', this.value)" placeholder="Ej. Ronda 1: Hábitos en Casa" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-serBlue">
-            </div>
-            <div class="space-y-1.5">
-              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Multiplicador</label>
-              <select onchange="updateEditField('multiplier', this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-serBlue">
-                <option value="1" ${activeRound.multiplier == 1 ? 'selected' : ''}>Puntos x1</option>
-                <option value="2" ${activeRound.multiplier == 2 ? 'selected' : ''}>Puntos x2 (Doble)</option>
-                <option value="3" ${activeRound.multiplier == 3 ? 'selected' : ''}>Puntos x3 (Triple)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Pregunta de la Ronda</label>
-            <textarea rows="2" oninput="updateEditField('question', this.value)" placeholder="Escribe la pregunta completa aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue resize-none">${escapedRoundQuestion}</textarea>
-          </div>
-
-          <div class="space-y-3 pt-2">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-              <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Respuestas más populares (Máximo 5)</label>
-              <span class="text-xs font-bold ${pointsStyle}">
-                Suma de puntos: ${totalPoints} / 100
-                ${totalPoints !== 100 ? '⚠️ (Se sugiere sumar 100)' : '✓'}
-              </span>
-            </div>
-            <div class="space-y-2">
-              ${answersInputsHtml}
-            </div>
-          </div>
-        </div>
-      `;
+      }
     }
 
     function updateEditField(field, value) {
-      if (field === 'multiplier') {
-        editingRounds[selectedEditIdx][field] = parseInt(value) || 1;
-      } else {
-        editingRounds[selectedEditIdx][field] = value;
-      }
       const activeRound = editingRounds[selectedEditIdx];
+      if (field === 'multiplier') {
+        activeRound[field] = parseInt(value) || 1;
+      } else {
+        activeRound[field] = value;
+      }
       const items = document.getElementById('editor-rounds-list').children;
       if (items[selectedEditIdx]) {
         items[selectedEditIdx].querySelector('p.text-xs').innerText = activeRound.question || 'Nueva pregunta';
@@ -1575,7 +1909,6 @@
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
-      // Colores de la marca: Magenta, Amarillo, Azul y Blanco
       const colors = ['#E11B7C', '#FCCC32', '#009BD1', '#ffffff'];
       particles = Array.from({ length: 150 }).map(() => ({
         x: Math.random() * canvas.width,
@@ -1591,6 +1924,7 @@
 
     function startConfettiLoop() {
       const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
       function draw() {
