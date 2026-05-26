@@ -332,7 +332,8 @@
       </div>
 
       <!-- EL TABLERO DE LAS 5 RESPUESTAS OCULTAS -->
-      <div id="pub-answers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto w-full mb-6 z-10">
+      <!-- MODIFICADO: Ahora es "grid-cols-1" y tiene un ancho máximo de "max-w-3xl" para ver respuestas completas en una sola columna -->
+      <div id="pub-answers-grid" class="grid grid-cols-1 gap-4 max-w-3xl mx-auto w-full mb-6 z-10">
         <!-- Renderizado de las 5 tarjetas 3D mediante JS -->
       </div>
 
@@ -340,7 +341,7 @@
       <button id="btn-fullscreen" onclick="toggleFullscreen()" class="absolute bottom-4 right-4 z-[60] p-3 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-full border border-slate-700/50 shadow-lg transition-all opacity-40 hover:opacity-100 focus:outline-none" title="Activar Pantalla Completa (F)">
         <!-- Icono de Expandir (Fullscreen) -->
         <svg id="svg-fs-expand" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l-5 5m11 5l-5-5m5 5v-4m0 4h-4" />
         </svg>
         <!-- Icono de Contraer (Exit Fullscreen) -->
         <svg id="svg-fs-collapse" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -614,6 +615,7 @@
       syncViewAndData();
     }
 
+    // Abrir proyector en nueva pestaña
     function openProjectorWindow() {
       const url = `${window.location.origin}${window.location.pathname}?view=projector`;
       window.open(url, '_blank', 'width=1280,height=720');
