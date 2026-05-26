@@ -478,12 +478,12 @@
         <div class="flex items-center justify-center gap-6 md:gap-12 w-full max-w-4xl">
           <div class="flex-1 p-5 bg-serBlue/10 border-2 border-serBlue/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(0,155,209,0.15)]">
             <p class="text-[10px] md:text-xs text-serBlue uppercase tracking-widest font-black font-body">Equipo Excelencia</p>
-            <p id="pub-welcome-teamA" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold">EQUIPO EXCELENCIA</p>
+            <p id="pub-welcome-teamA" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold font-title">EQUIPO EXCELENCIA</p>
           </div>
           <div class="text-4xl md:text-6xl font-title tracking-widest text-serYellow filter drop-shadow-[0_0_10px_rgba(252,204,50,0.3)]">VS</div>
           <div class="flex-1 p-5 bg-serMagenta/10 border-2 border-serMagenta/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(225,27,126,0.15)]">
             <p class="text-[10px] md:text-xs text-serMagenta uppercase tracking-widest font-black font-body">Equipo Superación</p>
-            <p id="pub-welcome-teamB" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold">EQUIPO SUPERACIÓN</p>
+            <p id="pub-welcome-teamB" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold font-title">EQUIPO SUPERACIÓN</p>
           </div>
         </div>
       </div>
@@ -556,7 +556,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l-5 5m11 5l-5-5m5 5v-4m0 4h-4" />
         </svg>
         <svg id="svg-fs-collapse" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l5 5m0 0v-4m0 4H5m15-5l-5 5m0 0v-4m0 4h4M4 20l5-5m0 0v-4m0-4H5m15 5l-5-5m0 0v-4m0-4h4" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l5 5m0 0v-4m0 4H5m15-5l-5 5m0 0v-4m0 4h-4M4 20l5-5m0 0v-4m0-4H5m15 5l-5-5m0 0v-4m0-4h4" />
         </svg>
       </button>
 
@@ -607,7 +607,7 @@
               <!-- Cargado dinámicamente con JS -->
             </div>
           </div>
-          <button onclick="addNewRound()" class="w-full mt-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-indigo-500 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 font-body">
+          <button onclick="addNewRound()" class="w-full mt-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-indigo-500 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 font-body font-bold">
             ➕ Agregar Nueva Ronda
           </button>
         </div>
@@ -1197,7 +1197,8 @@
         // Renderizado dinámico del Logotipo
         const logoContainer = document.getElementById('pub-logo-container');
         if (logoData) {
-          logoContainer.innerHTML = `<img src="${logoData}" class="max-h-[35vh] max-w-[80vw] object-contain rounded-3xl shadow-[0_0_50px_rgba(245,158,11,0.25)] border-4 border-serYellow/20 animate-fade-in" alt="Logo de Bienvenida">`;
+          // MODIFICADO: Eliminados 'border-4 border-serYellow/20' y 'shadow-[0_0_50px_rgba(245,158,11,0.25)]' para limpiar el marco del logo en el proyector
+          logoContainer.innerHTML = `<img src="${logoData}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in" alt="Logo de Bienvenida">`;
         } else {
           // Logotipo de reserva neutral (Sin el logo visual "SER")
           logoContainer.innerHTML = `
@@ -1206,7 +1207,7 @@
                 <div class="absolute inset-1.5 border-4 border-dashed border-white/20 rounded-full"></div>
                 <span class="text-4xl md:text-5xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">🎓</span>
               </div>
-              <div class="font-title text-4xl md:text-6xl tracking-widest text-white uppercase select-none">
+              <div class="font-title text-4xl md:text-6xl tracking-widest text-white uppercase select-none font-bold">
                 100 Estudiantes Dijeron
               </div>
               <p class="text-[10px] font-bold text-serYellow uppercase tracking-widest mt-3 bg-serYellow/10 px-4 py-1.5 rounded-full border border-serYellow/20 select-none font-body">Edición Escolar</p>
@@ -1319,6 +1320,7 @@
       syncViewAndData();
     }
 
+    // Retroceder de ronda
     function prevRound() {
       gameState.currentRoundIdx = gameState.currentRoundIdx === 0 ? gameState.rounds.length - 1 : gameState.currentRoundIdx - 1;
       gameState.bank = 0;
