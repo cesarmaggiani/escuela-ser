@@ -115,9 +115,14 @@
         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
           <div class="flex justify-between items-center border-b border-slate-800 pb-2">
             <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Marcadores Rápidos</h3>
-            <button onclick="resetGame()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
-              🔄 Reiniciar Todo
-            </button>
+            <div class="flex items-center gap-3">
+              <button onclick="editTeamNames()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1">
+                ✏️ Editar Nombres
+              </button>
+              <button onclick="resetGame()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
+                🔄 Reiniciar Todo
+              </button>
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="p-3 bg-emerald-950/20 border border-emerald-500/30 rounded-lg">
@@ -602,13 +607,17 @@
       const setupSec = document.getElementById('setup-section');
       const controlsSec = document.getElementById('game-controls');
 
-      // 1. Mostrar/Ocultar secciones de inicio
+      // 1. Mostrar/Ocultar secciones de inicio e inputs
       if (gameState.gameStarted) {
         setupSec.classList.add('hidden');
         controlsSec.classList.remove('hidden');
       } else {
         setupSec.classList.remove('hidden');
         controlsSec.classList.add('hidden');
+        
+        // Sincronizar los campos de texto con el estado
+        document.getElementById('input-teamA-name').value = gameState.teamA.name;
+        document.getElementById('input-teamB-name').value = gameState.teamB.name;
       }
 
       // 2. Marcadores del Administrador
@@ -758,12 +767,19 @@
       syncViewAndData();
     }
 
+    function editTeamNames() {
+      gameState.gameStarted = false;
+      saveState();
+      syncViewAndData();
+    }
+
     function updateTeamName(team, val) {
       gameState[team].name = val.toUpperCase();
       saveState();
       syncViewAndData();
     }
 
+    // Modificar puntuación de forma manual
     function changeScore(team, offset) {
       gameState[team].score = Math.max(0, gameState[team].score + offset);
       saveState();
@@ -836,15 +852,15 @@
     function resetGame() {
       if (confirm("¿Estás seguro de que deseas reiniciar todo el juego y los marcadores?")) {
         gameState = {
-          teamA: { name: document.getElementById('input-teamA-name').value.toUpperCase(), score: 0 },
-          teamB: { name: document.getElementById('input-teamB-name').value.toUpperCase(), score: 0 },
+          teamA: { name: "EQUIPO TRICOLOR", score: 0 },
+          teamB: { name: "EQUIPO CALAVERA", score: 0 },
           currentRoundIdx: 0,
           bank: 0,
           strikes: 0,
           revealedAnswers: [],
           showStrikeOverlay: false,
           rounds: DEFAULT_ROUNDS,
-          gameStarted: true,
+          gameStarted: false, // Ahora se establece en falso para volver a mostrar el formulario de configuración
           victoryTrigger: false
         };
         saveState();
