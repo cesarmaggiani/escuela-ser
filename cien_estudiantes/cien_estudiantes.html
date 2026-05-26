@@ -306,7 +306,7 @@
         <div class="border-t border-slate-700/50 pt-3 space-y-3">
           <label class="text-xs text-serYellow font-bold uppercase tracking-wider block">Logotipo para la Bienvenida</label>
           <div class="flex flex-wrap gap-2 items-center">
-            <button onclick="document.getElementById('input-logo-file').click()" class="px-3 py-2 bg-slate-950 hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition-all">
+            <button onclick="document.getElementById('input-logo-file').click()" class="px-3 py-2 bg-slate-950 hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition-all font-body">
               📁 Subir Imagen (Local)
             </button>
             <input id="input-logo-file" type="file" accept="image/*" onchange="uploadLogo(event)" class="hidden">
@@ -328,7 +328,7 @@
             <label class="text-xs text-serYellow font-bold uppercase tracking-wider block">🎵 Música de Introducción</label>
             <label class="flex items-center gap-1.5 cursor-pointer select-none">
               <input type="checkbox" id="check-music-enable" checked onchange="toggleMusicEnable(this.checked)" class="accent-serBlue w-3.5 h-3.5 rounded">
-              <span class="text-[10px] text-slate-400 font-bold uppercase">Habilitar</span>
+              <span class="text-[10px] text-slate-400 font-bold uppercase font-body">Habilitar</span>
             </label>
           </div>
           
@@ -377,7 +377,7 @@
           <button onclick="startGame()" class="flex-1 py-3 bg-gradient-to-r from-serBlue to-serMagenta text-white font-title tracking-wider rounded-xl hover:brightness-110 active:scale-95 transition-all text-center text-lg">
             🚀 ¡INICIAR JUEGO!
           </button>
-          <button onclick="openEditor()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition-all text-xs uppercase flex items-center gap-1 font-body">
+          <button onclick="openEditor()" class="px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition-all text-xs uppercase flex items-center gap-1 font-body font-bold">
             📝 Editar Preguntas
           </button>
         </div>
@@ -753,6 +753,14 @@
     }
 
     // ==========================================
+    // ESCAPADO DE COMILLAS PARA EVITAR ERRORES EN EDITOR
+    // ==========================================
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str.replace(/"/g, '&quot;');
+    }
+
+    // ==========================================
     // TOASTS Y CONFIRMACIONES CUSTOM (Anti-alertas)
     // ==========================================
     function showToast(message, type = 'warning') {
@@ -852,8 +860,8 @@
         try {
           await saveAudioBlob(file, file.name);
           gameState.welcomeMusicType = 'local';
-          gameState.localMusicName = file.name;
-          // Notificar sincronización
+          // Se añade timestamp único para forzar sincronización y carga
+          gameState.localMusicName = file.name + '?' + Date.now();
           localStorage.setItem('mexicanos_game_music_trigger', Date.now());
           saveState();
           syncViewAndData();
@@ -1038,7 +1046,9 @@
           btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
           wrapperLocal.classList.remove('hidden');
           if (labelMusicFileStatus) {
-            labelMusicFileStatus.innerText = gameState.localMusicName || "Ningún archivo";
+            // Se limpia el timestamp para mostrar un nombre estético y limpio
+            const cleanMusicName = (gameState.localMusicName || "").split('?')[0];
+            labelMusicFileStatus.innerText = cleanMusicName || "Ningún archivo";
           }
         } else {
           btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serMagenta/50 text-serMagenta text-center";
@@ -1361,10 +1371,12 @@
           renderEditor();
         };
 
+        const escapedQuestionText = escapeHtml(round.question || 'Nueva pregunta');
+
         item.innerHTML = `
           <div class="truncate pr-2 font-body">
-            <p class="text-[10px] font-black uppercase text-serBlue leading-none">x${round.multiplier}</p>
-            <p class="text-xs font-bold leading-tight truncate mt-1">${round.question || 'Nueva pregunta'}</p>
+            <p class="text-[10px] font-black uppercase text-serBlue leading-none font-title tracking-widest">x${round.multiplier}</p>
+            <p class="text-xs font-bold leading-tight truncate mt-1">${escapedQuestionText}</p>
           </div>
           <button class="delete-btn p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-serMagenta rounded-lg transition-all" onclick="deleteRound(${index})">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1391,25 +1403,29 @@
 
       const activeRound = editingRounds[selectedEditIdx];
       const totalPoints = activeRound.answers.reduce((acc, ans) => acc + (parseInt(ans.points) || 0), 0);
-      const pointsStyle = totalPoints === 100 ? 'text-emerald-400' : 'text-serYellow animate-pulse';
+      const pointsStyle = totalPoints === 100 ? 'text-emerald-400 font-bold' : 'text-serYellow font-bold animate-pulse';
 
       let answersInputsHtml = '';
       activeRound.answers.forEach((ans, index) => {
+        const escapedAnswerText = escapeHtml(ans.text);
         answersInputsHtml += `
           <div class="grid grid-cols-12 gap-3 items-center font-body">
             <span class="col-span-1 text-xs font-black text-slate-500 text-center">${index + 1}</span>
-            <input type="text" value="${ans.text}" oninput="updateEditAnswer(${index}, 'text', this.value)" placeholder="Escribe la respuesta" class="col-span-8 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue">
+            <input type="text" value="${escapedAnswerText}" oninput="updateEditAnswer(${index}, 'text', this.value)" placeholder="Escribe la respuesta" class="col-span-8 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue">
             <input type="number" value="${ans.points}" oninput="updateEditAnswer(${index}, 'points', this.value)" placeholder="Pts" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-center text-slate-100 font-mono focus:outline-none focus:border-serBlue" min="0" max="100">
           </div>
         `;
       });
+
+      const escapedRoundTitle = escapeHtml(activeRound.title);
+      const escapedRoundQuestion = escapeHtml(activeRound.question);
 
       form.innerHTML = `
         <div class="space-y-4 font-body">
           <div class="grid grid-cols-3 gap-4">
             <div class="col-span-2 space-y-1.5">
               <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Título de la Ronda</label>
-              <input type="text" value="${activeRound.title}" oninput="updateEditField('title', this.value)" placeholder="Ej. Ronda 1: Hábitos en Casa" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-serBlue">
+              <input type="text" value="${escapedRoundTitle}" oninput="updateEditField('title', this.value)" placeholder="Ej. Ronda 1: Hábitos en Casa" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 font-bold focus:outline-none focus:border-serBlue">
             </div>
             <div class="space-y-1.5">
               <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Multiplicador</label>
@@ -1423,7 +1439,7 @@
 
           <div class="space-y-1.5">
             <label class="text-xs font-black text-slate-500 uppercase tracking-wider">Pregunta de la Ronda</label>
-            <textarea rows="2" oninput="updateEditField('question', this.value)" placeholder="Escribe la pregunta completa aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue resize-none">${activeRound.question}</textarea>
+            <textarea rows="2" oninput="updateEditField('question', this.value)" placeholder="Escribe la pregunta completa aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-serBlue resize-none">${escapedRoundQuestion}</textarea>
           </div>
 
           <div class="space-y-3 pt-2">
@@ -1559,6 +1575,7 @@
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
+      // Colores de la marca: Magenta, Amarillo, Azul y Blanco
       const colors = ['#E11B7C', '#FCCC32', '#009BD1', '#ffffff'];
       particles = Array.from({ length: 150 }).map(() => ({
         x: Math.random() * canvas.width,
