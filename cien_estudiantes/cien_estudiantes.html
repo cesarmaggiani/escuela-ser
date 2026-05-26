@@ -108,7 +108,7 @@
         </button>
       </div>
 
-      <!-- CONTROLES ACTIVOS DEL JUEGO (OCULTOS HASTA QUE EMPIECE) -->
+      <!-- CONTROLES ACTIVOS DEL JUEGO -->
       <div id="game-controls" class="hidden space-y-6">
         
         <!-- MARCADORES MANUALES -->
@@ -247,7 +247,7 @@
 
       <!-- PAPEL PICADO MEXICANO -->
       <div class="absolute top-0 left-0 right-0 flex justify-between px-2 opacity-40 select-none pointer-events-none z-0">
-        <!-- 12 Piezas decorativas -->
+        <!-- Piezas decorativas estilo papel picado -->
         <div class="w-10 h-10 transform origin-top rotate-12 text-emerald-500"><svg viewBox="0 0 100 100" fill="currentColor"><path d="M0,0 L100,0 L100,80 L80,100 L60,80 L40,100 L20,80 L0,100 Z" /></svg></div>
         <div class="w-10 h-10 transform origin-top -rotate-12 text-amber-400"><svg viewBox="0 0 100 100" fill="currentColor"><path d="M0,0 L100,0 L100,80 L80,100 L60,80 L40,100 L20,80 L0,100 Z" /></svg></div>
         <div class="w-10 h-10 transform origin-top rotate-6 text-rose-500"><svg viewBox="0 0 100 100" fill="currentColor"><path d="M0,0 L100,0 L100,80 L80,100 L60,80 L40,100 L20,80 L0,100 Z" /></svg></div>
@@ -303,7 +303,7 @@
           </p>
         </div>
 
-        <!-- POZO DE PUNTOS ACUMULADOS EN LA RONDA -->
+        <!-- POZO DE PUNTOS ACUMULADOS -->
         <div class="flex justify-center items-center gap-4 mt-4">
           <div class="px-6 py-2 bg-slate-900/90 rounded-2xl border border-slate-800 flex items-center gap-3 shadow-xl">
             <span class="text-sm font-bold text-slate-400 uppercase tracking-wider">Pozo Acumulado:</span>
@@ -324,11 +324,23 @@
 
       <!-- EL TABLERO DE LAS 5 RESPUESTAS OCULTAS -->
       <div id="pub-answers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto w-full mb-6 z-10">
-        <!-- Renderizado de las 5 tarjetas 3D con JS -->
+        <!-- Renderizado de las 5 tarjetas 3D mediante JS -->
       </div>
 
-      <!-- INTERRUPTOR DE SEGURIDAD PARA AUDIO (SÓLO PROYECTOR DESCONECTADO) -->
-      <div id="audio-auth-screen" class="hidden absolute inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 text-center">
+      <!-- BOTÓN DISCRETO FLOTANTE DE PANTALLA COMPLETA -->
+      <button id="btn-fullscreen" onclick="toggleFullscreen()" class="absolute bottom-4 right-4 z-30 p-3 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-full border border-slate-700/50 shadow-lg transition-all opacity-40 hover:opacity-100 focus:outline-none" title="Activar Pantalla Completa (F)">
+        <!-- Icono de Expandir (Fullscreen) -->
+        <svg id="svg-fs-expand" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+        <!-- Icono de Contraer (Exit Fullscreen) -->
+        <svg id="svg-fs-collapse" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l5 5m0 0v-4m0 4H5m15-5l-5 5m0 0v-4m0 4h4M4 20l5-5m0 0v4m0-4H5m15 5l-5-5m0 0v4m0-4h4" />
+        </svg>
+      </button>
+
+      <!-- INTERRUPTOR DE AUDIO PARA NAVEGADORES -->
+      <div id="audio-auth-screen" class="hidden absolute inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
         <span class="text-6xl mb-4">🔊</span>
         <h2 class="text-2xl font-black text-amber-400 mb-2">¡Sincronización Lista con tu Proyector!</h2>
         <p class="text-sm text-slate-300 max-w-md mb-6">
@@ -351,21 +363,21 @@
     const DEFAULT_ROUNDS = [
       {
         id: 1,
-        title: "Ronda 1: Hábitos en Casa (Sencilla)",
-        question: "¿Qué es lo primero que hace un estudiante al llegar a su casa después de las clases?",
+        title: "Ronda 1: Salir a la Calle (Sencilla)",
+        question: "Menciona algo que un adolescente jamás se le olvidaría llevar cuando sale a la calle",
         multiplier: 1,
         answers: [
-          { text: "Quitarse el uniforme / ponerse ropa cómoda", points: 40 },
-          { text: "Agarrar el celular / revisar redes sociales", points: 25 },
-          { text: "Comer / buscar comida en la cocina", points: 20 },
-          { text: "Dormirse una siesta", points: 10 },
-          { text: "Ponerse a hacer la tarea", points: 5 }
+          { text: "El celular (con batería)", points: 50 },
+          { text: "Los audífonos (para ir escuchando música)", points: 25 },
+          { text: "Dinero / La cartera / Monedero", points: 15 },
+          { text: "Las llaves de la casa", points: 7 },
+          { text: "Chicles / Bálsamo labial / Perfume", points: 3 }
         ]
       },
       {
         id: 2,
         title: "Ronda 2: Gustos Musicales (Sencilla)",
-        question: "¿Qué género o artista musical no puede faltar en la playlist de un estudiante de secundaria?",
+        question: "Menciona un género o artista musical que no puede faltar en la playlist de un estudiante de secundaria",
         multiplier: 1,
         answers: [
           { text: "Reggaetón / Urbano (Bad Bunny, Karol G, Feid)", points: 35 },
@@ -377,40 +389,41 @@
       },
       {
         id: 3,
-        title: "Ronda 3: El Drama con los Profes (¡DOBLE PUNTOS!)",
-        question: "¿Qué frase típica dice un profesor cuando se enoja con el grupo?",
+        title: "Ronda 3: Redes Sociales (¡DOBLE PUNTOS!)",
+        question: "Menciona la red social o aplicación que usan los estudiantes para enterarse del 'chisme' o de lo que hacen sus amigos",
         multiplier: 2,
         answers: [
-          { text: "“Es el peor grupo que he tenido en mi vida”", points: 40 },
-          { text: "“A mí me siguen pagando igual si entienden o no”", points: 25 },
-          { text: "“El que se quiera salir, la puerta está muy grande”", points: 20 },
-          { text: "“Guarden silencio o les pongo examen sorpresa”", points: 10 },
-          { text: "“¿De qué se ríen? Cuéntenos el chiste a todos”", points: 5 }
+          { text: "Instagram (Historias / Close Friends)", points: 45 },
+          { text: "WhatsApp (Estados o grupos del salón)", points: 30 },
+          { text: "TikTok (Videos o tendencias)", points: 15 },
+          { text: "Snapchat / Facebook", points: 7 },
+          { text: "X (Twitter)", points: 3 }
         ]
       },
       {
         id: 4,
-        title: "Ronda 4: Antojos de Recreo (¡TRIPLE PUNTOS!)",
-        question: "¿Qué es lo primero que corren a comprar a la cooperativa/tiendita en el recreo?",
+        title: "Ronda 4: Educación Física (¡TRIPLE PUNTOS!)",
+        question: "Cuál es la excusa más común para no hacer ejercicio en la clase de Educación Física",
         multiplier: 3,
         answers: [
-          { text: "Unas papitas con mucha salsa y limón", points: 45 },
-          { text: "Un refresco bien frío / Té helado / Arizona", points: 25 },
-          { text: "Una torta, tacos o hamburguesa", points: 15 },
-          { text: "Dulces, gomitas o paletas", points: 10 },
-          { text: "Un helado, hielito o bolis", points: 5 }
+          { text: "“Me duele la panza, la cabeza o me siento mal”", points: 45 },
+          { text: "“No traje el uniforme de deportes / los tenis”", points: 28 },
+          { text: "“Me lastimé el pie o la rodilla ayer jugando”", points: 15 },
+          { text: "“Está haciendo demasiado calor o sol”", points: 8 },
+          { text: "“Se me olvidó desayunar / no tengo energía”", points: 4 }
         ]
       },
       {
         id: 5,
-        title: "Ronda de Reserva: Educación Física (Por si hay empate)",
-        question: "¿Cuál es la excusa más común para no hacer ejercicio en la clase de Educación Física?",
+        title: "Ronda de Reserva: Hábitos en Casa (Por si hay empate)",
+        question: "Qué es lo primero que hace un estudiante al llegar a su casa después de las clases",
         multiplier: 1,
         answers: [
-          { text: "“Me duele la panza, la cabeza o me siento mal”", points: 50 },
-          { text: "“No traje el uniforme de deportes / los tenis”", points: 30 },
-          { text: "“Me lastimé el pie o la rodilla ayer jugando”", points: 15 },
-          { text: "“Está haciendo demasiado calor o sol”", points: 5 }
+          { text: "Quitarse el uniforme / ponerse ropa cómoda", points: 40 },
+          { text: "Agarrar el celular / revisar redes sociales", points: 25 },
+          { text: "Comer / buscar comida en la cocina", points: 20 },
+          { text: "Dormirse una siesta", points: 10 },
+          { text: "Ponerse a hacer la tarea", points: 5 }
         ]
       }
     ];
@@ -488,14 +501,14 @@
       currentRoundIdx: 0,
       bank: 0,
       strikes: 0,
-      revealedAnswers: [], // Índices de respuestas reveladas
+      revealedAnswers: [],
       showStrikeOverlay: false,
       rounds: DEFAULT_ROUNDS,
       gameStarted: false,
       victoryTrigger: false
     };
 
-    // Detectar si se abre directamente como proyector puro
+    // Detectar si se abre como proyector puro
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('view') === 'projector') {
       viewMode = 'projector';
@@ -503,17 +516,19 @@
 
     // Inicializar App
     window.onload = function() {
+      // Cargar el estado guardado para AMBOS modos (Admin y Proyector) al iniciar
+      const saved = localStorage.getItem('mexicanos_game_state');
+      if (saved) {
+        gameState = JSON.parse(saved);
+      }
+
       if (viewMode === 'projector') {
         // Adaptar vista completa de proyector
         document.getElementById('admin-header').classList.add('hidden');
         document.getElementById('admin-panel').classList.add('hidden');
+        
+        // Si ya hay un juego iniciado, mostramos la pantalla de audio y conectamos
         document.getElementById('audio-auth-screen').classList.remove('hidden');
-      } else {
-        // Cargar estado si ya existe
-        const saved = localStorage.getItem('mexicanos_game_state');
-        if (saved) {
-          gameState = JSON.parse(saved);
-        }
       }
       
       syncViewAndData();
@@ -536,6 +551,13 @@
 
           gameState = parsed;
           syncViewAndData();
+        }
+      });
+
+      // Configurar detector de teclado para pantalla completa en la ventana del proyector
+      window.addEventListener('keydown', function(e) {
+        if (e.key.toLowerCase() === 'f') {
+          toggleFullscreen();
         }
       });
     };
@@ -601,6 +623,58 @@
       document.getElementById('audio-auth-screen').classList.add('hidden');
       playSound('correct');
     }
+
+    // FUNCIÓN DE PANTALLA COMPLETA INTEGRADA (Requisito de interacción directa)
+    function toggleFullscreen() {
+      const doc = document.documentElement;
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+
+      if (!isFS) {
+        if (doc.requestFullscreen) {
+          doc.requestFullscreen();
+        } else if (doc.mozRequestFullScreen) { // Firefox
+          doc.mozRequestFullScreen();
+        } else if (doc.webkitRequestFullscreen) { // Chrome, Safari y Opera
+          doc.webkitRequestFullscreen();
+        } else if (doc.msRequestFullscreen) { // IE/Edge
+          doc.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+
+    // Monitorear y sincronizar visualmente el botón con el estado nativo de la pantalla completa
+    function updateFullscreenIcons() {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+      const expandIcon = document.getElementById('svg-fs-expand');
+      const collapseIcon = document.getElementById('svg-fs-collapse');
+      const btn = document.getElementById('btn-fullscreen');
+
+      if (isFS) {
+        expandIcon.classList.add('hidden');
+        collapseIcon.classList.remove('hidden');
+        btn.title = "Salir de Pantalla Completa (F)";
+      } else {
+        expandIcon.classList.remove('hidden');
+        collapseIcon.classList.add('hidden');
+        btn.title = "Activar Pantalla Completa (F)";
+      }
+    }
+
+    // Escuchadores del cambio de pantalla completa del navegador
+    document.addEventListener('fullscreenchange', updateFullscreenIcons);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+    document.addEventListener('mozfullscreenchange', updateFullscreenIcons);
+    document.addEventListener('MSFullscreenChange', updateFullscreenIcons);
 
     // Sincronizar UI entera basándose en `gameState`
     function syncViewAndData() {
@@ -767,6 +841,7 @@
       syncViewAndData();
     }
 
+    // Permitir editar nombres de equipo a la mitad del juego
     function editTeamNames() {
       gameState.gameStarted = false;
       saveState();
@@ -860,9 +935,11 @@
           revealedAnswers: [],
           showStrikeOverlay: false,
           rounds: DEFAULT_ROUNDS,
-          gameStarted: false, // Ahora se establece en falso para volver a mostrar el formulario de configuración
+          gameStarted: false, // Regresa a pantalla de edición
           victoryTrigger: false
         };
+        // Limpiamos memoria del navegador explícitamente al reiniciar
+        localStorage.removeItem('mexicanos_game_state');
         saveState();
         syncViewAndData();
       }
