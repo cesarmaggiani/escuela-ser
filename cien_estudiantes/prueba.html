@@ -151,6 +151,7 @@
     /* Reglas para la Pantalla de Bienvenida Adaptativa */
     body.view-projector #pub-welcome-board h2 {
       font-size: clamp(1.5rem, 4.5vh, 3.5rem) !important;
+      margin-top: 6vh !important; /* Espaciado extra con respecto al logo */
       margin-bottom: 3vh !important;
     }
     body.view-projector #pub-welcome-board .p-5 {
@@ -545,17 +546,17 @@
         <div id="pub-logo-container" class="mb-6 flex justify-center items-center h-[35vh] max-w-[85vw]">
           <!-- Se carga dinámicamente -->
         </div>
-        <h2 class="text-3xl md:text-5xl font-title tracking-wider bg-gradient-to-r from-serMagenta via-serYellow to-serBlue bg-clip-text text-transparent animate-pulse mb-8 uppercase">
+        <h2 class="text-3xl md:text-5xl font-title tracking-wider bg-gradient-to-r from-serMagenta via-serYellow to-serBlue bg-clip-text text-transparent animate-pulse mt-8 md:mt-12 mb-8 uppercase">
           ¡Bienvenidos al Show!
         </h2>
         <div class="flex items-center justify-center gap-6 md:gap-12 w-full max-w-4xl">
           <div class="flex-1 p-5 bg-serBlue/10 border-2 border-serBlue/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(0,155,209,0.15)] animate-scale-up">
-            <p class="text-[10px] md:text-xs text-serBlue uppercase tracking-widest font-black font-body">Equipo Excelencia</p>
+            <p class="text-[10px] md:text-xs text-serBlue uppercase tracking-widest font-black font-body">Equipo</p>
             <p id="pub-welcome-teamA" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold">EQUIPO EXCELENCIA</p>
           </div>
           <div class="text-4xl md:text-6xl font-title tracking-widest text-serYellow filter drop-shadow-[0_0_10px_rgba(252,204,50,0.3)]">VS</div>
           <div class="flex-1 p-5 bg-serMagenta/10 border-2 border-serMagenta/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(225,27,126,0.15)] animate-scale-up">
-            <p class="text-[10px] md:text-xs text-serMagenta uppercase tracking-widest font-black font-body">Equipo Superación</p>
+            <p class="text-[10px] md:text-xs text-serMagenta uppercase tracking-widest font-black font-body">Equipo</p>
             <p id="pub-welcome-teamB" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold">EQUIPO SUPERACIÓN</p>
           </div>
         </div>
@@ -715,7 +716,7 @@
       {
         id: 1,
         title: "Ronda 1: Salir a la Calle (Sencilla)",
-        question: "Menciona algo que un adolescente jamás se le olvidaría llevar cuando sale a la calle",
+        question: "Menciona algo que un adolescent jamás se le olvidaría llevar cuando sale a la calle",
         multiplier: 1,
         answers: [
           { text: "El celular (con batería)", points: 50 },
@@ -1333,13 +1334,6 @@
       synthThemeIntervalId = setInterval(playStep, stepTime * 1000);
     }
 
-    function stopSynthWelcomeTheme() {
-      if (synthThemeIntervalId) {
-        clearInterval(synthThemeIntervalId);
-        synthThemeIntervalId = null;
-      }
-    }
-
     // ==========================================
     // NUEVA FUNCIÓN DE AUDIO SINTETIZADO PREMIUM
     // ==========================================
@@ -1514,7 +1508,10 @@
       const btnAdmin = document.getElementById('btn-view-admin');
 
       if (mode === 'split') {
-        if (adminPanel) adminPanel.classList.remove('hidden');
+        if (adminPanel) {
+          adminPanel.classList.remove('hidden', 'md:w-full');
+          adminPanel.classList.add('w-full', 'md:w-[45%]');
+        }
         if (projectorPanel) projectorPanel.classList.remove('hidden');
         if (btnSplit) {
           btnSplit.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-gradient-to-r from-serBlue to-serBlue/80 text-white shadow-lg";
@@ -1523,7 +1520,10 @@
           btnAdmin.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
         }
       } else if (mode === 'admin') {
-        if (adminPanel) adminPanel.classList.remove('hidden');
+        if (adminPanel) {
+          adminPanel.classList.remove('hidden', 'md:w-[45%]');
+          adminPanel.classList.add('w-full', 'md:w-full');
+        }
         if (projectorPanel) projectorPanel.classList.add('hidden');
         if (btnSplit) {
           btnSplit.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
@@ -1888,6 +1888,9 @@
       syncViewAndData();
     }
 
+    // ==========================================
+    // SECCIÓN DE EVENTOS Y CONTROLES DEL JUEGO
+    // ==========================================
     function revealAnswer(idx, points) {
       if (!gameState.revealedAnswers || !Array.isArray(gameState.revealedAnswers)) {
         gameState.revealedAnswers = [];
