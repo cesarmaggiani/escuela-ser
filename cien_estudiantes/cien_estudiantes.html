@@ -229,6 +229,26 @@
 </head>
 <body class="min-h-screen bg-slate-950 text-white overflow-x-hidden flex flex-col selection:bg-serMagenta selection:text-white font-body">
 
+  <!-- Toast de Notificación Premium -->
+  <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none scale-90">
+    <div id="toast-message" class="bg-slate-900 border border-serYellow/30 text-serYellow px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2">
+      <span class="text-lg">📢</span> <span id="toast-text">Notificación</span>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación Personalizado -->
+  <div id="confirm-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="bg-slate-900 border-2 border-serYellow/20 p-6 rounded-3xl max-w-sm w-full text-center space-y-4 shadow-2xl">
+      <span class="text-4xl">⚠️</span>
+      <h3 class="text-lg font-title tracking-wider text-white uppercase">¿Estás seguro?</h3>
+      <p id="confirm-modal-text" class="text-xs text-slate-300 font-body">Esta acción no se puede deshacer.</p>
+      <div class="flex gap-2 pt-2">
+        <button id="btn-confirm-cancel" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold uppercase transition-all font-body">Cancelar</button>
+        <button id="btn-confirm-ok" class="flex-1 py-2 bg-serMagenta hover:brightness-110 text-white rounded-xl text-xs font-bold uppercase transition-all font-body">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- BARRA DE NAVEGACIÓN (Se oculta en el Proyector puro) -->
   <header id="admin-header" class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-wrap gap-4 justify-between items-center shadow-md z-10">
     <div class="flex items-center gap-3">
@@ -291,7 +311,7 @@
             </button>
             <input id="input-logo-file" type="file" accept="image/*" onchange="uploadLogo(event)" class="hidden">
             
-            <span class="text-xs text-slate-500">o</span>
+            <span class="text-xs text-slate-500 font-body">o</span>
             
             <input id="input-logo-url" type="text" oninput="updateLogoUrl(this.value)" placeholder="Pega URL de imagen (https://...)" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-serYellow">
           </div>
@@ -302,11 +322,10 @@
           </div>
         </div>
 
-        <!-- NUEVA SECCIÓN: MÚSICA DE INTRODUCCIÓN -->
+        <!-- MÚSICA DE INTRODUCCIÓN CON SOPORTE COMPLETO PARA SUBIR MP3 -->
         <div class="border-t border-slate-700/50 pt-3 space-y-3">
           <div class="flex justify-between items-center">
             <label class="text-xs text-serYellow font-bold uppercase tracking-wider block">🎵 Música de Introducción</label>
-            <!-- Checkbox de Habilitación -->
             <label class="flex items-center gap-1.5 cursor-pointer select-none">
               <input type="checkbox" id="check-music-enable" checked onchange="toggleMusicEnable(this.checked)" class="accent-serBlue w-3.5 h-3.5 rounded">
               <span class="text-[10px] text-slate-400 font-bold uppercase">Habilitar</span>
@@ -314,15 +333,29 @@
           </div>
           
           <div id="music-settings-group" class="space-y-3">
-            <div class="grid grid-cols-2 gap-2">
-              <button id="btn-music-synth" onclick="setMusicType('synth')" class="py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center">
+            <div class="grid grid-cols-3 gap-2">
+              <button id="btn-music-synth" onclick="setMusicType('synth')" class="py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center">
                 🎹 Sintetizador SER
               </button>
-              <button id="btn-music-url" onclick="setMusicType('url')" class="py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center">
+              <button id="btn-music-local" onclick="setMusicType('local')" class="py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center">
+                📁 Subir MP3 (Local)
+              </button>
+              <button id="btn-music-url" onclick="setMusicType('url')" class="py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center">
                 🔗 Enlace MP3 (Web)
               </button>
             </div>
             
+            <!-- Campo Archivo Local -->
+            <div id="wrapper-music-local" class="hidden space-y-2">
+              <div class="flex items-center gap-2">
+                <button onclick="document.getElementById('input-music-file').click()" class="px-3 py-1.5 bg-slate-950 hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition-all font-body">
+                  📁 Seleccionar MP3
+                </button>
+                <input id="input-music-file" type="file" accept="audio/mp3,audio/*" onchange="uploadMusicFile(event)" class="hidden">
+                <span id="label-music-file-status" class="text-xs text-slate-400 truncate max-w-[150px] font-body">Ningún archivo</span>
+              </div>
+            </div>
+
             <!-- Campo URL -->
             <div id="wrapper-music-url" class="hidden space-y-1">
               <input id="input-music-url" type="text" oninput="updateMusicUrl(this.value)" placeholder="Pega URL de MP3 (https://...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-serYellow font-body">
@@ -371,7 +404,7 @@
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="p-3 bg-serBlue/5 border border-serBlue/20 rounded-lg">
-              <p id="label-admin-teamA" class="text-xs text-serBlue font-black truncate">EQUIPO EXCELENCIA</p>
+              <p id="label-admin-teamA" class="text-xs text-serBlue font-black truncate font-body">EQUIPO EXCELENCIA</p>
               <div class="flex items-center gap-2 mt-2">
                 <button onclick="changeScore('teamA', -10)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs font-bold">-10</button>
                 <span id="label-admin-scoreA" class="text-xl font-bold flex-1 text-center font-body">0 pts</span>
@@ -379,7 +412,7 @@
               </div>
             </div>
             <div class="p-3 bg-serMagenta/5 border border-serMagenta/20 rounded-lg">
-              <p id="label-admin-teamB" class="text-xs text-serMagenta font-black truncate">EQUIPO SUPERACIÓN</p>
+              <p id="label-admin-teamB" class="text-xs text-serMagenta font-black truncate font-body">EQUIPO SUPERACIÓN</p>
               <div class="flex items-center gap-2 mt-2">
                 <button onclick="changeScore('teamB', -10)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs font-bold">-10</button>
                 <span id="label-admin-scoreB" class="text-xl font-bold flex-1 text-center font-body">0 pts</span>
@@ -530,7 +563,7 @@
       </div>
 
       <!-- TABLERO DE JUEGO ACTIVO (Se muestra en partida) -->
-      <div id="pub-active-board" class="hidden flex-1 flex flex-col justify-between w-full h-full">
+      <div id="pub-active-board" class="hidden flex-1 flex flex-col justify-between w-full h-full font-body">
         <!-- MARCADORES GIGANTES -->
         <div class="grid grid-cols-2 gap-8 items-center mt-6 z-10">
           <div class="text-center space-y-2 p-4 bg-slate-900/60 rounded-3xl border border-serBlue/20 backdrop-blur shadow-2xl">
@@ -602,7 +635,7 @@
       </button>
 
       <!-- INTERRUPTOR DE AUDIO PARA NAVEGADORES -->
-      <div id="audio-auth-screen" class="hidden absolute inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+      <div id="audio-auth-screen" class="hidden absolute inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in animate-scale-up">
         <span class="text-6xl mb-4">🔊</span>
         <h2 class="text-2xl font-title tracking-wider text-serYellow mb-2">¡Sincronización Satisfecha!</h2>
         <p class="text-sm text-slate-300 max-w-md mb-6 font-body">
@@ -623,7 +656,7 @@
   </main>
 
   <!-- MODAL / EDITOR BANCO DE PREGUNTAS -->
-  <div id="editor-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur z-50 flex items-center justify-center p-4">
+  <div id="editor-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur z-50 flex items-center justify-center p-4 font-body">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl animate-scale-up">
       <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50 rounded-t-3xl">
         <div class="flex items-center gap-2">
@@ -677,446 +710,100 @@
   <!-- CONTROLADORES Y LÓGICA DEL JUEGO -->
   <script>
     // ==========================================
-    // PREGUNTAS Y RESPUESTAS POR DEFECTO
+    // SISTEMA DE ALMACENAMIENTO INDEPENDIENTE MP3 (IndexedDB)
     // ==========================================
-    const DEFAULT_ROUNDS = [
-      {
-        id: 1,
-        title: "Ronda 1: Salir a la Calle (Sencilla)",
-        question: "Menciona algo que un adolescente jamás se le olvidaría llevar cuando sale a la calle",
-        multiplier: 1,
-        answers: [
-          { text: "El celular (con batería)", points: 50 },
-          { text: "Los audífonos (para ir escuchando música)", points: 25 },
-          { text: "Dinero / La cartera / Monedero", points: 15 },
-          { text: "Las llaves de la casa", points: 7 },
-          { text: "Chicles / Bálsamo labial / Perfume", points: 3 }
-        ]
-      },
-      {
-        id: 2,
-        title: "Ronda 2: Gustos Musicales (Sencilla)",
-        question: "Menciona un género o artista musical que no puede faltar en la playlist de un estudiante de secundaria",
-        multiplier: 1,
-        answers: [
-          { text: "Reggaetón / Urbano (Bad Bunny, Karol G, Feid)", points: 35 },
-          { text: "Corridos Tumbados / Regional (Peso Pluma, Nata)", points: 30 },
-          { text: "K-Pop (BTS, BLACKPINK, NewJeans)", points: 15 },
-          { text: "Pop en Inglés (Taylor Swift, Olivia Rodrigo, Billie)", points: 12 },
-          { text: "Trap / Rap / Hip-Hop (Duki, Travis Scott)", points: 8 }
-        ]
-      },
-      {
-        id: 3,
-        title: "Ronda 3: Redes Sociales (¡DOBLE PUNTOS!)",
-        question: "Menciona la red social o aplicación que usan los estudiantes para enterarse del 'chisme' o de lo que hacen sus amigos",
-        multiplier: 2,
-        answers: [
-          { text: "Instagram (Historias / Close Friends)", points: 45 },
-          { text: "WhatsApp (Estados o grupos del salón)", points: 30 },
-          { text: "TikTok (Videos o tendencias)", points: 15 },
-          { text: "Snapchat / Facebook", points: 7 },
-          { text: "X (Twitter)", points: 3 }
-        ]
-      },
-      {
-        id: 4,
-        title: "Ronda 4: Educación Física (¡TRIPLE PUNTOS!)",
-        question: "Cuál es la excusa más común para no hacer ejercicio en la clase de Educación Física",
-        multiplier: 3,
-        answers: [
-          { text: "“Me duele la panza, la cabeza o me siento mal”", points: 45 },
-          { text: "“No traje el uniforme de deportes / los tenis”", points: 28 },
-          { text: "“Me lastimé el pie o la rodilla ayer jugando”", points: 15 },
-          { text: "“Está haciendo demasiado calor o sol”", points: 8 },
-          { text: "“Se me olvidó desayunar / no tengo energía”", points: 4 }
-        ]
-      },
-      {
-        id: 5,
-        title: "Ronda de Reserva: Hábitos en Casa (Por si hay empate)",
-        question: "Qué es lo primero que hace un estudiante al llegar a su casa después de las clases",
-        multiplier: 1,
-        answers: [
-          { text: "Quitarse el uniforme / ponerse ropa cómoda", points: 40 },
-          { text: "Agarrar el celular / revisar redes sociales", points: 25 },
-          { text: "Comer / buscar comida en la cocina", points: 20 },
-          { text: "Dormirse una siesta", points: 10 },
-          { text: "Ponerse a hacer la tarea", points: 5 }
-        ]
-      }
-    ];
+    const DB_NAME = 'MexicanosGameDB';
+    const STORE_NAME = 'audioStore';
+    const DB_VERSION = 1;
 
-    // ==========================================
-    // SINTETIZADOR DE SONIDOS (Web Audio API)
-    // ==========================================
-    let audioCtx = null;
-    let synthThemeIntervalId = null;
-
-    function playSound(type) {
-      if (!audioEnabled) return;
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = ctx.currentTime;
-
-        if (type === 'correct') {
-          const osc1 = ctx.createOscillator();
-          const gain1 = ctx.createGain();
-          osc1.type = 'sine';
-          osc1.frequency.setValueAtTime(523.25, now);
-          osc1.frequency.setValueAtTime(659.25, now + 0.1);
-          osc1.frequency.setValueAtTime(783.99, now + 0.2);
-          gain1.gain.setValueAtTime(0.2, now);
-          gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-          osc1.connect(gain1);
-          gain1.connect(ctx.destination);
-          osc1.start(now);
-          osc1.stop(now + 0.4);
-        } 
-        else if (type === 'strike') {
-          const osc1 = ctx.createOscillator();
-          const osc2 = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc1.type = 'sawtooth';
-          osc2.type = 'sawtooth';
-          osc1.frequency.setValueAtTime(90, now);
-          osc2.frequency.setValueAtTime(93, now);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.8);
-          osc1.connect(gain);
-          osc2.connect(gain);
-          gain.connect(ctx.destination);
-          osc1.start(now);
-          osc2.start(now);
-          osc1.stop(now + 0.8);
-          osc2.stop(now + 0.8);
-        } 
-        else if (type === 'victory') {
-          const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
-          notes.forEach((freq, idx) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
-            gain.gain.setValueAtTime(0.15, now + idx * 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.3);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + idx * 0.1);
-            osc.stop(now + idx * 0.1 + 0.3);
-          });
-        }
-      } catch (e) {
-        console.warn("La reproducción de sonido falló:", e);
-      }
-    }
-
-    // ==========================================
-    // MELODÍA ARPEGIADA DE BIENVENIDA (SINTETIZADA)
-    // ==========================================
-    function playSynthWelcomeTheme() {
-      if (synthThemeIntervalId) return;
-      try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      } catch(e) {
-        return;
-      }
-      
-      const tempo = 135; // BPM
-      const stepTime = 60 / tempo / 2; // Corcheas (Eighth notes)
-      
-      // Una alegre progresión de acordes de concurso (C - F - G - C)
-      const themeNotes = [
-        // Do Mayor
-        261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 261.63, 329.63,
-        // Fa Mayor
-        349.23, 440.00, 523.25, 698.46, 523.25, 440.00, 349.23, 440.00,
-        // Sol Mayor
-        392.00, 493.88, 587.33, 783.99, 587.33, 493.88, 392.00, 493.88,
-        // Do Mayor Remate
-        523.25, 659.25, 783.99, 1046.50, 783.99, 523.25, 392.00, 261.63
-      ];
-      
-      let step = 0;
-      
-      function playStep() {
-        if (!audioEnabled || !gameState.welcomeMusicPlaying || gameState.gameStarted) {
-          stopSynthWelcomeTheme();
-          return;
-        }
-        
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        osc.type = 'triangle'; // Sonido dulce y retro
-        osc.frequency.setValueAtTime(themeNotes[step % themeNotes.length], audioCtx.currentTime);
-        
-        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + stepTime - 0.02);
-        
-        osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + stepTime);
-        
-        step++;
-      }
-      
-      playStep();
-      synthThemeIntervalId = setInterval(playStep, stepTime * 1000);
-    }
-
-    function stopSynthWelcomeTheme() {
-      if (synthThemeIntervalId) {
-        clearInterval(synthThemeIntervalId);
-        synthThemeIntervalId = null;
-      }
-    }
-
-    // ==========================================
-    // ESTADO DE LA APLICACIÓN
-    // ==========================================
-    let viewMode = 'split'; // 'split', 'admin', 'projector'
-    let gameState = {
-      teamA: { name: "EQUIPO EXCELENCIA", score: 0 },
-      teamB: { name: "EQUIPO SUPERACIÓN", score: 0 },
-      currentRoundIdx: 0,
-      bank: 0,
-      strikes: 0,
-      revealedAnswers: [],
-      showStrikeOverlay: false,
-      rounds: DEFAULT_ROUNDS,
-      gameStarted: false,
-      victoryTrigger: false,
-      welcomeMusicEnabled: true,
-      welcomeMusicType: 'synth', // 'synth' o 'url'
-      welcomeMusicUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Música libre de ejemplo
-      welcomeMusicPlaying: false
-    };
-
-    // Estructuras de trabajo del editor
-    let editingRounds = [];
-    let selectedEditIdx = 0;
-
-    // Detectar si se abre como proyector puro
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('view') === 'projector') {
-      viewMode = 'projector';
-    }
-
-    // Inicializar App
-    window.onload = function() {
-      // CARGA CON FILTRADO ROBUSTO
-      const saved = localStorage.getItem('mexicanos_game_state');
-      if (saved) {
-        try {
-          const loadedState = JSON.parse(saved);
-          gameState = {
-            teamA: loadedState.teamA || { name: "EQUIPO EXCELENCIA", score: 0 },
-            teamB: loadedState.teamB || { name: "EQUIPO SUPERACIÓN", score: 0 },
-            currentRoundIdx: typeof loadedState.currentRoundIdx === 'number' ? loadedState.currentRoundIdx : 0,
-            bank: typeof loadedState.bank === 'number' ? loadedState.bank : 0,
-            strikes: typeof loadedState.strikes === 'number' ? loadedState.strikes : 0,
-            revealedAnswers: Array.isArray(loadedState.revealedAnswers) ? loadedState.revealedAnswers : [],
-            showStrikeOverlay: !!loadedState.showStrikeOverlay,
-            rounds: (Array.isArray(loadedState.rounds) && loadedState.rounds.length > 0) ? loadedState.rounds : DEFAULT_ROUNDS,
-            gameStarted: !!loadedState.gameStarted,
-            victoryTrigger: !!loadedState.victoryTrigger,
-            welcomeMusicEnabled: loadedState.welcomeMusicEnabled !== undefined ? loadedState.welcomeMusicEnabled : true,
-            welcomeMusicType: loadedState.welcomeMusicType || 'synth',
-            welcomeMusicUrl: loadedState.welcomeMusicUrl || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-            welcomeMusicPlaying: !!loadedState.welcomeMusicPlaying
-          };
-        } catch (e) {
-          console.error("Error al recuperar los datos del juego:", e);
-          gameState.rounds = DEFAULT_ROUNDS;
-        }
-      } else {
-        gameState.rounds = DEFAULT_ROUNDS;
-      }
-
-      if (viewMode === 'projector') {
-        // Adaptar vista completa de proyector
-        document.getElementById('admin-header').classList.add('hidden');
-        document.getElementById('admin-panel').classList.add('hidden');
-        document.body.classList.add('view-projector');
-        
-        // Mostrar la pantalla de audio y conectar
-        document.getElementById('audio-auth-screen').classList.remove('hidden');
-      }
-      
-      syncViewAndData();
-      startConfettiLoop();
-
-      // Escuchar sincronizaciones entre pestañas
-      window.addEventListener('storage', function(e) {
-        if (e.key === 'mexicanos_game_state' && e.newValue) {
-          const parsed = JSON.parse(e.newValue);
-          
-          if (!parsed.revealedAnswers) parsed.revealedAnswers = [];
-          if (!parsed.rounds) parsed.rounds = DEFAULT_ROUNDS;
-          
-          // Lanzar efectos de sonido correspondientes
-          if (parsed.strikes > gameState.strikes) {
-            playSound('strike');
-          } else if (parsed.revealedAnswers.length > gameState.revealedAnswers.length) {
-            playSound('correct');
-          } else if (parsed.bank === 0 && (parsed.teamA.score > gameState.teamA.score || parsed.teamB.score > gameState.teamB.score)) {
-            playSound('victory');
-            triggerConfetti();
+    function getDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
           }
-
-          gameState = parsed;
-          syncViewAndData();
-        } else if (e.key === 'mexicanos_game_logo') {
-          syncViewAndData();
-        }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
       });
+    }
 
-      // Configurar detector de teclado para pantalla completa en la ventana del proyector
-      window.addEventListener('keydown', function(e) {
-        if (e.key.toLowerCase() === 'f') {
-          toggleFullscreen();
-        }
+    async function saveAudioBlob(blob, name) {
+      const db = await getDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.put({ blob, name }, 'introMusic');
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
       });
+    }
+
+    async function getAudioBlob() {
+      const db = await getDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const request = store.get('introMusic');
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    // ==========================================
+    // TOASTS Y CONFIRMACIONES CUSTOM (Anti-alertas)
+    // ==========================================
+    function showToast(message, type = 'warning') {
+      const toast = document.getElementById('toast-container');
+      const toastMsg = document.getElementById('toast-message');
+      const toastText = document.getElementById('toast-text');
+      
+      toastText.innerText = message;
+      if (type === 'error') {
+        toastMsg.className = "bg-rose-950 border border-serMagenta/40 text-serMagenta px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+      } else if (type === 'success') {
+        toastMsg.className = "bg-emerald-950 border border-emerald-500/40 text-emerald-400 px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+      } else {
+        toastMsg.className = "bg-slate-900 border border-serYellow/30 text-serYellow px-6 py-3 rounded-2xl shadow-2xl font-body font-semibold flex items-center gap-2";
+      }
+      
+      toast.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'scale-100');
+      
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'scale-100');
+        toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+      }, 3500);
+    }
+
+    let confirmResolve = null;
+    function customConfirm(message) {
+      document.getElementById('confirm-modal-text').innerText = message;
+      document.getElementById('confirm-modal').classList.remove('hidden');
+      return new Promise((resolve) => {
+        confirmResolve = resolve;
+      });
+    }
+
+    document.getElementById('btn-confirm-cancel').onclick = function() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+      if (confirmResolve) confirmResolve(false);
+    };
+    document.getElementById('btn-confirm-ok').onclick = function() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+      if (confirmResolve) confirmResolve(true);
     };
 
-    // Guardar cambios en el almacenamiento local para sincronización interactiva
-    function saveState() {
-      if (viewMode !== 'projector') {
-        try {
-          localStorage.setItem('mexicanos_game_state', JSON.stringify(gameState));
-        } catch (e) {
-          console.error("Error al guardar el estado del juego:", e);
-        }
-      }
-    }
+    // ==========================================
+    // ESTADO E INTERFAZ DEL JUEGO
+    // ==========================================
+    let currentLoadedMusicName = null;
+    let currentLoadedObjectURL = null;
 
     // ==========================================
-    // INTERFACES Y ACTUALIZACIÓN DEL DOM
-    // ==========================================
-    function setViewMode(mode) {
-      viewMode = mode;
-      const header = document.getElementById('admin-header');
-      const admin = document.getElementById('admin-panel');
-      const projector = document.getElementById('projector-panel');
-
-      const btnSplit = document.getElementById('btn-view-split');
-      const btnAdmin = document.getElementById('btn-view-admin');
-
-      btnSplit.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
-      btnAdmin.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
-
-      if (mode === 'split') {
-        header.classList.remove('hidden');
-        admin.classList.remove('hidden');
-        admin.className = "w-full md:w-[45%] border-r border-slate-800 bg-slate-900 p-6 overflow-y-auto space-y-6 flex flex-col";
-        projector.classList.remove('hidden');
-        btnSplit.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-gradient-to-r from-serBlue to-serBlue/80 text-white shadow-lg";
-        document.body.classList.remove('view-projector');
-      } else if (mode === 'admin') {
-        header.classList.remove('hidden');
-        admin.classList.remove('hidden');
-        admin.className = "w-full bg-slate-900 p-6 overflow-y-auto space-y-6 flex flex-col";
-        projector.classList.add('hidden');
-        btnAdmin.className = "px-4 py-2 rounded-lg text-sm font-title tracking-wider transition-all bg-gradient-to-r from-serMagenta to-serMagenta/80 text-white shadow-lg";
-        document.body.classList.remove('view-projector');
-      }
-      syncViewAndData();
-    }
-
-    function openProjectorWindow() {
-      const url = `${window.location.origin}${window.location.pathname}?view=projector`;
-      window.open(url, '_blank', 'width=1280,height=720');
-    }
-
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      const btn = document.getElementById('btn-audio');
-      if (audioEnabled) {
-        btn.className = "p-2 bg-emerald-600 text-white rounded-lg text-sm font-title tracking-wider transition-all";
-        btn.innerText = "🔔 Sonido Listo";
-        playSound('correct');
-      } else {
-        btn.className = "p-2 bg-slate-800 text-serMagenta border border-serMagenta/30 rounded-lg text-sm font-title tracking-wider transition-all";
-        btn.innerText = "🔕 Activar Audio";
-      }
-      syncViewAndData();
-    }
-
-    function authorizeAudio() {
-      audioEnabled = true;
-      document.getElementById('audio-auth-screen').classList.add('hidden');
-      playSound('correct');
-      
-      // Auto-iniciar la música si está configurada para sonar en la bienvenida
-      if (gameState.welcomeMusicEnabled && !gameState.gameStarted) {
-        gameState.welcomeMusicPlaying = true;
-        saveState();
-      }
-      syncViewAndData();
-    }
-
-    // PANTALLA COMPLETA INTEGRADA
-    function toggleFullscreen() {
-      const doc = document.documentElement;
-      const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-
-      if (!isFS) {
-        if (doc.requestFullscreen) {
-          doc.requestFullscreen();
-        } else if (doc.mozRequestFullScreen) {
-          doc.mozRequestFullScreen();
-        } else if (doc.webkitRequestFullscreen) {
-          doc.webkitRequestFullscreen();
-        } else if (doc.msRequestFullscreen) {
-          doc.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      }
-    }
-
-    function updateFullscreenIcons() {
-      const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-      const expandIcon = document.getElementById('svg-fs-expand');
-      const collapseIcon = document.getElementById('svg-fs-collapse');
-      const btn = document.getElementById('btn-fullscreen');
-      const btnAuthFS = document.getElementById('btn-auth-fullscreen');
-
-      if (btn) {
-        if (isFS) {
-          expandIcon.classList.add('hidden');
-          collapseIcon.classList.remove('hidden');
-          btn.title = "Salir de Pantalla Completa (F)";
-        } else {
-          expandIcon.classList.remove('hidden');
-          collapseIcon.classList.add('hidden');
-          btn.title = "Activar Pantalla Completa (F)";
-        }
-      }
-
-      if (btnAuthFS) {
-        btnAuthFS.innerHTML = isFS ? '🗗 Salir de Pantalla Completa (F)' : '🖥️ Pantalla Completa (F)';
-      }
-    }
-
-    document.addEventListener('fullscreenchange', updateFullscreenIcons);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
-    document.addEventListener('mozfullscreenchange', updateFullscreenIcons);
-    document.addEventListener('MSFullscreenChange', updateFullscreenIcons);
-
-    // ==========================================
-    // CARGADOR Y PROCESADO DEL LOGO (DECOUPLED)
+    // CARGADOR DE LOGO (DECOUPLED)
     // ==========================================
     function uploadLogo(event) {
       const file = event.target.files[0];
@@ -1127,8 +814,9 @@
           try {
             localStorage.setItem('mexicanos_game_logo', logoData);
             syncViewAndData();
+            showToast("Logotipo guardado con éxito.", "success");
           } catch (err) {
-            alert("¡La imagen del logo es demasiado grande para el navegador! Por favor sube una imagen reducida (menos de 1.5MB) o utiliza una URL.");
+            showToast("¡La imagen es demasiado pesada! Sube una de menor resolución.", "error");
             localStorage.removeItem('mexicanos_game_logo');
             syncViewAndData();
           }
@@ -1151,15 +839,38 @@
       document.getElementById('input-logo-file').value = '';
       document.getElementById('input-logo-url').value = '';
       syncViewAndData();
+      showToast("Logotipo removido.", "success");
     }
 
     // ==========================================
-    // CONTROLADORES DE LÓGICA DE MÚSICA
+    // CARGADOR MP3 INTEGRADO (IndexedDB)
     // ==========================================
+    async function uploadMusicFile(event) {
+      const file = event.target.files[0];
+      if (file) {
+        showToast("Procesando y guardando audio local...", "warning");
+        try {
+          await saveAudioBlob(file, file.name);
+          gameState.welcomeMusicType = 'local';
+          gameState.localMusicName = file.name;
+          // Notificar sincronización
+          localStorage.setItem('mexicanos_game_music_trigger', Date.now());
+          saveState();
+          syncViewAndData();
+          showToast("¡Audio MP3 guardado con éxito!", "success");
+        } catch (err) {
+          console.error(err);
+          showToast("Ocurrió un error al intentar guardar el audio.", "error");
+        }
+      }
+    }
+
     function toggleMusicEnable(checked) {
       gameState.welcomeMusicEnabled = checked;
       if (!checked) {
         gameState.welcomeMusicPlaying = false;
+      } else if (!gameState.gameStarted) {
+        gameState.welcomeMusicPlaying = true;
       }
       saveState();
       syncViewAndData();
@@ -1177,9 +888,9 @@
       syncViewAndData();
     }
 
-    // Función de prueba de música en local para el admin
+    // Prueba local en laptop
     let adminLocalAudio = null;
-    function adminTestPlayMusic(play) {
+    async function adminTestPlayMusic(play) {
       if (!play) {
         stopSynthWelcomeTheme();
         if (adminLocalAudio) {
@@ -1189,37 +900,53 @@
         return;
       }
 
-      // Activar audio localmente en laptop
       audioEnabled = true;
-      document.getElementById('btn-audio').className = "p-2 bg-emerald-600 text-white rounded-lg text-sm font-title tracking-wider transition-all";
-      document.getElementById('btn-audio').innerText = "🔔 Sonido Listo";
+      const btn = document.getElementById('btn-audio');
+      btn.className = "p-2 bg-emerald-600 text-white rounded-lg text-sm font-title tracking-wider transition-all";
+      btn.innerText = "🔔 Sonido Listo";
 
       if (gameState.welcomeMusicType === 'synth') {
         if (adminLocalAudio) {
           adminLocalAudio.pause();
           adminLocalAudio = null;
         }
-        // Forzar simulación de reproducción musical sintetizada local
         gameState.welcomeMusicPlaying = true;
         playSynthWelcomeTheme();
-      } else {
+      } else if (gameState.welcomeMusicType === 'url') {
         stopSynthWelcomeTheme();
         if (adminLocalAudio) adminLocalAudio.pause();
         adminLocalAudio = new Audio(gameState.welcomeMusicUrl);
         adminLocalAudio.loop = true;
         adminLocalAudio.volume = 0.5;
-        adminLocalAudio.play().catch(e => alert("No se pudo cargar la URL de música. Verifica que termine en .mp3 y que no tenga restricciones CORS."));
+        adminLocalAudio.play().catch(e => showToast("Error al reproducir. Revisa la URL o permisos CORS.", "error"));
+      } else if (gameState.welcomeMusicType === 'local') {
+        stopSynthWelcomeTheme();
+        if (adminLocalAudio) adminLocalAudio.pause();
+        try {
+          const audioData = await getAudioBlob();
+          if (audioData && audioData.blob) {
+            const objectURL = URL.createObjectURL(audioData.blob);
+            adminLocalAudio = new Audio(objectURL);
+            adminLocalAudio.loop = true;
+            adminLocalAudio.volume = 0.5;
+            adminLocalAudio.play().catch(e => showToast("El audio fue bloqueado por permisos del navegador.", "error"));
+          } else {
+            showToast("Por favor, selecciona primero un archivo de audio presionando 'Seleccionar MP3'.", "error");
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("Error leyendo audio de IndexedDB.", "error");
+        }
       }
     }
 
     // ==========================================
-    // MANEJADOR GENERAL DE REPRODUCCIÓN EN PROYECTOR
+    // REPRODUCCIÓN EN PANTALLA PROYECTADA
     // ==========================================
-    function manageProyectorWelcomeMusic() {
+    async function manageProyectorWelcomeMusic() {
       const pubAudio = document.getElementById('pub-audio-player');
       if (!pubAudio) return;
 
-      // Apagar música si el juego ya inició, si está desactivada, o si no se ha autorizado el audio
       if (gameState.gameStarted || !gameState.welcomeMusicEnabled || !gameState.welcomeMusicPlaying || !audioEnabled) {
         stopSynthWelcomeTheme();
         pubAudio.pause();
@@ -1227,7 +954,6 @@
         return;
       }
 
-      // Reproducción según tipo de música
       if (gameState.welcomeMusicType === 'synth') {
         pubAudio.pause();
         playSynthWelcomeTheme();
@@ -1236,9 +962,30 @@
         if (gameState.welcomeMusicUrl) {
           if (pubAudio.src !== gameState.welcomeMusicUrl) {
             pubAudio.src = gameState.welcomeMusicUrl;
-            pubAudio.volume = 0.4; // Volumen moderado para la bienvenida
+            pubAudio.volume = 0.4;
           }
-          pubAudio.play().catch(e => console.log("La reproducción de URL fue bloqueada hasta interactuar con el proyector.", e));
+          pubAudio.play().catch(e => console.log("La reproducción de URL fue bloqueada hasta interactuar con el proyector."));
+        }
+      } else if (gameState.welcomeMusicType === 'local') {
+        stopSynthWelcomeTheme();
+        if (currentLoadedMusicName !== gameState.localMusicName) {
+          try {
+            const audioData = await getAudioBlob();
+            if (audioData && audioData.blob) {
+              if (currentLoadedObjectURL) {
+                URL.revokeObjectURL(currentLoadedObjectURL);
+              }
+              currentLoadedObjectURL = URL.createObjectURL(audioData.blob);
+              currentLoadedMusicName = gameState.localMusicName;
+              pubAudio.src = currentLoadedObjectURL;
+              pubAudio.volume = 0.4;
+            }
+          } catch (err) {
+            console.error("Error cargando de IndexedDB:", err);
+          }
+        }
+        if (pubAudio.src) {
+          pubAudio.play().catch(e => console.log("La reproducción local fue bloqueada hasta interactuar con el proyector."));
         }
       }
     }
@@ -1248,7 +995,6 @@
       const setupSec = document.getElementById('setup-section');
       const controlsSec = document.getElementById('game-controls');
 
-      // 1. Mostrar/Ocultar secciones de inicio e inputs
       if (gameState.gameStarted) {
         setupSec.classList.add('hidden');
         controlsSec.classList.remove('hidden');
@@ -1256,7 +1002,6 @@
         setupSec.classList.remove('hidden');
         controlsSec.classList.add('hidden');
         
-        // Sincronizar los campos de texto e inputs de logo en el admin
         document.getElementById('input-teamA-name').value = gameState.teamA.name;
         document.getElementById('input-teamB-name').value = gameState.teamB.name;
 
@@ -1271,17 +1016,32 @@
         }
 
         const btnSynth = document.getElementById('btn-music-synth');
+        const btnLocal = document.getElementById('btn-music-local');
         const btnUrl = document.getElementById('btn-music-url');
+
+        const wrapperLocal = document.getElementById('wrapper-music-local');
         const wrapperUrl = document.getElementById('wrapper-music-url');
+        
         const inputMusicUrl = document.getElementById('input-music-url');
+        const labelMusicFileStatus = document.getElementById('label-music-file-status');
+
+        btnSynth.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+        btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+        btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+
+        wrapperLocal.classList.add('hidden');
+        wrapperUrl.classList.add('hidden');
 
         if (gameState.welcomeMusicType === 'synth') {
-          btnSynth.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
-          btnUrl.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
-          wrapperUrl.classList.add('hidden');
+          btnSynth.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
+        } else if (gameState.welcomeMusicType === 'local') {
+          btnLocal.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
+          wrapperLocal.classList.remove('hidden');
+          if (labelMusicFileStatus) {
+            labelMusicFileStatus.innerText = gameState.localMusicName || "Ningún archivo";
+          }
         } else {
-          btnSynth.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
-          btnUrl.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-indigo-950 border border-serMagenta/50 text-serMagenta text-center";
+          btnUrl.className = "py-2 px-1 rounded-lg text-[10px] font-title tracking-wider transition-all bg-indigo-950 border border-serMagenta/50 text-serMagenta text-center";
           wrapperUrl.classList.remove('hidden');
           if (inputMusicUrl && !inputMusicUrl.matches(':focus')) {
             inputMusicUrl.value = gameState.welcomeMusicUrl;
@@ -1298,9 +1058,9 @@
           imgPreview.src = currentLogo;
           if (inputUrl && !inputUrl.matches(':focus')) {
             if (currentLogo.startsWith('data:image')) {
-              inputUrl.value = ''; // Archivo local subido
+              inputUrl.value = '';
             } else {
-              inputUrl.value = currentLogo; // URL pegada
+              inputUrl.value = currentLogo;
             }
           }
         } else {
@@ -1309,24 +1069,23 @@
         }
       }
 
-      // Asegurar que las variables críticas existan para que no se caiga la renderización
       if (!gameState.revealedAnswers) gameState.revealedAnswers = [];
       if (!gameState.rounds) gameState.rounds = DEFAULT_ROUNDS;
 
-      // 2. Marcadores del Administrador
+      // Marcadores del Administrador
       document.getElementById('label-admin-teamA').innerText = gameState.teamA.name;
       document.getElementById('label-admin-teamB').innerText = gameState.teamB.name;
       document.getElementById('label-admin-scoreA').innerText = `${gameState.teamA.score} pts`;
       document.getElementById('label-admin-scoreB').innerText = `${gameState.teamB.score} pts`;
 
-      // 3. Rondas y Preguntas
+      // Rondas y Preguntas
       const currentRound = gameState.rounds[gameState.currentRoundIdx] || gameState.rounds[0];
       document.getElementById('round-indicator').innerText = `Pregunta ${gameState.currentRoundIdx + 1} de ${gameState.rounds.length}`;
       document.getElementById('round-title').innerText = currentRound.title;
       document.getElementById('round-multiplier').innerText = `Multiplicador: x${currentRound.multiplier}`;
       document.getElementById('round-question').innerText = `"${currentRound.question}"`;
 
-      // 4. Panel de Respuestas del Administrador (Botones de revelado)
+      // Panel de Respuestas del Administrador (Botones de revelado)
       const answersPanel = document.getElementById('answers-panel');
       answersPanel.innerHTML = '';
       currentRound.answers.forEach((ans, idx) => {
@@ -1346,7 +1105,7 @@
         answersPanel.appendChild(btn);
       });
 
-      // 5. Pozo e Indicadores del Administrador
+      // Pozo e Indicadores del Administrador
       document.getElementById('bank-points').innerText = `${gameState.bank} pts`;
       document.getElementById('multiplier-reminder').innerText = `Se aplicará x${currentRound.multiplier} (${gameState.bank * currentRound.multiplier} pts totales) al entregar.`;
 
@@ -1367,12 +1126,11 @@
       document.getElementById('assign-points-B').innerText = `+${gameState.bank * currentRound.multiplier} pts`;
 
       // -----------------------------------------------------------------
-      // 6. ACTUALIZACIONES DE LA PANTALLA PÚBLICA (PROYECTOR / BIENVENIDA)
+      // ACTUALIZACIONES DE LA PANTALLA PÚBLICA (PROYECTOR / BIENVENIDA)
       // -----------------------------------------------------------------
       const logoData = localStorage.getItem('mexicanos_game_logo') || '';
 
       if (gameState.gameStarted) {
-        // Mostrar panel de juego activo y ocultar bienvenida
         document.getElementById('pub-welcome-board').classList.add('hidden');
         document.getElementById('pub-active-board').classList.remove('hidden');
 
@@ -1385,7 +1143,6 @@
         document.getElementById('pub-round-question').innerText = `¿${currentRound.question}`;
         document.getElementById('pub-bank').innerText = gameState.bank;
 
-        // Actualizar visualización de fallos (X) del público
         for (let i = 1; i <= 3; i++) {
           const pubStrike = document.getElementById(`pub-strike-${i}`);
           if (gameState.strikes >= i) {
@@ -1395,7 +1152,6 @@
           }
         }
 
-        // Grid de respuestas proyectadas (Tablero 3D adaptativo de una columna)
         const pubGrid = document.getElementById('pub-answers-grid');
         pubGrid.innerHTML = '';
         currentRound.answers.forEach((ans, idx) => {
@@ -1404,14 +1160,12 @@
           cardContainer.className = "pub-card-container h-16 relative perspective-3d";
           cardContainer.innerHTML = `
             <div class="w-full h-full transform-style-3d absolute ${isRev ? 'rotate-x-180' : ''}">
-              <!-- CARA FRONTAL (OCULTA) - Usando Azul Oficial como contorno -->
               <div class="absolute inset-0 backface-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-2 border-serBlue/40 rounded-2xl flex items-center justify-between px-6 shadow-[0_0_15px_rgba(0,155,209,0.1)]">
                 <span class="text-3xl font-title tracking-wider text-serBlue/80">${idx + 1}</span>
                 <div class="w-10 h-10 rounded-full bg-serBlue/10 border border-serBlue/30 flex items-center justify-center shadow-inner">
                   <span class="text-xl font-title text-serBlue font-black">?</span>
                 </div>
               </div>
-              <!-- CARA TRASERA (REVELADA) - Usando Amarillo Oficial -->
               <div class="absolute inset-0 backface-hidden rotate-x-180 bg-gradient-to-r from-serYellow via-amber-300 to-serYellow border-2 border-yellow-100 rounded-2xl flex items-center justify-between px-6 shadow-xl text-slate-950">
                 <span class="text-lg font-bold uppercase tracking-wide truncate pr-4 font-body">${ans.text}</span>
                 <span class="text-xl font-title tracking-widest bg-slate-950 text-serYellow px-4 py-1 rounded-xl border border-yellow-200">${ans.points}</span>
@@ -1421,19 +1175,16 @@
           pubGrid.appendChild(cardContainer);
         });
       } else {
-        // Mostrar panel de bienvenida y ocultar panel de juego
         document.getElementById('pub-welcome-board').classList.remove('hidden');
         document.getElementById('pub-active-board').classList.add('hidden');
 
         document.getElementById('pub-welcome-teamA').innerText = gameState.teamA.name;
         document.getElementById('pub-welcome-teamB').innerText = gameState.teamB.name;
 
-        // Renderizado dinámico del Logotipo
         const logoContainer = document.getElementById('pub-logo-container');
         if (logoData) {
           logoContainer.innerHTML = `<img src="${logoData}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in" alt="Logo de Bienvenida">`;
         } else {
-          // Logotipo de reserva neutral (Sin el logo visual "SER")
           logoContainer.innerHTML = `
             <div class="flex flex-col items-center animate-fade-in">
               <div class="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-gradient-to-tr from-serMagenta to-serBlue rounded-full shadow-[0_0_30px_rgba(225,27,126,0.3)] animate-bounce-short mb-6">
@@ -1449,42 +1200,23 @@
         }
       }
 
-      // Ejecutar reproducción o apagado de la música de bienvenida
       manageProyectorWelcomeMusic();
-
-      // Overlay de Strikes en Proyector
-      const overlay = document.getElementById('strike-overlay');
-      const xContainer = document.getElementById('strike-x-container');
-      if (gameState.showStrikeOverlay) {
-        overlay.classList.remove('hidden');
-        xContainer.innerHTML = '';
-        for (let i = 0; i < gameState.strikes; i++) {
-          const xSpan = document.createElement('span');
-          xSpan.className = "text-9xl font-title tracking-wider text-serMagenta drop-shadow-[0_0_35px_rgba(225,27,126,0.8)] animate-bounce-short";
-          xSpan.innerText = 'X';
-          xContainer.appendChild(xSpan);
-        }
-      } else {
-        overlay.classList.add('hidden');
-      }
-
-      // Sincronizar iconos/textos de pantalla completa iniciales
       updateFullscreenIcons();
     }
 
     // ==========================================
-    // DISPARADORES Y LÓGICA DE JUEGO
+    // DISPARADORES Y LÓGICA DE JUEGO (ASYNC)
     // ==========================================
     function startGame() {
       gameState.gameStarted = true;
-      gameState.welcomeMusicPlaying = false; // Apagar la música al iniciar la partida activa
+      gameState.welcomeMusicPlaying = false; // Apagar la música al iniciar partida activa
       saveState();
       syncViewAndData();
+      showToast("¡Juego iniciado! Que gane el mejor equipo.", "success");
     }
 
     function editTeamNames() {
       gameState.gameStarted = false;
-      // Reactivar la música al volver a la pantalla de bienvenida
       if (gameState.welcomeMusicEnabled) {
         gameState.welcomeMusicPlaying = true;
       }
@@ -1550,6 +1282,7 @@
       
       saveState();
       syncViewAndData();
+      showToast(`Puntos asignados a ${gameState[team].name}.`, "success");
     }
 
     function nextRound() {
@@ -1570,8 +1303,9 @@
       syncViewAndData();
     }
 
-    function resetGame() {
-      if (confirm("¿Estás seguro de que deseas reiniciar todo el juego y los marcadores?")) {
+    async function resetGame() {
+      const ok = await customConfirm("¿Estás seguro de que deseas reiniciar todo el juego y los marcadores?");
+      if (ok) {
         gameState = {
           teamA: { name: "EQUIPO EXCELENCIA", score: 0 },
           teamB: { name: "EQUIPO SUPERACIÓN", score: 0 },
@@ -1591,6 +1325,7 @@
         localStorage.removeItem('mexicanos_game_state');
         saveState();
         syncViewAndData();
+        showToast("Juego reiniciado correctamente.", "success");
       }
     }
 
@@ -1757,32 +1492,35 @@
       renderEditor();
     }
 
-    // Eliminar ronda
-    function deleteRound(index) {
-      if (confirm("¿Estás seguro de que deseas eliminar esta ronda?")) {
+    async function deleteRound(index) {
+      const ok = await customConfirm("¿Estás seguro de que deseas eliminar esta ronda?");
+      if (ok) {
         editingRounds.splice(index, 1);
         selectedEditIdx = Math.max(0, selectedEditIdx - 1);
         renderEditor();
+        showToast("Ronda eliminada con éxito.", "success");
       }
     }
 
-    function resetToDefaultRounds() {
-      if (confirm("Se restablecerán todas las preguntas y multiplicadores originales. Perderás tus modificaciones. ¿Deseas continuar?")) {
+    async function resetToDefaultRounds() {
+      const ok = await customConfirm("Se restablecerán todas las preguntas y multiplicadores originales. Perderás tus modificaciones. ¿Deseas continuar?");
+      if (ok) {
         editingRounds = JSON.parse(JSON.stringify(DEFAULT_ROUNDS));
         selectedEditIdx = 0;
         renderEditor();
+        showToast("Preguntas restablecidas.", "success");
       }
     }
 
     function saveEditorChanges() {
       if (editingRounds.length === 0) {
-        alert("Debes tener por lo menos una ronda configurada en el juego.");
+        showToast("Debes tener por lo menos una ronda configurada en el juego.", "error");
         return;
       }
 
       for (let i = 0; i < editingRounds.length; i++) {
         if (!editingRounds[i].title.trim() || !editingRounds[i].question.trim()) {
-          alert(`La ronda número ${i + 1} tiene el título o la pregunta en blanco.`);
+          showToast(`La ronda número ${i + 1} tiene el título o la pregunta en blanco.`, "error");
           selectedEditIdx = i;
           renderEditor();
           return;
@@ -1804,6 +1542,7 @@
       closeEditor();
       
       playSound('correct');
+      showToast("Preguntas guardadas y sincronizadas.", "success");
     }
 
     // ==========================================
@@ -1820,7 +1559,6 @@
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
-      // Colores de la marca: Magenta, Amarillo, Azul y Blanco
       const colors = ['#E11B7C', '#FCCC32', '#009BD1', '#ffffff'];
       particles = Array.from({ length: 150 }).map(() => ({
         x: Math.random() * canvas.width,
