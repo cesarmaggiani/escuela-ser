@@ -283,7 +283,7 @@
         </div>
 
         <!-- CARGADOR DE LOGOTIPO PERSONALIZADO -->
-        <div class="border-t border-slate-700/50 pt-4 space-y-3">
+        <div class="border-t border-slate-700/50 pt-3 space-y-3">
           <label class="text-xs text-serYellow font-bold uppercase tracking-wider block">Logotipo para la Bienvenida</label>
           <div class="flex flex-wrap gap-2 items-center">
             <button onclick="document.getElementById('input-logo-file').click()" class="px-3 py-2 bg-slate-950 hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition-all">
@@ -299,6 +299,44 @@
             <img id="img-preview-admin" class="h-10 w-10 object-contain rounded border border-slate-700 bg-slate-900" alt="Vista previa">
             <span class="text-[11px] text-slate-400 truncate flex-1 font-body">Logo cargado correctamente</span>
             <button onclick="removeLogo()" class="text-xs text-serMagenta hover:text-red-400 font-bold font-body">Quitar</button>
+          </div>
+        </div>
+
+        <!-- NUEVA SECCIÓN: MÚSICA DE INTRODUCCIÓN -->
+        <div class="border-t border-slate-700/50 pt-3 space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-xs text-serYellow font-bold uppercase tracking-wider block">🎵 Música de Introducción</label>
+            <!-- Checkbox de Habilitación -->
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+              <input type="checkbox" id="check-music-enable" checked onchange="toggleMusicEnable(this.checked)" class="accent-serBlue w-3.5 h-3.5 rounded">
+              <span class="text-[10px] text-slate-400 font-bold uppercase">Habilitar</span>
+            </label>
+          </div>
+          
+          <div id="music-settings-group" class="space-y-3">
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-music-synth" onclick="setMusicType('synth')" class="py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center">
+                🎹 Sintetizador SER
+              </button>
+              <button id="btn-music-url" onclick="setMusicType('url')" class="py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center">
+                🔗 Enlace MP3 (Web)
+              </button>
+            </div>
+            
+            <!-- Campo URL -->
+            <div id="wrapper-music-url" class="hidden space-y-1">
+              <input id="input-music-url" type="text" oninput="updateMusicUrl(this.value)" placeholder="Pega URL de MP3 (https://...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-serYellow font-body">
+              <p class="text-[10px] text-slate-500 font-body">Ej: https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3</p>
+            </div>
+            
+            <!-- Controles de escucha local para admin -->
+            <div class="flex items-center justify-between bg-slate-950/50 p-2 rounded-lg border border-slate-800">
+              <span class="text-[11px] text-slate-400 font-body">Escuchar en Laptop:</span>
+              <div class="flex gap-2">
+                <button onclick="adminTestPlayMusic(true)" class="px-2.5 py-1 bg-serBlue hover:brightness-110 text-slate-950 text-[10px] font-bold rounded uppercase font-body">▶ Play</button>
+                <button onclick="adminTestPlayMusic(false)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded uppercase font-body">■ Stop</button>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -439,6 +477,9 @@
     <!-- PANTALLA DEL PROYECTOR (PUBLIC DISPLAY) -->
     <section id="projector-panel" class="flex-1 bg-gradient-to-b from-slate-950 to-indigo-950 p-6 flex flex-col justify-between relative overflow-hidden select-none min-h-[500px]">
       
+      <!-- AUDIO PLAYER DE RESPALDO (Custom link playback) -->
+      <audio id="pub-audio-player" loop class="hidden"></audio>
+
       <!-- CANVAS DE CONFETI -->
       <canvas id="confetti-canvas" class="absolute inset-0 pointer-events-none z-20 w-full h-full"></canvas>
 
@@ -467,7 +508,7 @@
       </div>
 
       <!-- VISTA DE BIENVENIDA (SPLASH SCREEN PROYECTOR) -->
-      <div id="pub-welcome-board" class="flex-1 flex flex-col justify-center items-center text-center p-4 z-10 w-full animate-fade-in">
+      <div id="pub-welcome-board" class="flex-1 flex flex-col justify-center items-center text-center p-4 z-10 w-full animate-fade-in font-body">
         <!-- Contenedor del Logo -->
         <div id="pub-logo-container" class="mb-6 flex justify-center items-center h-[35vh] max-w-[85vw]">
           <!-- Se carga dinámicamente -->
@@ -476,12 +517,12 @@
           ¡Bienvenidos al Show!
         </h2>
         <div class="flex items-center justify-center gap-6 md:gap-12 w-full max-w-4xl">
-          <div class="flex-1 p-5 bg-serBlue/10 border-2 border-serBlue/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(0,155,209,0.15)]">
+          <div class="flex-1 p-5 bg-serBlue/10 border-2 border-serBlue/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(0,155,209,0.15)] animate-scale-up">
             <p class="text-[10px] md:text-xs text-serBlue uppercase tracking-widest font-black font-body">Equipo Excelencia</p>
             <p id="pub-welcome-teamA" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold font-title">EQUIPO EXCELENCIA</p>
           </div>
           <div class="text-4xl md:text-6xl font-title tracking-widest text-serYellow filter drop-shadow-[0_0_10px_rgba(252,204,50,0.3)]">VS</div>
-          <div class="flex-1 p-5 bg-serMagenta/10 border-2 border-serMagenta/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(225,27,126,0.15)]">
+          <div class="flex-1 p-5 bg-serMagenta/10 border-2 border-serMagenta/30 rounded-3xl backdrop-blur shadow-[0_0_30px_rgba(225,27,126,0.15)] animate-scale-up">
             <p class="text-[10px] md:text-xs text-serMagenta uppercase tracking-widest font-black font-body">Equipo Superación</p>
             <p id="pub-welcome-teamB" class="text-xl md:text-3xl font-title tracking-wide mt-2 truncate font-bold font-title">EQUIPO SUPERACIÓN</p>
           </div>
@@ -565,7 +606,7 @@
         <span class="text-6xl mb-4">🔊</span>
         <h2 class="text-2xl font-title tracking-wider text-serYellow mb-2">¡Sincronización Satisfecha!</h2>
         <p class="text-sm text-slate-300 max-w-md mb-6 font-body">
-          Para permitir que el navegador emita los efectos de sonido y la fanfarria de victoria de SER, haz clic en el botón de abajo. Puedes poner el proyector en pantalla completa desde aquí mismo.
+          Para permitir que el navegador emita los efectos de sonido y la música de bienvenida del evento, haz clic en el botón de abajo. Puedes maximizar la pantalla completa desde aquí mismo.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button id="btn-auth-fullscreen" onclick="toggleFullscreen()" class="px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white text-lg font-title tracking-wider rounded-2xl border border-slate-700 shadow-xl transition-all active:scale-95 flex items-center gap-2">
@@ -709,7 +750,8 @@
     // ==========================================
     // SINTETIZADOR DE SONIDOS (Web Audio API)
     // ==========================================
-    let audioEnabled = false;
+    let audioCtx = null;
+    let synthThemeIntervalId = null;
 
     function playSound(type) {
       if (!audioEnabled) return;
@@ -770,6 +812,69 @@
     }
 
     // ==========================================
+    // MELODÍA ARPEGIADA DE BIENVENIDA (SINTETIZADA)
+    // ==========================================
+    function playSynthWelcomeTheme() {
+      if (synthThemeIntervalId) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) {
+        return;
+      }
+      
+      const tempo = 135; // BPM
+      const stepTime = 60 / tempo / 2; // Corcheas (Eighth notes)
+      
+      // Una alegre progresión de acordes de concurso (C - F - G - C)
+      const themeNotes = [
+        // Do Mayor
+        261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 261.63, 329.63,
+        // Fa Mayor
+        349.23, 440.00, 523.25, 698.46, 523.25, 440.00, 349.23, 440.00,
+        // Sol Mayor
+        392.00, 493.88, 587.33, 783.99, 587.33, 493.88, 392.00, 493.88,
+        // Do Mayor Remate
+        523.25, 659.25, 783.99, 1046.50, 783.99, 523.25, 392.00, 261.63
+      ];
+      
+      let step = 0;
+      
+      function playStep() {
+        if (!audioEnabled || !gameState.welcomeMusicPlaying || gameState.gameStarted) {
+          stopSynthWelcomeTheme();
+          return;
+        }
+        
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        osc.type = 'triangle'; // Sonido dulce y retro
+        osc.frequency.setValueAtTime(themeNotes[step % themeNotes.length], audioCtx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + stepTime - 0.02);
+        
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + stepTime);
+        
+        step++;
+      }
+      
+      playStep();
+      synthThemeIntervalId = setInterval(playStep, stepTime * 1000);
+    }
+
+    function stopSynthWelcomeTheme() {
+      if (synthThemeIntervalId) {
+        clearInterval(synthThemeIntervalId);
+        synthThemeIntervalId = null;
+      }
+    }
+
+    // ==========================================
     // ESTADO DE LA APLICACIÓN
     // ==========================================
     let viewMode = 'split'; // 'split', 'admin', 'projector'
@@ -783,7 +888,11 @@
       showStrikeOverlay: false,
       rounds: DEFAULT_ROUNDS,
       gameStarted: false,
-      victoryTrigger: false
+      victoryTrigger: false,
+      welcomeMusicEnabled: true,
+      welcomeMusicType: 'synth', // 'synth' o 'url'
+      welcomeMusicUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Música libre de ejemplo
+      welcomeMusicPlaying: false
     };
 
     // Estructuras de trabajo del editor
@@ -813,7 +922,11 @@
             showStrikeOverlay: !!loadedState.showStrikeOverlay,
             rounds: (Array.isArray(loadedState.rounds) && loadedState.rounds.length > 0) ? loadedState.rounds : DEFAULT_ROUNDS,
             gameStarted: !!loadedState.gameStarted,
-            victoryTrigger: !!loadedState.victoryTrigger
+            victoryTrigger: !!loadedState.victoryTrigger,
+            welcomeMusicEnabled: loadedState.welcomeMusicEnabled !== undefined ? loadedState.welcomeMusicEnabled : true,
+            welcomeMusicType: loadedState.welcomeMusicType || 'synth',
+            welcomeMusicUrl: loadedState.welcomeMusicUrl || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            welcomeMusicPlaying: !!loadedState.welcomeMusicPlaying
           };
         } catch (e) {
           console.error("Error al recuperar los datos del juego:", e);
@@ -857,7 +970,6 @@
           gameState = parsed;
           syncViewAndData();
         } else if (e.key === 'mexicanos_game_logo') {
-          // Si el logo cambia de forma independiente, refrescamos el proyector
           syncViewAndData();
         }
       });
@@ -914,7 +1026,6 @@
       syncViewAndData();
     }
 
-    // Abrir proyector en nueva pestaña
     function openProjectorWindow() {
       const url = `${window.location.origin}${window.location.pathname}?view=projector`;
       window.open(url, '_blank', 'width=1280,height=720');
@@ -931,15 +1042,23 @@
         btn.className = "p-2 bg-slate-800 text-serMagenta border border-serMagenta/30 rounded-lg text-sm font-title tracking-wider transition-all";
         btn.innerText = "🔕 Activar Audio";
       }
+      syncViewAndData();
     }
 
     function authorizeAudio() {
       audioEnabled = true;
       document.getElementById('audio-auth-screen').classList.add('hidden');
       playSound('correct');
+      
+      // Auto-iniciar la música si está configurada para sonar en la bienvenida
+      if (gameState.welcomeMusicEnabled && !gameState.gameStarted) {
+        gameState.welcomeMusicPlaying = true;
+        saveState();
+      }
+      syncViewAndData();
     }
 
-    // FUNCIÓN DE PANTALLA COMPLETA INTEGRADA
+    // PANTALLA COMPLETA INTEGRADA
     function toggleFullscreen() {
       const doc = document.documentElement;
       const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
@@ -967,7 +1086,6 @@
       }
     }
 
-    // Sincroniza visualmente ambos botones (flotante y del auth overlay)
     function updateFullscreenIcons() {
       const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
       const expandIcon = document.getElementById('svg-fs-expand');
@@ -1007,7 +1125,6 @@
         reader.onload = function(e) {
           const logoData = e.target.result;
           try {
-            // Guardamos el logo en una ranura de memoria separada de los clics normales de juego
             localStorage.setItem('mexicanos_game_logo', logoData);
             syncViewAndData();
           } catch (err) {
@@ -1029,12 +1146,101 @@
       syncViewAndData();
     }
 
-    // ELIMINACIÓN SEGURA Y GARANTIZADA DEL LOGO
     function removeLogo() {
       localStorage.removeItem('mexicanos_game_logo');
       document.getElementById('input-logo-file').value = '';
       document.getElementById('input-logo-url').value = '';
       syncViewAndData();
+    }
+
+    // ==========================================
+    // CONTROLADORES DE LÓGICA DE MÚSICA
+    // ==========================================
+    function toggleMusicEnable(checked) {
+      gameState.welcomeMusicEnabled = checked;
+      if (!checked) {
+        gameState.welcomeMusicPlaying = false;
+      }
+      saveState();
+      syncViewAndData();
+    }
+
+    function setMusicType(type) {
+      gameState.welcomeMusicType = type;
+      saveState();
+      syncViewAndData();
+    }
+
+    function updateMusicUrl(val) {
+      gameState.welcomeMusicUrl = val;
+      saveState();
+      syncViewAndData();
+    }
+
+    // Función de prueba de música en local para el admin
+    let adminLocalAudio = null;
+    function adminTestPlayMusic(play) {
+      if (!play) {
+        stopSynthWelcomeTheme();
+        if (adminLocalAudio) {
+          adminLocalAudio.pause();
+          adminLocalAudio = null;
+        }
+        return;
+      }
+
+      // Activar audio localmente en laptop
+      audioEnabled = true;
+      document.getElementById('btn-audio').className = "p-2 bg-emerald-600 text-white rounded-lg text-sm font-title tracking-wider transition-all";
+      document.getElementById('btn-audio').innerText = "🔔 Sonido Listo";
+
+      if (gameState.welcomeMusicType === 'synth') {
+        if (adminLocalAudio) {
+          adminLocalAudio.pause();
+          adminLocalAudio = null;
+        }
+        // Forzar simulación de reproducción musical sintetizada local
+        gameState.welcomeMusicPlaying = true;
+        playSynthWelcomeTheme();
+      } else {
+        stopSynthWelcomeTheme();
+        if (adminLocalAudio) adminLocalAudio.pause();
+        adminLocalAudio = new Audio(gameState.welcomeMusicUrl);
+        adminLocalAudio.loop = true;
+        adminLocalAudio.volume = 0.5;
+        adminLocalAudio.play().catch(e => alert("No se pudo cargar la URL de música. Verifica que termine en .mp3 y que no tenga restricciones CORS."));
+      }
+    }
+
+    // ==========================================
+    // MANEJADOR GENERAL DE REPRODUCCIÓN EN PROYECTOR
+    // ==========================================
+    function manageProyectorWelcomeMusic() {
+      const pubAudio = document.getElementById('pub-audio-player');
+      if (!pubAudio) return;
+
+      // Apagar música si el juego ya inició, si está desactivada, o si no se ha autorizado el audio
+      if (gameState.gameStarted || !gameState.welcomeMusicEnabled || !gameState.welcomeMusicPlaying || !audioEnabled) {
+        stopSynthWelcomeTheme();
+        pubAudio.pause();
+        pubAudio.currentTime = 0;
+        return;
+      }
+
+      // Reproducción según tipo de música
+      if (gameState.welcomeMusicType === 'synth') {
+        pubAudio.pause();
+        playSynthWelcomeTheme();
+      } else if (gameState.welcomeMusicType === 'url') {
+        stopSynthWelcomeTheme();
+        if (gameState.welcomeMusicUrl) {
+          if (pubAudio.src !== gameState.welcomeMusicUrl) {
+            pubAudio.src = gameState.welcomeMusicUrl;
+            pubAudio.volume = 0.4; // Volumen moderado para la bienvenida
+          }
+          pubAudio.play().catch(e => console.log("La reproducción de URL fue bloqueada hasta interactuar con el proyector.", e));
+        }
+      }
     }
 
     // Sincronizar UI entera basándose en `gameState`
@@ -1053,6 +1259,34 @@
         // Sincronizar los campos de texto e inputs de logo en el admin
         document.getElementById('input-teamA-name').value = gameState.teamA.name;
         document.getElementById('input-teamB-name').value = gameState.teamB.name;
+
+        // Sincronizar UI de música de introducción en admin
+        document.getElementById('check-music-enable').checked = gameState.welcomeMusicEnabled;
+        
+        const musicSettingsGroup = document.getElementById('music-settings-group');
+        if (gameState.welcomeMusicEnabled) {
+          musicSettingsGroup.classList.remove('hidden');
+        } else {
+          musicSettingsGroup.classList.add('hidden');
+        }
+
+        const btnSynth = document.getElementById('btn-music-synth');
+        const btnUrl = document.getElementById('btn-music-url');
+        const wrapperUrl = document.getElementById('wrapper-music-url');
+        const inputMusicUrl = document.getElementById('input-music-url');
+
+        if (gameState.welcomeMusicType === 'synth') {
+          btnSynth.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-indigo-950 border border-serBlue/50 text-serBlue text-center";
+          btnUrl.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+          wrapperUrl.classList.add('hidden');
+        } else {
+          btnSynth.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-slate-950 border border-slate-800 text-slate-400 text-center";
+          btnUrl.className = "py-2 px-3 rounded-lg text-xs font-title tracking-wider transition-all bg-indigo-950 border border-serMagenta/50 text-serMagenta text-center";
+          wrapperUrl.classList.remove('hidden');
+          if (inputMusicUrl && !inputMusicUrl.matches(':focus')) {
+            inputMusicUrl.value = gameState.welcomeMusicUrl;
+          }
+        }
 
         const logoPreview = document.getElementById('logo-preview-admin');
         const imgPreview = document.getElementById('img-preview-admin');
@@ -1197,7 +1431,6 @@
         // Renderizado dinámico del Logotipo
         const logoContainer = document.getElementById('pub-logo-container');
         if (logoData) {
-          // MODIFICADO: Eliminados 'border-4 border-serYellow/20' y 'shadow-[0_0_50px_rgba(245,158,11,0.25)]' para limpiar el marco del logo en el proyector
           logoContainer.innerHTML = `<img src="${logoData}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in" alt="Logo de Bienvenida">`;
         } else {
           // Logotipo de reserva neutral (Sin el logo visual "SER")
@@ -1215,6 +1448,9 @@
           `;
         }
       }
+
+      // Ejecutar reproducción o apagado de la música de bienvenida
+      manageProyectorWelcomeMusic();
 
       // Overlay de Strikes en Proyector
       const overlay = document.getElementById('strike-overlay');
@@ -1241,12 +1477,17 @@
     // ==========================================
     function startGame() {
       gameState.gameStarted = true;
+      gameState.welcomeMusicPlaying = false; // Apagar la música al iniciar la partida activa
       saveState();
       syncViewAndData();
     }
 
     function editTeamNames() {
       gameState.gameStarted = false;
+      // Reactivar la música al volver a la pantalla de bienvenida
+      if (gameState.welcomeMusicEnabled) {
+        gameState.welcomeMusicPlaying = true;
+      }
       saveState();
       syncViewAndData();
     }
@@ -1320,7 +1561,6 @@
       syncViewAndData();
     }
 
-    // Retroceder de ronda
     function prevRound() {
       gameState.currentRoundIdx = gameState.currentRoundIdx === 0 ? gameState.rounds.length - 1 : gameState.currentRoundIdx - 1;
       gameState.bank = 0;
@@ -1342,7 +1582,11 @@
           showStrikeOverlay: false,
           rounds: gameState.rounds || DEFAULT_ROUNDS, 
           gameStarted: false, 
-          victoryTrigger: false
+          victoryTrigger: false,
+          welcomeMusicEnabled: gameState.welcomeMusicEnabled !== undefined ? gameState.welcomeMusicEnabled : true,
+          welcomeMusicType: gameState.welcomeMusicType || 'synth',
+          welcomeMusicUrl: gameState.welcomeMusicUrl || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+          welcomeMusicPlaying: false
         };
         localStorage.removeItem('mexicanos_game_state');
         saveState();
@@ -1361,7 +1605,6 @@
       renderEditor();
     }
 
-    // Cerrar el modal del editor
     function closeEditor() {
       document.getElementById('editor-modal').classList.add('hidden');
     }
@@ -1514,6 +1757,7 @@
       renderEditor();
     }
 
+    // Eliminar ronda
     function deleteRound(index) {
       if (confirm("¿Estás seguro de que deseas eliminar esta ronda?")) {
         editingRounds.splice(index, 1);
@@ -1576,7 +1820,7 @@
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
-      // Colores estrictos de la marca: Magenta, Amarillo, Azul y Blanco
+      // Colores de la marca: Magenta, Amarillo, Azul y Blanco
       const colors = ['#E11B7C', '#FCCC32', '#009BD1', '#ffffff'];
       particles = Array.from({ length: 150 }).map(() => ({
         x: Math.random() * canvas.width,
