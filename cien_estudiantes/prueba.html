@@ -889,6 +889,7 @@
     // ==========================================
     // ESTADO E INTERFAZ DEL JUEGO
     // ==========================================
+    let activeWelcomeAudio = null; // Unificador de reproductor HTML5 de audio
     let currentLoadedMusicName = null;
     let currentLoadedObjectURL = null;
     let viewMode = 'split'; // 'split', 'admin', 'projector'
@@ -942,7 +943,7 @@
         };
       }
 
-      // 1. CARGA DEL LOGO DESDE INDEXEDDB (Bypassea límites del navegador)
+      // 1. CARGA DEL LOGO DESDE INDEXEDDB
       try {
         const logoRecord = await getFromDB('customLogo');
         if (logoRecord && logoRecord.data) {
@@ -1029,7 +1030,6 @@
             console.error("Error al sincronizar estado:", err);
           }
         } else if (e.key === 'mexicanos_game_logo_trigger') {
-          // El logo fue actualizado, lo recargamos de IndexedDB de manera asíncrona
           try {
             const logoRecord = await getFromDB('customLogo');
             loadedLogoData = (logoRecord && logoRecord.data) ? logoRecord.data : '';
@@ -1069,13 +1069,9 @@
         reader.onload = async function(e) {
           const logoData = e.target.result;
           try {
-            // Guardar en base de datos local robusta
             await saveToDB('customLogo', { data: logoData, name: file.name });
             loadedLogoData = logoData;
-            
-            // Disparar sincronización para pestañas alternas
             localStorage.setItem('mexicanos_game_logo_trigger', Date.now());
-            
             syncViewAndData();
             showToast("Logotipo guardado con éxito.", "success");
           } catch (err) {
@@ -1166,18 +1162,91 @@
       syncViewAndData();
     }
 
-    // Prueba local en laptop
-    let adminLocalAudio = null;
-    async function adminTestPlayMusic(play) {
-      if (!play) {
-        stopSynthWelcomeTheme();
-        if (adminLocalAudio) {
-          adminLocalAudio.pause();
-          adminLocalAudio = null;
-        }
+    // ==========================================
+    // SISTEMA UNIFICADO DE CONTROL DE AUDIO (Anti-solapamiento)
+    // ==========================================
+    function stopAllWelcomeMusic() {
+      // 1. Detener melodía del sintetizador
+      stopSynthWelcomeTheme();
+
+      // 2. Detener reproductor de audio HTML5 dinámico
+      if (activeWelcomeAudio) {
+        try {
+          activeWelcomeAudio.pause();
+          activeWelcomeAudio.currentTime = 0;
+        } catch(e) {}
+        activeWelcomeAudio = null;
+      }
+
+      // 3. Detener reproductor de respaldo del proyector en DOM
+      const pubAudio = document.getElementById('pub-audio-player');
+      if (pubAudio) {
+        try {
+          pubAudio.pause();
+          pubAudio.currentTime = 0;
+        } catch(e) {}
+      }
+    }
+
+    async function playWelcomeMusic() {
+      // Detener cualquier sonido previo de forma segura
+      stopAllWelcomeMusic();
+
+      if (!audioEnabled || !gameState.welcomeMusicEnabled || !gameState.welcomeMusicPlaying || gameState.gameStarted) {
         return;
       }
 
+      if (gameState.welcomeMusicType === 'synth') {
+        playSynthWelcomeTheme();
+      } else if (gameState.welcomeMusicType === 'url') {
+        if (gameState.welcomeMusicUrl) {
+          try {
+            activeWelcomeAudio = new Audio(gameState.welcomeMusicUrl);
+            activeWelcomeAudio.loop = true;
+            activeWelcomeAudio.volume = 0.4;
+            activeWelcomeAudio.play().catch(e => console.log("Audio block/interacción requerida"));
+          } catch(err) {
+            console.warn("Fallo al reproducir URL:", err);
+          }
+        }
+      } else if (gameState.welcomeMusicType === 'local') {
+        try {
+          const audioData = await getAudioBlob();
+          if (audioData && audioData.blob) {
+            if (currentLoadedObjectURL) {
+              URL.revokeObjectURL(currentLoadedObjectURL);
+            }
+            currentLoadedObjectURL = URL.createObjectURL(audioData.blob);
+            activeWelcomeAudio = new Audio(currentLoadedObjectURL);
+            activeWelcomeAudio.loop = true;
+            activeWelcomeAudio.volume = 0.4;
+            activeWelcomeAudio.play().catch(e => console.log("Audio block/interacción requerida"));
+          }
+        } catch (err) {
+          console.error("Error leyendo audio de IndexedDB:", err);
+        }
+      }
+    }
+
+    // Validador inteligente para evitar que la canción se reinicie a cada instante
+    function updateWelcomeMusicPlayback() {
+      if (gameState.welcomeMusicPlaying && !gameState.gameStarted && gameState.welcomeMusicEnabled && audioEnabled) {
+        // Solo iniciamos una nueva pista si no hay ya una ejecutándose para el tipo seleccionado
+        if (gameState.welcomeMusicType === 'synth' && !synthThemeIntervalId) {
+          playWelcomeMusic();
+        } else if (gameState.welcomeMusicType === 'url' && (!activeWelcomeAudio || activeWelcomeAudio.src !== gameState.welcomeMusicUrl)) {
+          playWelcomeMusic();
+        } else if (gameState.welcomeMusicType === 'local' && (!activeWelcomeAudio || currentLoadedMusicName !== gameState.localMusicName)) {
+          currentLoadedMusicName = gameState.localMusicName;
+          playWelcomeMusic();
+        }
+      } else {
+        stopAllWelcomeMusic();
+      }
+    }
+
+    // Botón unificado de Play / Stop en panel de Administrador
+    function adminTestPlayMusic(play) {
       audioEnabled = true;
       const btn = document.getElementById('btn-audio');
       if (btn) {
@@ -1185,96 +1254,9 @@
         btn.innerText = "🔔 Sonido Listo";
       }
 
-      if (gameState.welcomeMusicType === 'synth') {
-        if (adminLocalAudio) {
-          adminLocalAudio.pause();
-          adminLocalAudio = null;
-        }
-        gameState.welcomeMusicPlaying = true;
-        playSynthWelcomeTheme();
-      } else if (gameState.welcomeMusicType === 'url') {
-        stopSynthWelcomeTheme();
-        if (adminLocalAudio) adminLocalAudio.pause();
-        adminLocalAudio = new Audio(gameState.welcomeMusicUrl);
-        adminLocalAudio.loop = true;
-        adminLocalAudio.volume = 0.5;
-        adminLocalAudio.play().catch(e => showToast("Error al reproducir. Revisa la URL o permisos.", "error"));
-      } else if (gameState.welcomeMusicType === 'local') {
-        stopSynthWelcomeTheme();
-        if (adminLocalAudio) adminLocalAudio.pause();
-        try {
-          const audioData = await getAudioBlob();
-          if (audioData && audioData.blob) {
-            const objectURL = URL.createObjectURL(audioData.blob);
-            adminLocalAudio = new Audio(objectURL);
-            adminLocalAudio.loop = true;
-            adminLocalAudio.volume = 0.5;
-            adminLocalAudio.play().catch(e => showToast("El audio fue bloqueado por permisos del navegador.", "error"));
-          } else {
-            showToast("Selecciona primero un archivo de audio presionando 'Seleccionar MP3'.", "error");
-          }
-        } catch (err) {
-          console.error(err);
-          showToast("Error leyendo audio de IndexedDB.", "error");
-        }
-      }
-    }
-
-    // ==========================================
-    // REPRODUCCIÓN EN PANTALLA PROYECTADA
-    // ==========================================
-    async function manageProyectorWelcomeMusic() {
-      const pubAudio = document.getElementById('pub-audio-player');
-      if (!pubAudio) return;
-
-      try {
-        if (gameState.gameStarted || !gameState.welcomeMusicEnabled || !gameState.welcomeMusicPlaying || !audioEnabled) {
-          stopSynthWelcomeTheme();
-          pubAudio.pause();
-          if (pubAudio.src) {
-            //currentTime solo puede alterarse de forma segura si hay un elemento cargado
-            pubAudio.currentTime = 0; 
-          }
-          return;
-        }
-
-        if (gameState.welcomeMusicType === 'synth') {
-          pubAudio.pause();
-          playSynthWelcomeTheme();
-        } else if (gameState.welcomeMusicType === 'url') {
-          stopSynthWelcomeTheme();
-          if (gameState.welcomeMusicUrl) {
-            if (pubAudio.src !== gameState.welcomeMusicUrl) {
-              pubAudio.src = gameState.welcomeMusicUrl;
-              pubAudio.volume = 0.4;
-            }
-            pubAudio.play().catch(e => console.log("La reproducción de URL fue bloqueada hasta interactuar con el proyector."));
-          }
-        } else if (gameState.welcomeMusicType === 'local') {
-          stopSynthWelcomeTheme();
-          if (currentLoadedMusicName !== gameState.localMusicName) {
-            try {
-              const audioData = await getAudioBlob();
-              if (audioData && audioData.blob) {
-                if (currentLoadedObjectURL) {
-                  URL.revokeObjectURL(currentLoadedObjectURL);
-                }
-                currentLoadedObjectURL = URL.createObjectURL(audioData.blob);
-                currentLoadedMusicName = gameState.localMusicName;
-                pubAudio.src = currentLoadedObjectURL;
-                pubAudio.volume = 0.4;
-              }
-            } catch (err) {
-              console.error("Error cargando de IndexedDB:", err);
-            }
-          }
-          if (pubAudio.src) {
-            pubAudio.play().catch(e => console.log("La reproducción local fue bloqueada hasta interactuar con el proyector."));
-          }
-        }
-      } catch (err) {
-        console.warn("Fallo al reproducir el reproductor del proyector:", err);
-      }
+      gameState.welcomeMusicPlaying = play;
+      saveState();
+      syncViewAndData();
     }
 
     // ==========================================
@@ -1334,6 +1316,13 @@
       synthThemeIntervalId = setInterval(playStep, stepTime * 1000);
     }
 
+    function stopSynthWelcomeTheme() {
+      if (synthThemeIntervalId) {
+        clearInterval(synthThemeIntervalId);
+        synthThemeIntervalId = null;
+      }
+    }
+
     // ==========================================
     // NUEVA FUNCIÓN DE AUDIO SINTETIZADO PREMIUM
     // ==========================================
@@ -1344,7 +1333,6 @@
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
         
-        // Blindaje contra errores del estado suspendido
         try {
           if (audioCtx.state === 'suspended') {
             audioCtx.resume().catch(e => console.log("Permiso de Audio pendiente de interacción"));
@@ -1435,18 +1423,14 @@
           btn.innerText = "🔔 Sonido Listo";
           if (!gameState.gameStarted && gameState.welcomeMusicEnabled) {
             gameState.welcomeMusicPlaying = true;
-            playSynthWelcomeTheme();
           }
         } else {
           btn.className = "p-2 bg-slate-800 text-serMagenta border border-serMagenta/30 rounded-lg text-sm font-title tracking-wide transition-all";
           btn.innerText = "🔕 Activar Audio";
-          stopSynthWelcomeTheme();
-          const pubAudio = document.getElementById('pub-audio-player');
-          if (pubAudio) {
-            try { pubAudio.pause(); } catch(e) {}
-          }
+          stopAllWelcomeMusic();
         }
       }
+      syncViewAndData();
     }
 
     function authorizeAudio() {
@@ -1831,7 +1815,8 @@
           }
         }
 
-        manageProyectorWelcomeMusic();
+        // Activación del validador de reproducción inteligente
+        updateWelcomeMusicPlayback();
         updateFullscreenIcons();
       } catch (e) {
         console.error("Error crítico durante la sincronización de vista:", e);
