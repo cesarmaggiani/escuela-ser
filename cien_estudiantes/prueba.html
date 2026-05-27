@@ -68,6 +68,15 @@
       animation: bounce-short 0.5s ease-in-out infinite;
     }
 
+    /* ANIMACIÓN DE PULSO DE TAMAÑO PARA EL LOGO */
+    @keyframes scale-pulse {
+      0%, 100% { transform: scale(0.95); }
+      50% { transform: scale(1.05); }
+    }
+    .animate-scale-pulse {
+      animation: scale-pulse 4s ease-in-out infinite;
+    }
+
     /* ================================================================= */
     /* DISEÑO ADAPTATIVO VERTICAL PARA PREVENIR RECORTES EN PROYECTORES */
     /* ================================================================= */
@@ -383,7 +392,7 @@
         </div>
       </div>
 
-      <!-- CONTROLES ACTIVOS DEL JUEGO -->
+      <!-- CONTRELES ACTIVOS DEL JUEGO -->
       <div id="game-controls" class="hidden space-y-6">
         
         <!-- MARCADORES MANUALES -->
@@ -1156,12 +1165,6 @@
       syncViewAndData();
     }
 
-    function updateMusicUrl(val) {
-      gameState.welcomeMusicUrl = val;
-      saveState();
-      syncViewAndData();
-    }
-
     // ==========================================
     // SISTEMA UNIFICADO DE CONTROL DE AUDIO (Anti-solapamiento)
     // ==========================================
@@ -1175,7 +1178,7 @@
           activeWelcomeAudio.pause();
           activeWelcomeAudio.currentTime = 0;
         } catch(e) {}
-        activeWelcomeAudio = null;
+          activeWelcomeAudio = null;
       }
 
       // 3. Detener reproductor de respaldo del proyector en DOM
@@ -1316,6 +1319,7 @@
       synthThemeIntervalId = setInterval(playStep, stepTime * 1000);
     }
 
+    // Detención explícita del sintetizador de bienvenida
     function stopSynthWelcomeTheme() {
       if (synthThemeIntervalId) {
         clearInterval(synthThemeIntervalId);
@@ -1797,11 +1801,13 @@
           const logoContainer = document.getElementById('pub-logo-container');
           if (logoContainer) {
             if (currentLogo) {
-              logoContainer.innerHTML = `<img src="${currentLogo}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in" alt="Logo de Bienvenida">`;
+              // LOGO CARGADO CON ANIMACIÓN SUAVE DE ESCALADO INTERACTIVO
+              logoContainer.innerHTML = `<img src="${currentLogo}" class="max-h-[35vh] max-w-[80vw] object-contain animate-fade-in animate-scale-pulse" alt="Logo de Bienvenida">`;
             } else {
+              // LOGO POR DEFECTO CON LA NUEVA ANIMACIÓN DE ESCALADO SUAVE (EN LUGAR DE REBOTE)
               logoContainer.innerHTML = `
                 <div class="flex flex-col items-center animate-fade-in font-body">
-                  <div class="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-gradient-to-tr from-serMagenta to-serBlue rounded-full shadow-[0_0_30px_rgba(225,27,126,0.3)] animate-bounce-short mb-6">
+                  <div class="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-gradient-to-tr from-serMagenta to-serBlue rounded-full shadow-[0_0_30px_rgba(225,27,126,0.3)] animate-scale-pulse mb-6">
                     <div class="absolute inset-1.5 border-4 border-dashed border-white/20 rounded-full"></div>
                     <span class="text-4xl md:text-5xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">🎓</span>
                   </div>
@@ -1867,12 +1873,6 @@
       syncViewAndData();
     }
 
-    function changeScore(team, offset) {
-      gameState[team].score = Math.max(0, (gameState[team].score || 0) + offset);
-      saveState();
-      syncViewAndData();
-    }
-
     // ==========================================
     // SECCIÓN DE EVENTOS Y CONTROLES DEL JUEGO
     // ==========================================
@@ -1893,6 +1893,9 @@
       syncViewAndData();
     }
 
+    // ==========================================
+    // STRIKES
+    // ==========================================
     function addStrike() {
       if (typeof gameState.strikes !== 'number') {
         gameState.strikes = 0;
