@@ -3,410 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuesta de Satisfacción SER 2026</title>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
+    <title>Encuesta SER</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Bebas Neue & Cabin -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
     <style>
-        /* COLORES OFICIALES SER */
-        :root {
-            --ser-magenta: #E11B7E;
-            --ser-yellow: #FCCC32;
-            --ser-cyan: #009BD1;
-            --ser-gray: #f4f6f8;
-            --ser-dark: #333333;
-        }
-
-        body {
-            font-family: 'Cabin', sans-serif;
-            background-color: var(--ser-gray);
-            color: var(--ser-dark);
-        }
-
-        h1, h2, h3, .brand-font {
-            font-family: 'Bebas Neue', sans-serif;
-            letter-spacing: 0.05em;
-        }
-        
-        /* Utilidades de color personalizadas para Tailwind */
-        .text-ser-magenta { color: var(--ser-magenta); }
-        .text-ser-cyan { color: var(--ser-cyan); }
-        .text-ser-yellow { color: var(--ser-yellow); }
-        
-        .bg-ser-magenta { background-color: var(--ser-magenta); }
-        .bg-ser-cyan { background-color: var(--ser-cyan); }
-        .bg-ser-yellow { background-color: var(--ser-yellow); }
-        
-        .border-ser-magenta { border-color: var(--ser-magenta); }
-        .border-ser-cyan { border-color: var(--ser-cyan); }
-        .border-ser-yellow { border-color: var(--ser-yellow); }
-
-        /* Animaciones */
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .card-hover { transition: all 0.3s ease; }
+        @import url('https://fonts.googleapis.com/css2?family=Cabin&family=Bebas+Neue&display=swap');
+        body { font-family: 'Cabin', sans-serif; background-color: #f4f6f8; }
+        .brand-font { font-family: 'Bebas Neue', sans-serif; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="p-4">
 
-    <script type="text/babel">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <h1 class="text-4xl text-center brand-font text-gray-800">Encuesta de Satisfacción SER 2026</h1>
         
-        // ***************************************************************
-        // *** ÁREA DE CONFIGURACIÓN DE ENLACES ***
-        // ***************************************************************
-        const SITE_CONFIG = {
-            links: {
-                // SECCIÓN 1: ROLES
-                "COACHING": "https://forms.gle/iURsyY9uu8SoS2hc9",
-                "TABLEROS": "https://forms.gle/wH3kJHQg72TYKRji6",
-                "ACOMPAÑAMIENTO": "https://forms.gle/iXewEuWfksVYqGhU8",
-                "COMUNIDADES": "https://forms.gle/T1AegzzxbjF8ppTN8",
-                
-                // SECCIÓN 2: ACADÉMICO
-                "CÁLCULO MENTAL": "https://forms.gle/jmiVfq1UL3S7vhpF9",
-                "MATEMÁTICAS": "https://forms.gle/iYv5n3rt6ZUSnu2fA",
-                "ESPAÑOL": "https://forms.gle/43zyFG6Rq5zLKw4Z7",
-                "ESTUDIO DE PALABRAS": "https://forms.gle/1ZDthTdvCNsG3o7R9",
-                "CIENCIA Y TECNOLOGÍA": "https://forms.gle/tfz5PcKZwzTsYWuN7",
-                "DBQ": "https://forms.gle/gUpY4n8aGzgA3VPYA",
-                "INGLÉS": "https://forms.gle/jtCvWkgMdhsxRHhU6",
-                "PENSAMIENTO LECTOR": "https://forms.gle/CJsk4hy6Y6zH5qtV7" // Enlace actualizado
-            }
-        };
-        // ***************************************************************
+        <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+    </div>
 
+    <script>
+        const datos = [
+            { titulo: "COACHING", url: "https://forms.gle/iURsyY9uu8SoS2hc9", color: "border-blue-500" },
+            { titulo: "TABLEROS", url: "https://forms.gle/wH3kJHQg72TYKRji6", color: "border-blue-500" },
+            { titulo: "MATEMÁTICAS", url: "https://forms.gle/iYv5n3rt6ZUSnu2fA", color: "border-pink-500" },
+            { titulo: "ESPAÑOL", url: "https://forms.gle/43zyFG6Rq5zLKw4Z7", color: "border-pink-500" }
+            // Agrega aquí todos tus enlaces siguiendo este formato
+        ];
 
-        // Iconos SVG
-        const Icons = {
-            Hand: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>,
-            Briefcase: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
-            School: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m4 6 8-4 8 4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/><path d="M18 5v17"/><path d="M6 5v17"/></svg>,
-            Heart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
-            Users: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-            Calculator: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>,
-            Book: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
-            Globe: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-            Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
-            Chart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>,
-            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        };
-
-        // Modal Componente
-        const Modal = ({ isOpen, onClose, onRedirect, title }) => {
-            if (!isOpen) return null;
-            return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 transition-opacity backdrop-blur-sm">
-                    <div className="bg-white rounded-xl p-8 max-w-sm w-full shadow-2xl animate-fade-in text-center border-t-8 border-ser-magenta">
-                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-pink-50 mb-6">
-                            <Icons.Check className="h-8 w-8 text-ser-magenta" />
-                        </div>
-                        <h3 className="text-2xl text-gray-900 mb-3 brand-font tracking-wide">Abriendo Encuesta</h3>
-                        <p className="text-gray-600 mb-8 font-medium">Estás siendo redirigido a la encuesta de: <br/><strong className="text-ser-cyan text-lg block mt-2">{title}</strong></p>
-                        
-                        <div className="flex gap-4">
-                            <button 
-                                onClick={onClose}
-                                className="flex-1 inline-flex justify-center rounded-lg border border-gray-300 px-4 py-3 bg-white text-gray-700 font-bold hover:bg-gray-50 focus:outline-none transition-colors"
-                            >
-                                Cancelar
-                            </button>
-                            <button 
-                                onClick={onRedirect}
-                                className="flex-1 inline-flex justify-center rounded-lg border border-transparent shadow-lg px-4 py-3 bg-ser-magenta text-white font-bold hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all hover:-translate-y-1"
-                            >
-                                IR AHORA
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const SurveyCard = ({ title, linkKey, sub, icon: Icon, onClick, variant = "cyan" }) => {
-            const variants = {
-                cyan: "text-ser-cyan bg-cyan-50 group-hover:bg-ser-cyan group-hover:text-white border-ser-cyan",
-                magenta: "text-ser-magenta bg-pink-50 group-hover:bg-ser-magenta group-hover:text-white border-ser-magenta",
-                yellow: "text-yellow-600 bg-yellow-50 group-hover:bg-ser-yellow group-hover:text-black border-ser-yellow" 
-            };
-            
-            const borderClass = `hover:border-${variant === 'yellow' ? 'ser-yellow' : (variant === 'magenta' ? 'ser-magenta' : 'ser-cyan')}`;
-            
-            let titleClass = "group-hover:text-ser-cyan";
-            if (variant === "magenta") titleClass = "group-hover:text-ser-magenta";
-            if (variant === "yellow") titleClass = "group-hover:text-yellow-600";
-
-            return (
-                <button 
-                    onClick={() => onClick(linkKey || title, title)}
-                    className={`group flex flex-col items-center justify-center p-8 bg-white rounded-2xl border border-gray-200 shadow-sm card-hover w-full text-center h-full hover:border-opacity-100 border-t-4 ${borderClass}`}
-                    style={{borderColor: 'transparent'}}
-                >
-                    <div className={`p-5 rounded-full mb-5 transition-colors duration-300 ${variants[variant]}`}>
-                        <Icon />
-                    </div>
-                    <h3 className={`text-2xl text-gray-800 transition-colors brand-font leading-none mb-2 ${titleClass}`}>{title}</h3>
-                    {sub && <p className="text-sm text-gray-500 font-medium leading-tight px-2">{sub}</p>}
-                    <div className="mt-6 text-xs font-bold text-gray-300 uppercase tracking-widest group-hover:text-gray-400 flex items-center gap-1">
-                        <span>Clic para abrir</span>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </div>
-                </button>
-            );
-        };
-
-        const SectionHeader = ({ number, title, subtitle, color = "cyan" }) => {
-            let bgClass = "bg-ser-cyan";
-            if (color === "magenta") bgClass = "bg-ser-magenta";
-            if (color === "yellow") bgClass = "bg-ser-yellow text-black"; 
-
-            return (
-                <div className="mb-10 border-b border-gray-200 pb-6">
-                    <div className="flex items-center gap-4 mb-2">
-                        <span className={`flex items-center justify-center w-10 h-10 rounded-full text-white font-bold text-lg shadow-md ${bgClass}`}>
-                            {number}
-                        </span>
-                        <h2 className="text-3xl text-gray-800 brand-font">{title}</h2>
-                    </div>
-                    {subtitle && <p className="text-gray-500 text-base ml-14 font-medium">{subtitle}</p>}
-                </div>
-            );
-        };
-
-        const App = () => {
-            const [modalOpen, setModalOpen] = React.useState(false);
-            const [selectedLinkKey, setSelectedLinkKey] = React.useState("");
-            const [displayTitle, setDisplayTitle] = React.useState("");
-
-            const handleSurveyClick = (key, title) => {
-                setSelectedLinkKey(key);
-                setDisplayTitle(title);
-                setModalOpen(true);
-            };
-
-            const closeModal = () => {
-                setModalOpen(false);
-            };
-
-            const handleRedirect = () => {
-                const url = SITE_CONFIG.links[selectedLinkKey];
-                
-                if (url && url.includes("http")) {
-                    window.open(url, '_blank');
-                    setModalOpen(false);
-                } else {
-                    alert("⚠️ Enlace no configurado.\n\nPor favor, edita el archivo HTML y agrega la URL correcta en la sección 'SITE_CONFIG' al principio del código.");
-                }
-            };
-
-            return (
-                <div className="min-h-screen flex flex-col font-sans bg-gray-50">
-                    
-                    {/* Header */}
-                    <header className="bg-white shadow-lg sticky top-0 z-30 border-t-4 border-ser-magenta">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <img 
-                                    src="https://lh3.googleusercontent.com/d/1hNpuOxhxOMURyaFzczP4rQRNK81IzOKr" 
-                                    alt="Logo SER" 
-                                    className="h-14 w-auto object-contain hover:opacity-80 transition-opacity cursor-pointer"
-                                />
-                            </div>
-                            <div className="text-sm font-bold text-ser-cyan bg-cyan-50 px-5 py-2 rounded-full uppercase tracking-wider shadow-sm border border-cyan-100">
-                                Encuesta 2026
-                            </div>
-                        </div>
-                    </header>
-
-                    {/* Hero */}
-                    <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 text-white py-16 px-4 relative overflow-hidden">
-                        {/* Decorative Circles */}
-                        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-ser-magenta opacity-20 mix-blend-multiply blur-3xl"></div>
-                        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 rounded-full bg-ser-yellow opacity-30 mix-blend-overlay blur-2xl"></div>
-                        
-                        <div className="max-w-5xl mx-auto text-center relative z-10">
-                            <h2 className="text-5xl md:text-6xl mb-8 brand-font drop-shadow-md">Tu opinión nos ayuda a mejorar</h2>
-                            <div className="text-cyan-50 text-xl mb-10 font-light max-w-3xl mx-auto leading-relaxed space-y-4">
-                                <p>
-                                    ¡Hola! Este espacio está dedicado a todos los que forman parte de la red SER. Te pedimos unos minutos para que nos compartas tu opinión y evaluación, ¡queremos mejorar para ti!
-                                </p>
-                                <p>
-                                    SER te ofrece diferentes programas y acompañamiento, por eso te pedimos que respondas todas las encuestas de acuerdo con tu rol y los programas que usas.
-                                </p>
-                                <p className="font-bold text-white mt-4 text-2xl brand-font tracking-wide">
-                                    ¡Gracias por tu tiempo y opinión!
-                                </p>
-                            </div>
-                            <div className="inline-flex items-center bg-white text-ser-cyan px-8 py-3 rounded-full text-sm font-bold shadow-xl uppercase tracking-wide hover:scale-105 transition-transform cursor-default">
-                                <Icons.Hand className="w-5 h-5 mr-2 text-ser-magenta" />
-                                <span>Selecciona una opción abajo</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
-                        
-                        {/* SECCIÓN 1: Roles */}
-                        <section>
-                            <SectionHeader 
-                                number="1" 
-                                title="POR ROL Y PERFIL" 
-                                subtitle="Para Grupo Operador, Líderes y Coordinadores." 
-                                color="cyan"
-                            />
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                
-                                {/* Líder Escolar */}
-                                <SurveyCard 
-                                    title="COACHING" 
-                                    sub="Líder Escolar" 
-                                    icon={Icons.Users} 
-                                    onClick={handleSurveyClick} 
-                                    variant="cyan"
-                                />
-                                <SurveyCard 
-                                    title="TABLEROS" 
-                                    sub="Líder Escolar" 
-                                    icon={Icons.Chart} 
-                                    onClick={handleSurveyClick} 
-                                    variant="cyan"
-                                />
-                                
-                                {/* Otros */}
-                                <SurveyCard 
-                                    title="ACOMPAÑAMIENTO" 
-                                    sub="Docentes de carácter y Psicólogos" 
-                                    icon={Icons.Heart} 
-                                    onClick={handleSurveyClick} 
-                                    variant="cyan"
-                                />
-                                <SurveyCard 
-                                    title="COMUNIDADES" 
-                                    sub="Líderes, Coordinadores y Docentes" 
-                                    icon={Icons.Users} 
-                                    onClick={handleSurveyClick} 
-                                    variant="cyan"
-                                />
-                            </div>
-                        </section>
-
-                        {/* SECCIÓN 2: Académico */}
-                        <section>
-                            <SectionHeader 
-                                number="2" 
-                                title="POR PROGRAMAS ACADÉMICOS" 
-                                subtitle="Docentes: Respondan por cada programa que imparten." 
-                                color="magenta"
-                            />
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                                <SurveyCard 
-                                    title="CÁLCULO MENTAL" 
-                                    sub="1° - 9° Grado"
-                                    icon={Icons.Calculator} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="MATEMÁTICAS" 
-                                    sub="1° - 9° Grado"
-                                    icon={Icons.Calculator} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="ESPAÑOL" 
-                                    sub="1° - 9° Grado"
-                                    icon={Icons.Book} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="ESTUDIO DE PALABRAS" 
-                                    sub="Docentes 1º y 2º Primaria"
-                                    icon={Icons.Book} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="CIENCIA Y TECNOLOGÍA" 
-                                    sub="Titulares de Ciencia y Tecnología"
-                                    icon={Icons.Microscope} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="DBQ" 
-                                    sub="7° - 9° Grado"
-                                    icon={Icons.Globe} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="INGLÉS" 
-                                    sub="1° - 4° Grado"
-                                    icon={Icons.Globe} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                                <SurveyCard 
-                                    title="PENSAMIENTO LECTOR" 
-                                    linkKey="PENSAMIENTO LECTOR"
-                                    sub="3° - 6° Grado"
-                                    icon={Icons.Book} 
-                                    onClick={handleSurveyClick} 
-                                    variant="magenta"
-                                />
-                            </div>
-                        </section>
-
-                        {/* SECCIÓN 3 ELIMINADA */}
-
-                    </main>
-
-                    <footer className="bg-gray-900 text-gray-400 py-16 border-t-4 border-ser-yellow mt-10">
-                        <div className="max-w-7xl mx-auto px-4 text-center">
-                            <div className="flex flex-col justify-center items-center gap-6 mb-8">
-                                <img 
-                                    src="https://lh3.googleusercontent.com/d/1MBv-q5FI7-q15O8h6_ur4YM7jztIek1C" 
-                                    alt="Logo SER Footer" 
-                                    className="h-20 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
-                                />
-                            </div>
-                            <p className="mb-2 text-base font-light tracking-wide">¡Gracias por tu tiempo y opinión!</p>
-                            <p className="text-xs text-gray-600 uppercase tracking-widest">&copy; 2026 Red de Escuelas SER.</p>
-                        </div>
-                    </footer>
-
-                    <Modal 
-                        isOpen={modalOpen} 
-                        onClose={closeModal} 
-                        onRedirect={handleRedirect} 
-                        title={displayTitle} 
-                    />
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        const grid = document.getElementById('grid');
+        
+        datos.forEach(item => {
+            const card = document.createElement('a');
+            card.href = item.url;
+            card.target = "_blank";
+            card.className = `block p-6 bg-white rounded-xl border-t-4 ${item.color} shadow-sm card-hover transition-all text-center`;
+            card.innerHTML = `
+                <h3 class="text-xl brand-font">${item.titulo}</h3>
+                <p class="text-sm text-gray-500 mt-2">Clic para responder</p>
+            `;
+            grid.appendChild(card);
+        });
     </script>
 </body>
 </html>
