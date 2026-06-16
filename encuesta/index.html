@@ -12,24 +12,15 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
     <style>
-        :root { --ser-magenta: #E11B7E; --ser-yellow: #FCCC32; --ser-cyan: #009BD1; --ser-gray: #f4f6f8; --ser-dark: #333333; }
-        body, html { margin: 0; padding: 0; min-height: 100vh; background-color: var(--ser-gray); font-family: 'Cabin', sans-serif; }
-        #root { min-height: 100vh; }
-        .brand-font { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
-        .text-ser-magenta { color: var(--ser-magenta); }
-        .bg-ser-magenta { background-color: var(--ser-magenta); }
-        .border-ser-magenta { border-color: var(--ser-magenta); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        :root { --ser-magenta: #E11B7E; --ser-yellow: #FCCC32; --ser-cyan: #009BD1; --ser-gray: #f4f6f8; }
+        body { background-color: var(--ser-gray); }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react">
         const SITE_CONFIG = {
             links: {
                 "COACHING": "https://forms.gle/iURsyY9uu8SoS2hc9",
@@ -48,52 +39,22 @@
         };
 
         const App = () => {
-            const [modalOpen, setModalOpen] = React.useState(false);
-            const [selectedLink, setSelectedLink] = React.useState({ key: "", title: "" });
-
-            const handleRedirect = () => {
-                window.open(SITE_CONFIG.links[selectedLink.key], '_blank');
-                setModalOpen(false);
-            };
-
             return (
-                <div className="flex flex-col items-center py-10 px-4">
-                    <h1 className="text-5xl brand-font text-gray-800 mb-10">Encuestas SER 2026</h1>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl w-full">
-                        {Object.keys(SITE_CONFIG.links).map((key) => (
-                            <button 
-                                key={key} 
-                                onClick={() => { setSelectedLink({key, title: key}); setModalOpen(true); }} 
-                                className="p-6 bg-white border-t-4 border-ser-magenta rounded-xl shadow-sm card-hover text-left hover:shadow-lg"
-                            >
-                                <h3 className="text-xl font-bold text-gray-700">{key}</h3>
-                                <p className="text-sm text-gray-400 mt-2">Haz clic para responder</p>
-                            </button>
+                <div className="p-10 text-center">
+                    <h1 className="text-4xl font-bold mb-6">Encuestas SER 2026</h1>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {Object.keys(SITE_CONFIG.links).map(key => (
+                            <a key={key} href={SITE_CONFIG.links[key]} target="_blank" className="p-4 bg-white shadow rounded hover:bg-pink-100 transition">
+                                {key}
+                            </a>
                         ))}
                     </div>
-
-                    {modalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 p-4">
-                            <div className="bg-white p-8 rounded-2xl max-w-sm w-full shadow-2xl text-center">
-                                <h2 className="text-2xl brand-font mb-4">¿Abrir encuesta?</h2>
-                                <p className="text-gray-600 mb-6">Vas a acceder a: <strong>{selectedLink.title}</strong></p>
-                                <div className="flex gap-4">
-                                    <button onClick={() => setModalOpen(false)} className="flex-1 py-3 border rounded-lg hover:bg-gray-100">Cancelar</button>
-                                    <button onClick={handleRedirect} className="flex-1 py-3 bg-ser-magenta text-white font-bold rounded-lg hover:bg-pink-700">Ir Ahora</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             );
         };
 
-        // Modificación para asegurar carga correcta
-        window.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('root');
-            const root = ReactDOM.createRoot(container);
-            root.render(<App />);
-        });
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
