@@ -3,46 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuesta SER</title>
+    <title>Encuesta de Satisfacción SER 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabin:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ser-magenta': '#E11B7E',
+                        'ser-yellow': '#FCCC32',
+                        'ser-cyan': '#009BD1',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cabin&family=Bebas+Neue&display=swap');
-        body { font-family: 'Cabin', sans-serif; background-color: #f4f6f8; }
+        body { font-family: 'Cabin', sans-serif; }
         .brand-font { font-family: 'Bebas Neue', sans-serif; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="p-4">
+<body class="bg-gray-100 p-4">
 
-    <div class="max-w-4xl mx-auto space-y-8">
-        <h1 class="text-4xl text-center brand-font text-gray-800">Encuesta de Satisfacción SER 2026</h1>
-        
-        <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
+    <div class="bg-cyan-600 text-white py-12 px-6 rounded-2xl text-center mb-10 shadow-lg">
+        <h2 class="text-4xl md:text-5xl brand-font mb-4">Tu opinión nos ayuda a mejorar</h2>
+        <p class="max-w-2xl mx-auto">Selecciona el área correspondiente a tu rol o programa.</p>
     </div>
 
-    <script>
-        const datos = [
-            { titulo: "COACHING", url: "https://forms.gle/iURsyY9uu8SoS2hc9", color: "border-blue-500" },
-            { titulo: "TABLEROS", url: "https://forms.gle/wH3kJHQg72TYKRji6", color: "border-blue-500" },
-            { titulo: "MATEMÁTICAS", url: "https://forms.gle/iYv5n3rt6ZUSnu2fA", color: "border-pink-500" },
-            { titulo: "ESPAÑOL", url: "https://forms.gle/43zyFG6Rq5zLKw4Z7", color: "border-pink-500" }
-            // Agrega aquí todos tus enlaces siguiendo este formato
-        ];
-
-        const grid = document.getElementById('grid');
+    <div class="max-w-6xl mx-auto space-y-12">
         
-        datos.forEach(item => {
-            const card = document.createElement('a');
-            card.href = item.url;
-            card.target = "_blank";
-            card.className = `block p-6 bg-white rounded-xl border-t-4 ${item.color} shadow-sm card-hover transition-all text-center`;
-            card.innerHTML = `
-                <h3 class="text-xl brand-font">${item.titulo}</h3>
-                <p class="text-sm text-gray-500 mt-2">Clic para responder</p>
-            `;
-            grid.appendChild(card);
-        });
-    </script>
+        <section>
+            <h2 class="text-2xl brand-font border-b-2 border-cyan-500 pb-2 mb-6">1. POR ROL Y PERFIL</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="https://forms.gle/iURsyY9uu8SoS2hc9" target="_blank" class="block p-6 bg-white rounded-xl shadow hover:shadow-xl transition border-t-4 border-cyan-500">
+                    <h3 class="text-xl font-bold text-cyan-600">COACHING</h3>
+                    <p class="text-sm text-gray-500">Líder Escolar</p>
+                </a>
+                <a href="https://forms.gle/wH3kJHQg72TYKRji6" target="_blank" class="block p-6 bg-white rounded-xl shadow hover:shadow-xl transition border-t-4 border-cyan-500">
+                    <h3 class="text-xl font-bold text-cyan-600">TABLEROS</h3>
+                    <p class="text-sm text-gray-500">Líder Escolar</p>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl brand-font border-b-2 border-pink-500 pb-2 mb-6">2. POR PROGRAMAS ACADÉMICOS</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="https://forms.gle/jmiVfq1UL3S7vhpF9" target="_blank" class="block p-6 bg-white rounded-xl shadow hover:shadow-xl transition border-t-4 border-pink-500">
+                    <h3 class="text-xl font-bold text-pink-600">CÁLCULO MENTAL</h3>
+                </a>
+                <a href="https://forms.gle/iYv5n3rt6ZUSnu2fA" target="_blank" class="block p-6 bg-white rounded-xl shadow hover:shadow-xl transition border-t-4 border-pink-500">
+                    <h3 class="text-xl font-bold text-pink-600">MATEMÁTICAS</h3>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
 </body>
 </html>
