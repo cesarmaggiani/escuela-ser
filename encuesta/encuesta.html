@@ -16,13 +16,12 @@
     
     <style>
         :root { --ser-magenta: #E11B7E; --ser-yellow: #FCCC32; --ser-cyan: #009BD1; --ser-gray: #f4f6f8; --ser-dark: #333333; }
-        body { font-family: 'Cabin', sans-serif; background-color: var(--ser-gray); color: var(--ser-dark); }
-        h1, h2, h3, .brand-font { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
+        body, html { margin: 0; padding: 0; min-height: 100vh; background-color: var(--ser-gray); font-family: 'Cabin', sans-serif; }
+        #root { min-height: 100vh; }
+        .brand-font { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
         .text-ser-magenta { color: var(--ser-magenta); }
         .bg-ser-magenta { background-color: var(--ser-magenta); }
         .border-ser-magenta { border-color: var(--ser-magenta); }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
@@ -48,18 +47,6 @@
             }
         };
 
-        const Icons = {
-            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-            Hand: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>,
-            Users: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-            Chart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>,
-            Heart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
-            Calculator: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>,
-            Book: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
-            Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
-            Globe: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        };
-
         const App = () => {
             const [modalOpen, setModalOpen] = React.useState(false);
             const [selectedLink, setSelectedLink] = React.useState({ key: "", title: "" });
@@ -70,21 +57,30 @@
             };
 
             return (
-                <div className="p-8">
-                    <h1 className="text-4xl brand-font mb-8">Encuestas SER 2026</h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col items-center py-10 px-4">
+                    <h1 className="text-5xl brand-font text-gray-800 mb-10">Encuestas SER 2026</h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl w-full">
                         {Object.keys(SITE_CONFIG.links).map((key) => (
-                            <button key={key} onClick={() => { setSelectedLink({key, title: key}); setModalOpen(true); }} className="p-4 border rounded shadow hover:bg-gray-50">
-                                {key}
+                            <button 
+                                key={key} 
+                                onClick={() => { setSelectedLink({key, title: key}); setModalOpen(true); }} 
+                                className="p-6 bg-white border-t-4 border-ser-magenta rounded-xl shadow-sm card-hover text-left hover:shadow-lg"
+                            >
+                                <h3 className="text-xl font-bold text-gray-700">{key}</h3>
+                                <p className="text-sm text-gray-400 mt-2">Haz clic para responder</p>
                             </button>
                         ))}
                     </div>
+
                     {modalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                            <div className="bg-white p-6 rounded-lg">
-                                <h2 className="text-xl mb-4">¿Ir a {selectedLink.title}?</h2>
-                                <button onClick={() => setModalOpen(false)} className="mr-4">Cancelar</button>
-                                <button onClick={handleRedirect} className="bg-ser-magenta text-white px-4 py-2 rounded">Ir a la Encuesta</button>
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 p-4">
+                            <div className="bg-white p-8 rounded-2xl max-w-sm w-full shadow-2xl text-center">
+                                <h2 className="text-2xl brand-font mb-4">¿Abrir encuesta?</h2>
+                                <p className="text-gray-600 mb-6">Vas a acceder a: <strong>{selectedLink.title}</strong></p>
+                                <div className="flex gap-4">
+                                    <button onClick={() => setModalOpen(false)} className="flex-1 py-3 border rounded-lg hover:bg-gray-100">Cancelar</button>
+                                    <button onClick={handleRedirect} className="flex-1 py-3 bg-ser-magenta text-white font-bold rounded-lg hover:bg-pink-700">Ir Ahora</button>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -92,8 +88,12 @@
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // Modificación para asegurar carga correcta
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('root');
+            const root = ReactDOM.createRoot(container);
+            root.render(<App />);
+        });
     </script>
 </body>
 </html>
